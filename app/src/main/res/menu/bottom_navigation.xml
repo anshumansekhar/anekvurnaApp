@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Profile"
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_black_24dp"/>
+    <item
+        android:title="Hobbies"
+        android:id="@+id/Hobbies"
+        android:enabled="true"
+        android:icon="@drawable/ic_assessment_black_24dp"/>
+    <item
+        android:title="Family"
+        android:id="@+id/Family"
+        android:enabled="true"
+        android:icon="@drawable/ic_people_black_24dp"/>
+    <item
+        android:title="Education"
+        android:id="@+id/education"
+        android:enabled="true"
+        android:icon="@drawable/ic_school_black_24dp"
+        />
+    <item
+        android:title="Account"
+        android:id="@+id/account"
+        android:enabled="true"
+        android:icon="@drawable/ic_account_balance_black_24dp"/>
+</menu>
