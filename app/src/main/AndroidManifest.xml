@@ -62,9 +62,8 @@
         <activity
             android:name=".NavigationDrawer"
             android:label="@string/title_activity_navigation_drawer"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".addEducationDetails"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Main2Activity" />
         <activity android:name=".addFamily" />
 
@@ -79,7 +78,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".AnotherActivity"></activity>
+        <activity android:name=".AnotherActivity" />
+        <activity android:name=".YoutubeActivity">
+
+    </activity>
+        <activity android:name=".Registration"></activity>
     </application>
 
 </manifest>

@@ -24,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +44,7 @@ public class NavigationDrawer extends AppCompatActivity
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FloatingActionButton floatingActionButton;
 
+    int selected;
     Toolbar toolbar;
     ActionBar actionBar;
 
@@ -61,6 +64,7 @@ public class NavigationDrawer extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
 
         floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
         floatingActionButton.hide();
@@ -193,6 +197,34 @@ public class NavigationDrawer extends AppCompatActivity
             shareApplication();
 
         } else if (id == R.id.nav_send) {
+
+        }
+        else if(id==R.id.videos)
+        {
+            final Intent i=new Intent(NavigationDrawer.this,AnotherActivity.class);
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setTitle("Select a Class");
+            final String[] classes=getResources().getStringArray(R.array.Class);
+            builder.setSingleChoiceItems(classes,0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    selected=which;
+
+                }
+            });
+            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  i.putExtra("SelectedClass",classes[selected]);
+                    startActivity(i);
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+
+                }
+            }).show();
 
         }
 

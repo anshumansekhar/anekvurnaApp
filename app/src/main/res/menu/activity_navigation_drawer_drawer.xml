@@ -15,6 +15,9 @@
     </item>
     <item android:title="About">
         <menu>
+            <item android:id="@+id/videos"
+                android:icon="@drawable/ic_video_library_black_24dp"
+                android:title="Videos"/>
             <item
                 android:id="@+id/nav_about_app"
                 android:icon="@drawable/ic_info_black_24dp"

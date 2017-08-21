@@ -49,11 +49,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     ShareLinkContent shareLinkContent;
     ShareDialog shareDialog;
     GoogleApiClient mGoogleApiClient;
+
+
 
 
     public static final String TAG="MainActivity";
@@ -155,88 +159,94 @@ public class MainActivity extends AppCompatActivity {
                 emailText=email.getText().toString();
                 passwordText=password.getText().toString();
                 phoneText=phone.getText().toString();
-                if(checkEmailPattern(emailText) &&checkPhonePattern(phoneText)) {
-                    Log.e(TAG,"email password okay");
-                    firebaseAuth.createUserWithEmailAndPassword(emailText,passwordText)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Log.e(TAG,"Creating User ");
-                                    if(task.isSuccessful())
-                                    {
-                                        Log.e(TAG,"Creating User Successful");
-                                        User user = new User(emailText
-                                                ,""
-                                                ,firebaseAuth.getCurrentUser().getUid()
-                                                ,""
-                                                ,""
-                                                ,"true"
-                                        ,passwordText
-                                        ,phoneText);
-                                        firebaseDatabase.
-                                                getReference("Users").
-                                                child(firebaseAuth.getCurrentUser().getUid()).
-                                                setValue(user)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                if(!emailText.isEmpty()) {
+                    if (checkEmailPattern(emailText)) {
+                        firebaseAuth.signInWithEmailAndPassword(emailText, passwordText)
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Log.e(TAG, "Sign in Successful starting next activity");
+                                        startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Sign In Failed", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, e.toString());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("Confirmation");
+                                builder.setMessage("The entered Emailt has not Yet been Registered.Do you want to Register now?");
+                                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText)
+                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful())
-                                                        {
-                                                            Log.e(TAG,"User Added to Database");
-                                                            Log.e(TAG,"Starting Acitvity");
-                                                            startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
-                                                        }
+                                                    public void onSuccess(AuthResult authResult) {
+                                                        Log.e(TAG, "Creating User ");
+                                                        Log.e(TAG, "Creating User Successful");
+                                                        User user = new User(emailText
+                                                                , ""
+                                                                , firebaseAuth.getCurrentUser().getUid()
+                                                                , ""
+                                                                , ""
+                                                                , "true"
+                                                                , passwordText
+                                                                , phoneText);
+                                                        firebaseDatabase.
+                                                                getReference("Users").
+                                                                child(firebaseAuth.getCurrentUser().getUid()).
+                                                                setValue(user)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            Log.e(TAG, "User Added to Database");
+                                                                            Log.e(TAG, "Starting Acitvity");
+                                                                            startActivity(new Intent(MainActivity.this, Registration.class));
+                                                                        }
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.e(TAG, "Failed to add User to database");
+                                                                        Log.e(TAG, e.toString());
+                                                                    }
+                                                                });
                                                     }
-                                                })
-                                        .addOnFailureListener(new OnFailureListener() {
+
+
+                                                }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Log.e(TAG,"Failed to add User to database");
-                                                Log.e(TAG,e.toString());
+                                                Log.e(TAG, e.toString());
                                             }
                                         });
                                     }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG,e.toString());
-                            Log.e(TAG,"Failed to create User");
-                            Log.e(TAG,"Asking for Sign in");
-                            AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Confirmation");
-                            builder.setMessage("User with the given Email Already Exists .Sign In Instead?");
-                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    firebaseAuth.signInWithEmailAndPassword(emailText, passwordText)
-                                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                                @Override
-                                                public void onSuccess(AuthResult authResult) {
-                                                    Log.e(TAG,"Sign in Successful starting next activity");
-                                                    startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
-                                                }
-                                            });
-                                }
-                            }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                            AlertDialog dialog=builder.create();
-                            dialog.show();
-                        }
-                    });
+                                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                        });
+                    } else if (!checkEmailPattern(emailText)) {
+                        email.setError("Enter a Valid Email Address");
+                    }
                 }
-                else if(!checkEmailPattern(emailText))
+                else
                 {
-                    email.setError("Enter a Valid Email Address");
+                    if(checkPhonePattern(phoneText))
+                    {
+                        signInWithPhone(phoneText);
+
+                    }
                 }
-                else if(!checkPhonePattern(phoneText))
-                {
-                    phone.setError("Enter a Valid 10 digit mobile number");
-                }
+
 
 
             }
@@ -392,5 +402,13 @@ public class MainActivity extends AppCompatActivity {
         String phoneRegex="[789]{1}[1234567890]{9}";
         boolean value1=Pattern.matches(phoneRegex,Phone);
         return value1;
+    }
+    public void signInWithPhone(String number) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                number,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
     }
 }
