@@ -28,12 +28,9 @@ public class addFamily extends AppCompatActivity {
         setContentView(R.layout.activity_add_family);
         name=(EditText)findViewById(R.id.familyMemberName);
         relations=(Spinner)findViewById(R.id.familyMemberRelation);
-
-        final String[] array=getResources().getStringArray(R.array.Relation);
         relationsSpinnerAdapter= ArrayAdapter.createFromResource(getApplicationContext(),R.array.Relation,android.R.layout.simple_spinner_dropdown_item);
         relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         relations.setAdapter(relationsSpinnerAdapter);
-
         relations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -49,10 +46,8 @@ public class addFamily extends AppCompatActivity {
                             }
                         });
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }

@@ -43,17 +43,26 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -76,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
     ShareDialog shareDialog;
     GoogleApiClient mGoogleApiClient;
 
-
-
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
     public static final String TAG="MainActivity";
 
@@ -97,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         //subscribeToPushService();
-        if(firebaseAuth.getCurrentUser()!=null)
-        {
+        if(firebaseAuth.getCurrentUser()!=null) {
             startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
         }
     }
@@ -106,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         Log.d("AndroidBash", "Subscribed");
         Toast.makeText(MainActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
-
         String token = FirebaseInstanceId.getInstance().getToken();
-        // Log and toast
         Log.d("AndroidBash", token);
         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
     }
@@ -128,6 +133,49 @@ public class MainActivity extends AppCompatActivity {
                         .build())
                 .build();
         shareDialog=new ShareDialog(this);
+        mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                Log.e(TAG, "onVerificationCompleted:" + phoneAuthCredential);
+                if(phoneAuthCredential!=null)
+                signInWithPhoneAuthCredential(phoneAuthCredential);
+            }
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Log.e(TAG, "onVerificationFailed", e);
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                }
+            }
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                Log.e(TAG, "onCodeSent:" + s);
+                final String id=s;
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Verification");
+                builder.setMessage("Enter the Code sent to "+phoneText);
+                final EditText code=new EditText(getApplicationContext());
+                builder.setView(code);
+                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PhoneAuthCredential credential=PhoneAuthProvider.getCredential(id,code.getText().toString().trim());
+                        signInWithPhoneAuthCredential(credential);
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog=builder.create();
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        };
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -149,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
         googleSignin=(SignInButton)findViewById(R.id.googlelogin);
         googleSignin.setSize(SignInButton.SIZE_STANDARD);
         submit=(Button)findViewById(R.id.Submit);
-
 
         firebaseDatabase=FirebaseDatabase.getInstance();
         submit.setOnClickListener(new View.OnClickListener() {
@@ -179,50 +226,9 @@ public class MainActivity extends AppCompatActivity {
                                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText)
-                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                                    @Override
-                                                    public void onSuccess(AuthResult authResult) {
-                                                        Log.e(TAG, "Creating User ");
-                                                        Log.e(TAG, "Creating User Successful");
-                                                        User user = new User(emailText
-                                                                , ""
-                                                                , firebaseAuth.getCurrentUser().getUid()
-                                                                , ""
-                                                                , ""
-                                                                , "true"
-                                                                , passwordText
-                                                                , phoneText);
-                                                        firebaseDatabase.
-                                                                getReference("Users").
-                                                                child(firebaseAuth.getCurrentUser().getUid()).
-                                                                setValue(user)
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful()) {
-                                                                            Log.e(TAG, "User Added to Database");
-                                                                            Log.e(TAG, "Starting Acitvity");
-                                                                            startActivity(new Intent(MainActivity.this, Registration.class));
-                                                                        }
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.e(TAG, "Failed to add User to database");
-                                                                        Log.e(TAG, e.toString());
-                                                                    }
-                                                                });
-                                                    }
-
-
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.e(TAG, e.toString());
-                                            }
-                                        });
+                                        Intent f=new Intent(MainActivity.this,Registration.class);
+                                        f.putExtra("PhoneAuth",false);
+                                        startActivity(f);
                                     }
                                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
@@ -238,17 +244,11 @@ public class MainActivity extends AppCompatActivity {
                         email.setError("Enter a Valid Email Address");
                     }
                 }
-                else
-                {
-                    if(checkPhonePattern(phoneText))
-                    {
+                else{
+                    if(checkPhonePattern(phoneText)){
                         signInWithPhone(phoneText);
-
                     }
                 }
-
-
-
             }
         });
         fbLogin.setReadPermissions(Arrays.asList(
@@ -265,11 +265,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCancel() {
                 Log.e(TAG,"Cancelled");
             }
-
             @Override
             public void onError(FacebookException error) {
                 Log.e(TAG,error.toString());
-
             }
         });
         googleSignin.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +275,44 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.e(TAG,"Signing with Google");
                 signInWithGoogle();
+            }
+        });
+    }
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+        firebaseAuth.signInWithCredential(phoneAuthCredential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            DatabaseReference ref = firebaseDatabase.getReference("Users")
+                                    .child(firebaseAuth.getCurrentUser().getUid())
+                                    .child("email");
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists()) {
+                                        Intent i = new Intent(MainActivity.this, Registration.class);
+                                        i.putExtra("Mobile", phoneText);
+                                        i.putExtra("PhoneAuth", true);
+                                        startActivity(i);
+                                    } else {
+                                        startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.e(TAG, databaseError.toString());
+                                }
+                            });
+                        }
+                        else
+                            Log.e(TAG,"TaskFailed");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,e.toString());
             }
         });
     }
@@ -293,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
     public void signInWithGoogle()
     {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -339,12 +374,26 @@ public class MainActivity extends AppCompatActivity {
                                         child(firebaseAuth.getCurrentUser().getUid()).
                                         setValue(user);
                             }
+                            DatabaseReference edf=firebaseDatabase.getReference("ClassDetails")
+                                    .child(firebaseAuth.getCurrentUser().getUid());
+                            edf.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        Log.e(TAG,"Already added class Details");
+                                    }
+                                    else
+                                        pushClassDetails(firebaseAuth.getCurrentUser().getUid());
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
                             Log.e(TAG,"Starting Activity");
                             startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
                             Log.e(TAG,"Facebook dialog");
                             shareDialog.show(shareLinkContent);
                         } else {
-
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -376,6 +425,21 @@ public class MainActivity extends AppCompatActivity {
                                     .getReference("Users")
                                     .child(firebaseAuth.getCurrentUser().getUid())
                                     .setValue(user);
+                            DatabaseReference edf=firebaseDatabase.getReference("ClassDetails")
+                                    .child(firebaseAuth.getCurrentUser().getUid());
+                            edf.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        Log.e(TAG,"Already added class Details");
+                                    }
+                                    else
+                                        pushClassDetails(firebaseAuth.getCurrentUser().getUid());
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
                             startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
                             Log.e(TAG,"opening plushare");
                             Intent shareIntent = new PlusShare.Builder(getApplicationContext())
@@ -410,5 +474,16 @@ public class MainActivity extends AppCompatActivity {
                 TimeUnit.SECONDS,   // Unit of timeout
                 this,               // Activity (for callback binding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
+    }
+    public void pushClassDetails(String id)
+    {
+        ArrayList<ClassDetails> list=new ArrayList<>();
+        for(int i=0;i<12;i++)
+        {
+            list.add(new ClassDetails());
+        }
+        firebaseDatabase.getReference("ClassDetails")
+                .child(id).setValue(list);
+
     }
 }

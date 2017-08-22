@@ -37,7 +37,6 @@ public class AnotherActivity extends AppCompatActivity {
         ref=database.getReference("Videos")
                 .child(className)
                 .child("group");
-
         adapter=new FirebaseRecyclerAdapter<video, videoHolder>(video.class,
                 R.layout.video_item,
                 videoHolder.class,
@@ -72,7 +71,6 @@ public class AnotherActivity extends AppCompatActivity {
 
             }
         };
-
         videoRecycler.setAdapter(adapter);
     }
 }

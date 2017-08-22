@@ -59,11 +59,9 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
         super();
     }
-
     public boolean isChanged() {
         return isChanged;
     }
-
     public void setChanged(boolean changed) {
         isChanged = changed;
     }
@@ -77,7 +75,6 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,18 +88,13 @@ public class ProfileFragment extends Fragment {
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user.getFullName().equals(s.toString().trim()))
-                {
+                if(!user.getFullName().equals(s.toString().trim())) {
                     isChanged=true;
                     user.setFullName(s.toString());
                 }
@@ -111,18 +103,13 @@ public class ProfileFragment extends Fragment {
         birthDate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user.getBirthDate().equals(s.toString().trim()))
-                {
+                if(!user.getBirthDate().equals(s.toString().trim())) {
                     isChanged=true;
                     user.setBirthDate(s.toString());
                 }
@@ -131,14 +118,17 @@ public class ProfileFragment extends Fragment {
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if(user.getIsMale().equals("true") && group.getCheckedRadioButtonId()==R.id.male)
-                {
-
+                if(user.getIsMale().equals("false") && group.getCheckedRadioButtonId()==R.id.male) {
+                    male.setChecked(true);
+                    female.setChecked(false);
+                    user.setIsMale("true");
+                    isChanged=true;
                 }
-                else
-                {
+                else if(user.getIsMale().equals("true") && group.getCheckedRadioButtonId()==R.id.female){
                     female.setChecked(true);
                     male.setChecked(false);
+                    user.setIsMale("false");
+                    isChanged=true;
                 }
             }
         });
@@ -184,8 +174,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         user=dataSnapshot.getValue(User.class);
-                        if(getActivity()==null)
-                        {
+                        if(getActivity()==null) {
                             return;
                         }
                         Glide.with(getActivity())
@@ -193,26 +182,18 @@ public class ProfileFragment extends Fragment {
                                 .into(profileImage);
                         name.setText(user.getFullName());
                         birthDate.setText(user.getBirthDate());
-                        if(user.getIsMale().equals("true"))
-                        {
+                        if(user.getIsMale().equals("true")) {
                             male.setChecked(true);
                             female.setChecked(false);
-
                         }
-                        else
-                        {
+                        else {
                             male.setChecked(false);
                             female.setChecked(true);
-
                         }
-
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
-
     }
 }

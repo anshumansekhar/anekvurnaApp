@@ -32,11 +32,9 @@ public class AccountFragment extends Fragment {
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
 
     boolean isChanged=false;
-
     public boolean isChanged() {
         return isChanged;
     }
-
     public void setChanged(boolean changed) {
         isChanged = changed;
     }
@@ -76,20 +74,15 @@ public class AccountFragment extends Fragment {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if(user!=null)
@@ -97,20 +90,15 @@ public class AccountFragment extends Fragment {
                     isChanged=true;
                     user.setEmail(s.toString());
                 }
-
             }
         });
         password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if(user!=null)
@@ -118,27 +106,21 @@ public class AccountFragment extends Fragment {
                     isChanged = true;
                     user.setPassword(s.toString());
                 }
-
             }
         });
         mobileNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if(user!=null)
                 if(!user.getMobileNumber().equals(s.toString().trim())){
                     isChanged=true;
                     user.setMobileNumber(s.toString());
-
                 }
             }
         });
@@ -161,8 +143,6 @@ public class AccountFragment extends Fragment {
                                 dialog.cancel();
                             }
                         });
-
-
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
             @Override

@@ -15,7 +15,6 @@ public class ClassObject {
 
     public ClassObject() {
     }
-
     public ClassObject(String schoolName, String classnum, String percentage, String subjectName, String subjectMarks) {
         this.schoolName = schoolName;
         this.classnum = classnum;

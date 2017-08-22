@@ -49,13 +49,13 @@ public class EducationFragment extends Fragment {
     EditText schoolName;
     TextView percentage;
     RecyclerView subjects;
-    Button addSubject;
+    //Button addSubject;
     Button save;
 
     ArrayList<subject> list=new ArrayList<>();
 
-    Float marks = new Float(0);
-    Float totalmarks = new Float(0);
+    Float marks = Float.valueOf(0);
+    Float totalmarks = Float.valueOf(0);
 
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
 
@@ -67,6 +67,7 @@ public class EducationFragment extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     DatabaseReference ref;
+    DatabaseReference dref;
     DatabaseReference subjectsRef;
     String[] classes;
 
@@ -82,7 +83,7 @@ public class EducationFragment extends Fragment {
         schoolName = (EditText) view.findViewById(R.id.schoolnameEducation);
         percentage = (TextView) view.findViewById(R.id.percentageEducation);
         subjects = (RecyclerView) view.findViewById(R.id.subjectRecyclerEducation);
-        addSubject = (Button) view.findViewById(R.id.addSubject);
+//        addSubject = (Button) view.findViewById(R.id.addSubject);
         save=(Button)view.findViewById(R.id.save);
         subjects.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, android.R.layout.simple_spinner_item);
@@ -102,7 +103,6 @@ public class EducationFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveChanges();
-
                         }
                     }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
                         @Override
@@ -113,14 +113,12 @@ public class EducationFragment extends Fragment {
                     AlertDialog dialog=builder.create();
                     dialog.show();
                 }
-                className = "" + (position + 1);
+                className = "" + position ;
                 if(!className.equals("-1"))
                     setUp(className);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -129,19 +127,18 @@ public class EducationFragment extends Fragment {
                 saveChanges();
             }
         });
-        addSubject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                database.getReference("ClassDetails")
-                        .child(auth.getCurrentUser().getUid())
-                        .child(className)
-                        .child("Subjects")
-                        .push()
-                        .setValue(new subject("Subject", "", ""));
-            }
-        });
+//        addSubject.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                database.getReference("ClassDetails")
+//                        .child(auth.getCurrentUser().getUid())
+//                        .child(className)
+//                        .child("Subjects")
+//                        .push()
+//                        .setValue(new subject("Subject", "", ""));
+//            }
+//        });
         return view;
-
     }
 
     public void setUp(final String classN) {
@@ -152,41 +149,37 @@ public class EducationFragment extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
                     SchoolName = dataSnapshot.getValue().toString();
                     schoolName.setText(SchoolName);
-                } else {
-                    database.getReference("ClassDetails")
-                            .child(auth.getCurrentUser().getUid())
-                            .child(classN)
-                            .child("SchoolName")
-                            .setValue("Enter");
-                }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+            }
+        });
+        dref = database.getReference("ClassDetails").child(auth.getCurrentUser().getUid())
+                .child(classN)
+                .child("percentage");
+        dref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+              percentage.setText("Percentage: "+dataSnapshot.getValue().toString());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
         schoolName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-                if(!SchoolName.equals(s.toString().trim()))
-                {
+                if(!SchoolName.equals(s.toString().trim())) {
                     isChanged=true;
                 }
-
             }
         });
         subjectsRef = database.getReference("ClassDetails").child(auth.getCurrentUser().getUid())
@@ -202,94 +195,75 @@ public class EducationFragment extends Fragment {
                 viewHolder.subjectName.setText(model.getSubName());
                 viewHolder.totalMArks.setText(model.getTotalMarks());
                 viewHolder.subjectMarks.setText(model.getSubMarks());
-                if (!model.getSubMarks().equals("") && !model.getTotalMarks().equals("")) {
-                    marks = marks + Float.valueOf(model.getSubMarks());
-                    totalmarks = totalmarks + Float.valueOf(model.getTotalMarks());
-                    Float percentagenm = (marks / totalmarks) * 100;
-                    percentage.setText("Percentage" + "  " + percentagenm);
-                }
-
-                viewHolder.subjectName.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if(!list.get(position).getSubName().equals(s.toString().trim())) {
-                            isChanged=true;
-                            list.get(position).setSubName(s.toString());
-                        }
-
-                    }
-                });
+//                viewHolder.subjectName.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                    @Override
+//                    public void afterTextChanged(Editable s) {
+//                        if(!list.get(position).getSubName().equals(s.toString().trim())) {
+//                            isChanged=true;
+//                            list.get(position).setSubName(s.toString());
+//                        }
+//                    }
+//                });
                 viewHolder.totalMArks.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                     }
-
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!list.get(position).getTotalMarks().equals(s.toString().trim())) {
                             isChanged=true;
                             list.get(position).setTotalMarks(s.toString());
                         }
-
                     }
                 });
                 viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                     }
-
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!list.get(position).getSubMarks().equals(s.toString().trim())) {
                             isChanged=true;
                             list.get(position).setSubMarks(s.toString());
                         }
-
                     }
                 });
-
             }
         };
         subjects.setAdapter(recyclerAdapter);
     }
-
-    public boolean isChanged() {
-        return isChanged;
-    }
-
-    public void setChanged(boolean changed) {
-        isChanged = changed;
-    }
-
-    public void saveChanges()
-    {
+    public void saveChanges() {
+        Float percentage=Float.valueOf(0);
+        for(subject e:list)
+        {
+            totalmarks=totalmarks+Float.valueOf(e.getTotalMarks());
+            marks=marks+Float.valueOf(e.getSubMarks());
+        }
+        percentage=(marks/totalmarks)*100;
         database.getReference("ClassDetails")
                 .child(auth.getCurrentUser().getUid())
                 .child(className)
                 .child("SchoolName")
                 .setValue(schoolName.getText().toString());
+        isChanged=false;
+        database.getReference("ClassDetails")
+                .child(auth.getCurrentUser().getUid())
+                .child(className)
+                .child("percentage")
+                .setValue(""+percentage);
+        isChanged=false;
         database.getReference("ClassDetails")
                 .child(auth.getCurrentUser().getUid())
                 .child(className)
