@@ -5,40 +5,40 @@ package com.example.anshuman_hp.internship;
  */
 
 public class subject {
-    String subName;
-    String subMarks;
-    String totalMarks;
+    float subMarks;
+    float totalMarks;
+    String subjectName;
 
     public subject() {
     }
 
-    public subject(String subName, String subMarks, String totalMarks) {
-        this.subName = subName;
+    public subject(float subMarks, float totalMarks, String subjectName) {
         this.subMarks = subMarks;
         this.totalMarks = totalMarks;
+        this.subjectName = subjectName;
     }
 
-    public String getSubName() {
-        return subName;
+    public String getSubjectName() {
+        return subjectName;
     }
 
-    public void setSubName(String subName) {
-        this.subName = subName;
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 
-    public String getSubMarks() {
+    public float getSubMarks() {
         return subMarks;
     }
 
-    public void setSubMarks(String subMarks) {
+    public void setSubMarks(float subMarks) {
         this.subMarks = subMarks;
     }
 
-    public String getTotalMarks() {
+    public float getTotalMarks() {
         return totalMarks;
     }
 
-    public void setTotalMarks(String totalMarks) {
+    public void setTotalMarks(float totalMarks) {
         this.totalMarks = totalMarks;
     }
 }

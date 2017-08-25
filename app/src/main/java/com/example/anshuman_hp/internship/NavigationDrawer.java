@@ -98,9 +98,7 @@ public class NavigationDrawer extends AppCompatActivity
                         break;
                     case R.id.Hobbies:
                         HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
-                        floatingActionButton.show();
-                        floatingActionButton.setOnClickListener(hobbiesFragment.listener());
-                        floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+                        floatingActionButton.hide();
                         selectedFragment=hobbiesFragment;
                         actionBar.setTitle("Hobbies");
                         break;
@@ -201,33 +199,9 @@ public class NavigationDrawer extends AppCompatActivity
         }
         else if(id==R.id.videos)
         {
-            final Intent i=new Intent(NavigationDrawer.this,AnotherActivity.class);
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
-            builder.setTitle("Select a Class");
-            final String[] classes=getResources().getStringArray(R.array.Class);
-            builder.setSingleChoiceItems(classes,0, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    selected=which;
-
-                }
-            });
-            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                  i.putExtra("SelectedClass",classes[selected]);
-                    startActivity(i);
-                }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-
-                }
-            }).show();
-
+            Intent i=new Intent(NavigationDrawer.this,AnotherActivity.class);
+            startActivity(i);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

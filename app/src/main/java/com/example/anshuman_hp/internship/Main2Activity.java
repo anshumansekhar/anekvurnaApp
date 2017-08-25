@@ -16,7 +16,7 @@ import java.net.URL;
 
 public class Main2Activity extends AppCompatActivity {
     ImageView notificationImage;
-    Bitmap bmp;
+    String photoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,32 +27,14 @@ public class Main2Activity extends AppCompatActivity {
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
                 if (key.equals("image")) {
-                    bmp=getBitmapfromUrl(value);
+                    photoUrl=value;
 
                 }
             }
         }
-
         notificationImage=(ImageView)findViewById(R.id.notificationImage);
         Glide.with(getApplicationContext())
-                .load(bmp)
+                .load(photoUrl)
                 .into(notificationImage);
-    }
-    public Bitmap getBitmapfromUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-
-        }
     }
 }

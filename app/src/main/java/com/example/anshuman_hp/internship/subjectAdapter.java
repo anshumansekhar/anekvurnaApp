@@ -29,8 +29,9 @@ public class subjectAdapter extends RecyclerView.Adapter<subjectHolder> {
 
     @Override
     public void onBindViewHolder(subjectHolder holder, int position) {
-//        holder.subject.setText(list.get(position).getSubName()+"       "+list.get(position).getSubMarks());
-
+        holder.subjectMarks.setText(""+list.get(position).getSubMarks());
+        holder.subjectName.setText(""+list.get(position).getSubjectName());
+        holder.totalMArks.setText(""+list.get(position).getTotalMarks());
     }
 
     @Override

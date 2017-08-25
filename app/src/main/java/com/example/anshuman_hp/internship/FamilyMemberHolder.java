@@ -14,11 +14,17 @@ public class FamilyMemberHolder extends RecyclerView.ViewHolder {
     EditText memberName;
     ImageView memPhoto;
     Spinner memRelation;
+    EditText phoneNumber;
+    EditText emailId;
     public FamilyMemberHolder(View itemView) {
         super(itemView);
         memberName=(EditText)itemView.findViewById(R.id.familyMemberName);
-        memPhoto=(ImageView)itemView.findViewById(R.id.familyMemberProfileImage);
+        memPhoto=(ImageView)itemView.findViewById(R.id.photoFamily);
         memRelation=(Spinner)itemView.findViewById(R.id.familyMemberRelation);
+        phoneNumber=(EditText)itemView.findViewById(R.id.PhoneNumberFamily);
+        emailId=(EditText)itemView.findViewById(R.id.EmailIdFamily);
+
 
     }
+
 }

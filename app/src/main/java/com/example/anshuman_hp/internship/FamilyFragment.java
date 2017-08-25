@@ -35,7 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class FamilyFragment extends Fragment {
-    ImageView familyBackgroundImage;
+    //ImageView familyBackgroundImage;
     RecyclerView familyMembers;
     String[] relations;
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -47,7 +47,6 @@ public class FamilyFragment extends Fragment {
         FamilyFragment fragment = new FamilyFragment();
         return fragment;
     }
-
     public FamilyFragment() {
         super();
     }
@@ -55,14 +54,14 @@ public class FamilyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.family_details, container, false);
-        familyBackgroundImage = (ImageView) v.findViewById(R.id.familyBackgroungImage);
+        final View v = inflater.inflate(R.layout.family_details, container, false);
+        //familyBackgroundImage = (ImageView) v.findViewById(R.id.familyBackgroungImage);
         familyMembers = (RecyclerView) v.findViewById(R.id.familyMembersrecyclerView);
         relations = getResources().getStringArray(R.array.Relation);
         relationsSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Relation, android.R.layout.simple_spinner_dropdown_item);
         relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         familyMembers.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        DatabaseReference ref = database.getReference("Family").child(auth.getCurrentUser().getUid());
+        DatabaseReference ref = database.getReference(auth.getCurrentUser().getUid()).child("Family");
         adapter = new FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder>
                 (FamilyMember.class,
                         R.layout.family_member,
@@ -73,10 +72,16 @@ public class FamilyFragment extends Fragment {
                 viewHolder.memberName.setText(model.getMemberName());
                 viewHolder.memRelation.setAdapter(relationsSpinnerAdapter);
                 viewHolder.memRelation.setSelection(Integer.valueOf(model.getMemberRelation()));
+                viewHolder.emailId.setText(model.getEmail());
+                viewHolder.phoneNumber.setText(model.getPhoneNumber());
                 Glide.with(getActivity().getApplicationContext())
                         .load(model.getMemberPhotoUrl())
                         .into(viewHolder.memPhoto);
 
+            }
+            @Override
+            public int getItemViewType(int position) {
+                return super.getItemViewType(position);
             }
         };
         familyMembers.setAdapter(adapter);

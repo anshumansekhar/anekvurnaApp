@@ -4,6 +4,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -12,9 +13,9 @@ import android.widget.TextView;
  */
 
 public class HobbyHolder extends RecyclerView.ViewHolder {
-    TextView hobbyName;
+    CheckBox hobby;
     public HobbyHolder(View itemView) {
         super(itemView);
-        hobbyName=(TextView)itemView.findViewById(R.id.hobbyitem);
+        hobby=(CheckBox)itemView.findViewById(R.id.hobbyItem);
     }
 }

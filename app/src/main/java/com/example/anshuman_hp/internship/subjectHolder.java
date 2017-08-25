@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 public class subjectHolder extends RecyclerView.ViewHolder {
     ConstraintLayout layout;
-    EditText subjectName;
+    TextView subjectName;
     EditText subjectMarks;
     EditText totalMArks;
     public subjectHolder(View itemView) {
         super(itemView);
-        subjectName=(EditText) itemView.findViewById(R.id.subjectNameEdit);
-        subjectMarks=(EditText)itemView.findViewById(R.id.subjectMarkEdit);
-        totalMArks=(EditText)itemView.findViewById(R.id.totalMarksEdit);
+        subjectName=(TextView) itemView.findViewById(R.id.subjectNameEducation);
+        subjectMarks=(EditText)itemView.findViewById(R.id.marksSubject);
+        totalMArks=(EditText)itemView.findViewById(R.id.totalMarksSubject);
         layout=(ConstraintLayout)itemView.findViewById(R.id.layout);
     }
 

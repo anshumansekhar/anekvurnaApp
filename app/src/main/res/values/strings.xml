@@ -30,11 +30,53 @@
         <item>Mother</item>
         <item>Brother</item>
         <item>Sister</item>
+        <item>Daughter</item>
+        <item>Son</item>
         <item>Cousin</item>
         <item>Uncle</item>
         <item>Aunt</item>
-        <item>Daughter</item>
-        <item>Son</item>
+    </string-array>
+    <string-array name="hobbyGroup">
+        <item>Indoor Games</item>
+        <item>Outdoor Games</item>
+        <item>Instruments</item>
+        <item>Dance</item>
+        <item>Music</item>
+        <item>Singing</item>
+    </string-array>
+    <string-array name="Instruments">
+        <item>Piano</item>
+        <item>Guitar</item>
+        <item>Drum</item>
+        <item>Trumpet</item>
+        <item>Tabla</item>
+        <item>Harmonium</item>
+    </string-array>
+    <string-array name="IndoorGames">
+        <item>Chess</item>
+        <item>Table Tennis</item>
+        <item>Badminton</item>
+    </string-array>
+    <string-array name="OutdoorGames">
+        <item>Cricket</item>
+        <item>Football</item>
+        <item>Tennis</item>
+        <item>BasketBall</item>
+        <item>VolleyBall</item>
+    </string-array>
+    <string-array name="Dance">
+        <item>Contempory</item>
+        <item>Classical</item>
+        <item>Salsa</item>
+    </string-array>
+    <string-array name="Music">
+        <item>POP</item>
+        <item>Jazz</item>
+        <item>Classical</item>
+        <item>Bollywood</item>
+    </string-array>
+    <string-array name="singing">
+        <item>Singing</item>
     </string-array>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
@@ -44,4 +86,13 @@
     <string name="Subject_marks"><u><b>Subject Marks\n</b></u></string>
     <string name="classnum">Class-</string>
     <string name="percentage">Percentage-</string>
+    <string name="addHobby">You have Not added any Hobbies\n
+                                <u>Click Here to Add</u>
+    </string>
+
+    <string-array name="videoGroup">
+        <item>Group-1</item>
+        <item>Group-2</item>
+        <item>Group-3</item>
+    </string-array>
 </resources>

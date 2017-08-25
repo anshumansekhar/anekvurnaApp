@@ -1,6 +1,7 @@
 package com.example.anshuman_hp.internship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Anshuman-HP on 21-08-2017.
@@ -14,9 +15,8 @@ public class ClassDetails {
     public ClassDetails() {
         SchoolName = "";
         percentage = "";
-        Subjects.add(new subject("English","",""));
-        Subjects.add(new subject("Maths","",""));
-        Subjects.add(new subject("Computer Science","",""));
-        Subjects.add(new subject("Hindi","",""));
+        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"English"));
+        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Maths"));
+        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Hindi"));
     }
 }

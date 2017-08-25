@@ -5,20 +5,19 @@ package com.example.anshuman_hp.internship;
  */
 
 public class hobby {
-    String hobbyName;
-
+    boolean isCheckedhobby;
     public hobby() {
     }
 
-    public hobby(String hobbyName) {
-        this.hobbyName = hobbyName;
+    public hobby(boolean isCheckedhobby) {
+        this.isCheckedhobby = isCheckedhobby;
     }
 
-    public String getHobbyName() {
-        return hobbyName;
+    public boolean isCheckedhobby() {
+        return isCheckedhobby;
     }
 
-    public void setHobbyName(String hobbyName) {
-        this.hobbyName = hobbyName;
+    public void setCheckedhobby(boolean checkedhobby) {
+        isCheckedhobby = checkedhobby;
     }
 }

@@ -346,13 +346,9 @@ public class MainActivity extends AppCompatActivity {
                             if(currentProfile!=null) {
                                 Log.e(TAG, "sign in successful adding user to database");
                                 User user = new User(""
-                                        , currentProfile.getName()
-                                        , currentProfile.getId()
-                                        , currentProfile.getProfilePictureUri(100, 100).toString()
-                                        , ""
-                                        , "true"
-                                        , ""
-                                        , "");
+                                ,firebaseAuth.getCurrentUser().getUid()
+                                ,""
+                                ,"");
                                 firebaseDatabase.
                                         getReference("Users").
                                         child(firebaseAuth.getCurrentUser().getUid()).
@@ -362,20 +358,25 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 Log.e(TAG, "sign in successful adding user to database");
                                 User user = new User(""
-                                        , ""
-                                        , firebaseAuth.getCurrentUser().getUid()
-                                        , ""
-                                        , ""
-                                        , "true"
-                                        , ""
-                                        , "");
+                                ,firebaseAuth.getCurrentUser().getUid()
+                                ,""
+                                ,"");
                                 firebaseDatabase.
                                         getReference("Users").
                                         child(firebaseAuth.getCurrentUser().getUid()).
                                         setValue(user);
                             }
-                            DatabaseReference edf=firebaseDatabase.getReference("ClassDetails")
-                                    .child(firebaseAuth.getCurrentUser().getUid());
+                            user_profile userProfile=new user_profile(currentProfile.getName()
+                            ,""
+                            ,""
+                            ,"true"
+                            ,""
+                            ,currentProfile.getProfilePictureUri(200,200).toString());
+                            firebaseDatabase.getReference("UserProfile")
+                                    .child(firebaseAuth.getCurrentUser().getUid())
+                                    .setValue(userProfile);
+                            DatabaseReference edf=firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                                    .child("ClassDetails");
                             edf.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -413,20 +414,25 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.e(TAG,"Sign in with google firebase succesful");
-                            User user=new User(acct.getEmail()
-                            ,acct.getDisplayName()
-                            ,acct.getId()
-                            ,acct.getPhotoUrl().toString()
-                            ,""
-                            ,"true"
+                            User user=new User(acct.getEmail().toString()
+                            ,firebaseAuth.getCurrentUser().getUid()
                             ,""
                             ,"");
                             firebaseDatabase
                                     .getReference("Users")
                                     .child(firebaseAuth.getCurrentUser().getUid())
                                     .setValue(user);
-                            DatabaseReference edf=firebaseDatabase.getReference("ClassDetails")
-                                    .child(firebaseAuth.getCurrentUser().getUid());
+                            user_profile userProfile=new user_profile(acct.getDisplayName()
+                            ,""
+                            ,""
+                            ,"true"
+                            ,""
+                            ,acct.getPhotoUrl().toString());
+                            firebaseDatabase.getReference("UserProfile")
+                                    .child(firebaseAuth.getCurrentUser().getUid())
+                                    .setValue(userProfile);
+                            DatabaseReference edf=firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                                    .child("ClassDetails");
                             edf.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -482,8 +488,8 @@ public class MainActivity extends AppCompatActivity {
         {
             list.add(new ClassDetails());
         }
-        firebaseDatabase.getReference("ClassDetails")
-                .child(id).setValue(list);
+        firebaseDatabase.getReference(id)
+                .child("ClassDetails").setValue(list);
 
     }
 }

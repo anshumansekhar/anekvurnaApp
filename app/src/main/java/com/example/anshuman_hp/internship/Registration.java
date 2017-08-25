@@ -146,6 +146,17 @@ public class Registration extends AppCompatActivity {
         });
 
     }
+    public void pushUserProfileDetails()
+    {
+        firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("UserProfile")
+                .setValue(new user_profile(name.getText().toString()
+                ,birthDate.getText().toString()
+                ,""
+                ,ismale
+                ,""
+                ,""));
+    }
     public void createUser()
     {
         if(checkEmailPattern(emailText.getText().toString())) {
@@ -154,6 +165,7 @@ public class Registration extends AppCompatActivity {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             pushUserDetails(makeNewUser(""));
+                            pushUserProfileDetails();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -168,25 +180,19 @@ public class Registration extends AppCompatActivity {
     public User makeNewUser(String mob)
     {
        User d=new User(emailText.getText().toString()
-                ,name.getText().toString()
-                ,firebaseAuth.getCurrentUser().getUid()
-                ,""
-                ,birthDate.getText().toString()
-                ,ismale
-                ,passwordText.getText().toString()
-                ,mob);
+               ,firebaseAuth.getCurrentUser().getUid()
+       ,passwordText.getText().toString()
+       ,mob);
         return  d;
 
     }
     public void pushClassDetails()
     {
         ArrayList<ClassDetails> list=new ArrayList<>();
-        for(int i=0;i<12;i++)
-        {
+        for(int i=0;i<12;i++) {
             list.add(new ClassDetails());
         }
-        firebaseDatabase.getReference("ClassDetails")
-                .child(firebaseAuth.getCurrentUser().getUid()).setValue(list);
-
+        firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("ClassDetails").setValue(list);
     }
 }
