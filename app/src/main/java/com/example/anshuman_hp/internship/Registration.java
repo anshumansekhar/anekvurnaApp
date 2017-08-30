@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.internship;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -25,15 +27,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
  * Created by Anshuman-HP on 20-08-2017.
  */
 
-public class Registration extends AppCompatActivity {
+public class Registration extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     EditText emailText;
     EditText passwordText;
@@ -46,6 +51,13 @@ public class Registration extends AppCompatActivity {
     String email,password;
 
     final String TAG="Registartion";
+
+    String myFormat = "dd/mm/yyyy"; //In which you need put here
+    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+    Calendar myCalendar = Calendar.getInstance();
+
+    DatePickerDialog datePickerDialog;
 
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
@@ -69,6 +81,9 @@ public class Registration extends AppCompatActivity {
         Log.e(TAG,email +""+ password);
 
 
+        datePickerDialog=new DatePickerDialog(Registration.this,this,2000,1,1);
+
+
 
         emailText=(EditText)findViewById(R.id.emailRegister);
         passwordText=(EditText)findViewById(R.id.passwordRegister);
@@ -85,6 +100,13 @@ public class Registration extends AppCompatActivity {
         }
         else
             ismale="false";
+
+        birthDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,5 +235,14 @@ public class Registration extends AppCompatActivity {
                         .setValue(map);
             }
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        myCalendar.set(Calendar.YEAR, year);
+        myCalendar.set(Calendar.MONTH, month);
+        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        birthDate.setText(sdf.format(myCalendar.getTime()));
     }
 }

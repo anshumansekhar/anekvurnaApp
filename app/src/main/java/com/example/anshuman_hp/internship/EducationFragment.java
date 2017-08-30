@@ -47,7 +47,7 @@ public class EducationFragment extends Fragment {
     EditText schoolName;
     TextView percentage;
     RecyclerView subjectsList;
-    Button save;
+    Button save,addnewSubject;
     HashMap<String,subject> map=new HashMap<>();
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
 
@@ -76,6 +76,7 @@ public class EducationFragment extends Fragment {
         percentage = (TextView) view.findViewById(R.id.percentageEducation);
         subjectsList = (RecyclerView) view.findViewById(R.id.subjectRecyclerEducation);
         save=(Button)view.findViewById(R.id.save);
+        addnewSubject=(Button)view.findViewById(R.id.addnewSubject);
         subjectsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -86,26 +87,59 @@ public class EducationFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(!className.equals("-1") && isChanged)
                 {
-                    AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Confirm");
-                    builder.setMessage("You have some unsaved chages!!");
-                    builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            saveChanges();
-                        }
-                    }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    AlertDialog dialog=builder.create();
-                    dialog.show();
+//                    AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+//                    builder.setTitle("Confirm");
+//                    builder.setMessage("You have some unsaved chages!!");
+//                    builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            saveChanges(ref,dref,subjectsRef);
+//                        }
+//                    }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//                    AlertDialog dialog=builder.create();
+//                    dialog.show();
+
                 }
                 className = "" + position ;
-                if(!className.equals("-1"))
-                    setUp(className);
+                if(!className.equals("-1")){
+                    AlertDialog dialog=null;
+                    if(className.equals("10") || className.equals("11"))
+                    {
+                        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+                        builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ref=database.getReference(auth.getCurrentUser().getUid())
+                                        .child("ClassDetails")
+                                        .child(className)
+                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
+                                        .child("SchoolName");
+                                dref=database.getReference(auth.getCurrentUser().getUid())
+                                        .child("ClassDetails")
+                                        .child(className)
+                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
+                                        .child("percentage");
+                                subjectsRef=database.getReference(auth.getCurrentUser().getUid())
+                                        .child("ClassDetails")
+                                        .child(className)
+                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
+                                        .child("Subjects");
+                                setUp(className);
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog=builder.create();
+                        dialog.setCancelable(false);
+                        dialog.show();
+                    }
+                    else
+                        setUp(className);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -114,40 +148,25 @@ public class EducationFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveChanges();
+                saveChanges(ref,dref,subjectsRef);
+            }
+        });
+        addnewSubject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getActivity(), AddNewSubject.class);
+                Log.e("size",""+map.size());
+                i.putExtra("Position",map.size());
+                i.putExtra("Ref",subjectsRef.getRef().toString());
+                startActivity(i);
             }
         });
         return view;
     }
     public void setUp(final String classN) {
         map.clear();
-        if(classN.equals("10") || classN.equals("11"))
-        {
-            AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-            builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ref=database.getReference(auth.getCurrentUser().getUid())
-                            .child("ClassDetails")
-                            .child(classN)
-                            .child(""+which)
-                            .child("SchoolName");
-                    dref=database.getReference(auth.getCurrentUser().getUid())
-                            .child("ClassDetails")
-                            .child(classN)
-                            .child(""+which)
-                            .child("percentage");
-                    subjectsRef=database.getReference(auth.getCurrentUser().getUid())
-                            .child("ClassDetails")
-                            .child(classN)
-                            .child(""+which)
-                            .child("Subjects");
-                }
-            });
-            AlertDialog dialog=builder.create();
-            dialog.show();
-        }
-        else {
+        Log.e("Class",""+classN);
+        if(!classN.equals("10") && !classN.equals("11")) {
             ref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
                     .child(classN)
                     .child("SchoolName");
@@ -191,13 +210,42 @@ public class EducationFragment extends Fragment {
                 }
             }
         });
+        setUpAdapter(subjectsRef);
+    }
+    public void saveChanges(DatabaseReference sref,DatabaseReference pref,DatabaseReference subref) {
+        float percentage=0;
+        float marks = 0;
+        float totalmarks = 0;
+        for(subject e:map.values())
+        {
+            Log.e(e.getSubjectName(),""+e.getSubMarks());
+            totalmarks=totalmarks+ e.getTotalMarks();
+            marks=marks+e.getSubMarks();
+        }
+        percentage=(marks/totalmarks)*100;
+        sref.setValue(schoolName.getText().toString());
+        isChanged=false;
+       pref.setValue(""+percentage);
+        isChanged=false;
+            subref.setValue(map)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            isChanged=false;
+                            return;
+                        }
+                    });
+    }
+    public void setUpAdapter(DatabaseReference subjectReference)
+    {
         recyclerAdapter = new FirebaseRecyclerAdapter<subject, subjectHolder>(subject.class,
                 R.layout.subject_entry
                 , subjectHolder.class
-                , subjectsRef) {
+                , subjectReference) {
             @Override
             protected void populateViewHolder(subjectHolder viewHolder, subject model, final int position) {
                 map.put(""+position,new subject(model.getSubMarks(),model.getTotalMarks(),model.getSubjectName()));
+                Log.e("psotiotion",""+position);
                 viewHolder.subjectName.setText(model.getSubjectName());
                 viewHolder.totalMArks.setText(""+model.getTotalMarks());
                 viewHolder.subjectMarks.setText(""+model.getSubMarks());
@@ -211,10 +259,10 @@ public class EducationFragment extends Fragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!s.toString().equals(""))
-                        if(!(map.get(position).getTotalMarks()==Float.parseFloat(s.toString().trim()))) {
-                            isChanged=true;
-                            map.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
-                        }
+                            if(!(map.get(""+position).getTotalMarks()==Float.parseFloat(s.toString().trim()))) {
+                                isChanged=true;
+                                map.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
+                            }
                     }
                 });
                 viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
@@ -227,66 +275,17 @@ public class EducationFragment extends Fragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!s.toString().equals(""))
-                        if(!(map.get(position).getSubMarks()==Float.parseFloat(s.toString().trim()))) {
-                            isChanged=true;
-                            if(!s.toString().equals("")) {
-                                map.get("" + position).setSubMarks(Float.parseFloat(s.toString()));
+                            if(!(map.get(""+position).getSubMarks()==Float.parseFloat(s.toString().trim()))) {
+                                isChanged=true;
+                                if(!s.toString().equals("")) {
+                                    map.get("" + position).setSubMarks(Float.parseFloat(s.toString()));
+                                }
                             }
-                        }
                     }
                 });
             }
         };
         subjectsList.setAdapter(recyclerAdapter);
-    }
-    public void saveChanges() {
-        float percentage=0;
-        float marks = 0;
-        float totalmarks = 0;
-        for(subject e:map.values())
-        {
-            Log.e(e.getSubjectName(),""+e.getSubMarks());
-            totalmarks=totalmarks+ e.getTotalMarks();
-            marks=marks+e.getSubMarks();
-        }
-        percentage=(marks/totalmarks)*100;
-        database.getReference(auth.getCurrentUser().getUid())
-                .child("ClassDetails")
-                .child(className)
-                .child("SchoolName")
-                .setValue(schoolName.getText().toString());
-        isChanged=false;
-        database.getReference(auth.getCurrentUser().getUid())
-                .child("ClassDetails")
-                .child(className)
-                .child("percentage")
-                .setValue(""+percentage);
-        isChanged=false;
-            database.getReference(auth.getCurrentUser().getUid())
-                    .child("ClassDetails")
-                    .child(className)
-                    .child("Subjects")
-                    .setValue(map)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            isChanged=false;
-                            return;
-                        }
-                    });
-    }
-    public View.OnClickListener listener() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(getActivity(), AddNewSubject.class);
-                i.putExtra("Position",map.size());
-                i.putExtra("Ref",subjectsRef.getRef().toString());
-                startActivity(i);
-            }
-        };
-        return listener;
-
 
     }
 }

@@ -56,7 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Birth Date"
+            android:cursorVisible="false"
             android:inputType="date"
+            android:drawableRight="@drawable/ic_date_range_black_24dp"
             tools:layout_editor_absoluteX="192dp"
             tools:layout_editor_absoluteY="115dp" />
     </android.support.design.widget.TextInputLayout>

@@ -39,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -48,6 +50,7 @@ import java.util.Locale;
  */
 
 public class ProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+    private static final java.lang.String DATE_FORMAT ="dd-MM-yyyy" ;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     ImageView profileImage;
@@ -60,7 +63,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     EditText address;
     String presentClassText;
 
-    String myFormat = "MM/dd/yy"; //In which you need put here
+    String myFormat = "dd/mm/yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
     Calendar myCalendar = Calendar.getInstance();
@@ -184,7 +187,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
             @Override
             public void afterTextChanged(Editable s) {
                 if(!user_profile.getBirthdate().equals(s.toString().trim())) {
-                    isChanged=true;
                     user_profile.setBirthdate(s.toString());
                 }
             }
@@ -236,8 +238,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, int which) {
-                database.getReference("UserProfile")
-                        .child(firebaseAuth.getCurrentUser().getUid())
+                database.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("UserProfile")
                         .setValue(user_profile)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -261,12 +263,16 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-        myCalendar.set(Calendar.YEAR, year);
-        myCalendar.set(Calendar.MONTH, month);
-        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        birthDate.setText(sdf.format(myCalendar.getTime()));
+        myCalendar.setLenient(false);
+        try {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            birthDate.setText(sdf.format(myCalendar.getTime()));
+        }catch (Exception e)
+        {
+            birthDate.setError("Enter a Valid Date");
+        }
 
     }
 }

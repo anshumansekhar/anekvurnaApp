@@ -77,10 +77,16 @@
                 android:layout_height="200dp"
                 android:descendantFocusability="beforeDescendants"></android.support.v7.widget.RecyclerView>
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="end"
     android:weightSum="2">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addnewSubject"
+        style="@android:style/DeviceDefault.ButtonBar"
+        android:layout_weight="1"
+        android:text="Add a Subject"/>
     <Button
         android:id="@+id/save"
         style="@android:style/DeviceDefault.ButtonBar"
@@ -89,10 +95,7 @@
         android:layout_gravity="end"
         android:layout_weight="1"
         android:text="SAVE" />
-
-
 </LinearLayout>
-
             <TextView
                 android:id="@+id/percentageEducation"
                 android:layout_width="match_parent"

@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -92,18 +93,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                if (key.equals("AnotherActivity") && value.equals("True")) {
-                    Intent intent = new Intent(this, AnotherActivity.class);
-                    intent.putExtra("value", value);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        }
         //subscribeToPushService();
         if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
@@ -134,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
                         .setHashtag(getResources().getString(R.string.app_name))
                         .build())
                 .build();
-        shareDialog = new ShareDialog(this);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -261,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Log.e("dv",loginResult.getAccessToken().toString());
                 Log.d("facebook:onSuccess:", loginResult.toString());
                 Profile currentFbProfile = Profile.getCurrentProfile();
                 handleFacebookAccessToken(loginResult.getAccessToken(), currentFbProfile);
@@ -336,22 +325,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            firebaseDatabase.getReference("UserProfile")
-                                    .child(firebaseAuth.getCurrentUser().getUid())
+                            firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                                    .child("UserProfile")
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.exists()) {
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
                                             } else {
-                                                user_profile userProfile = new user_profile(currentProfile.getName()
+                                                user_profile userProfile = new user_profile(Profile.getCurrentProfile().getName()
                                                         , ""
                                                         , ""
                                                         , "true"
-                                                        , ""
-                                                        , currentProfile.getProfilePictureUri(200, 200).toString());
-                                                firebaseDatabase.getReference("UserProfile")
-                                                        .child(firebaseAuth.getCurrentUser().getUid())
+                                                        , "1"
+                                                        , Profile.getCurrentProfile().getProfilePictureUri(200, 200).toString());
+                                                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                                                        .child("UserProfile")
                                                         .setValue(userProfile);
                                                 pushClassDetails(firebaseAuth.getCurrentUser().getUid());
                                                 shareDialog.show(shareLinkContent);
@@ -364,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     });
                         } else {
+                            Log.e("sagd","Task FAiled");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -395,10 +385,10 @@ public class MainActivity extends AppCompatActivity {
                                                         , ""
                                                         , ""
                                                         , "true"
-                                                        , ""
+                                                        , "1"
                                                         , acct.getPhotoUrl().toString());
-                                                firebaseDatabase.getReference("UserProfile")
-                                                        .child(firebaseAuth.getCurrentUser().getUid())
+                                                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                                                        .child("UserProfile")
                                                         .setValue(userProfile);
                                                 pushClassDetails(firebaseAuth.getCurrentUser().getUid());
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
@@ -459,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
                         .child("ClassDetails")
                         .child("11")
                         .setValue(map);
-            } else if (1 == 10) {
+            } else if (i == 10) {
                 HashMap<String, ClassDetails> map = new HashMap<>();
                 map.put("Arts", new ClassDetails());
                 map.put("Commerce", new ClassDetails());

@@ -109,9 +109,7 @@ public class NavigationDrawer extends AppCompatActivity
                         break;
                     case R.id.education:
                         EducationFragment educationFragment=EducationFragment.newInstance();
-                        floatingActionButton.show();
-                        floatingActionButton.setOnClickListener(educationFragment.listener());
-                        floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+                        floatingActionButton.hide();
                         selectedFragment = educationFragment;
                         actionBar.setTitle("Education");
                         break;
@@ -120,9 +118,7 @@ public class NavigationDrawer extends AppCompatActivity
                 Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
                 if(f instanceof EducationFragment)
                 {
-                    if(((EducationFragment)f).isChanged)
-                    {
-                        ((EducationFragment) f).saveChanges();
+                    if(((EducationFragment)f).isChanged) {
                         Log.e("Tag","Show Dialog");
                     }
                 }

@@ -64,7 +64,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@color/cardview_light_background"
-        app:srcCompat="@drawable/ic_favorite_black_24dp" />
+        app:srcCompat="@drawable/imagebuttonselector" />
     <ImageButton
         android:id="@+id/shareVideo"
         android:layout_width="30dp"

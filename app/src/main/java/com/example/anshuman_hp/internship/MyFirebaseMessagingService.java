@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -19,6 +20,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Anshuman-HP on 18-08-2017.
@@ -28,6 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FirebaseMessageService";
     Bitmap bitmap;
+    public static Map<String,String> map=new HashMap<>();
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -38,6 +43,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
+
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
@@ -51,15 +57,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
         String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
 
+        map=remoteMessage.getData();
+
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
-        sendNotification(message, bitmap, TrueOrFlase);
+        sendNotification(message, bitmap, TrueOrFlase,imageUri);
     }
 
-    private void sendNotification(String messageBody, Bitmap image, String TrueOrFalse) {
+    private void sendNotification(String messageBody, Bitmap image, String TrueOrFalse,String imgURL) {
         Intent intent = new Intent(this, Main2Activity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AnotherActivity", TrueOrFalse);
+        intent.putExtra("IMG",imgURL);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
