@@ -29,221 +29,63 @@ import java.util.List;
  */
 
 public class hobbyAdapter extends RecyclerView.Adapter<hobbyAdapter.hobbyHolder> {
-    String[] array;
+    List<Boolean> list;
     Context ctx;
     int ArrayNum;
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-    FirebaseAuth auth=FirebaseAuth.getInstance();
-    SparseBooleanArray booleanArray=new SparseBooleanArray();
-    HashMap<Integer,Boolean> isCheckedArray=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedIndoorGames=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedOutdoorGames=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedDancing=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedSinging=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedInstruments=new HashMap<>();
-    HashMap<Integer,Boolean> isCheckedMusic=new HashMap<>();
+    String[] array;
+    DatabaseReference reference;
 
-    public hobbyAdapter(Context ctx,int arrayNum) {
+    public hobbyAdapter(List<Boolean> list, Context ctx, int arrayNum,DatabaseReference ref) {
+        this.list = list;
         this.ctx = ctx;
-        ArrayNum=arrayNum;
-        getData();
-        switch(ArrayNum){
-            case 1:array=ctx.getResources().getStringArray(R.array.IndoorGames);
-                isCheckedArray=isCheckedIndoorGames;
-                    break;
-            case 2:array=ctx.getResources().getStringArray(R.array.OutdoorGames);
-                isCheckedArray=isCheckedOutdoorGames;
+        ArrayNum = arrayNum;
+        reference=ref;
+        switch (arrayNum)
+        {
+            case 0:array=ctx.getResources().getStringArray(R.array.IndoorGames);
                 break;
-            case 3:array=ctx.getResources().getStringArray(R.array.Instruments);
-                isCheckedArray=isCheckedInstruments;
+            case 1:array=ctx.getResources().getStringArray(R.array.OutdoorGames);
+                break;
+            case 2:array=ctx.getResources().getStringArray(R.array.Instruments);
+                break;
+            case 3:array=ctx.getResources().getStringArray(R.array.Dance);
                 break;
             case 4:array=ctx.getResources().getStringArray(R.array.Music);
-                isCheckedArray=isCheckedMusic;
                 break;
-            case 5:array=ctx.getResources().getStringArray(R.array.Dance);
-                isCheckedArray=isCheckedDancing;
+            case 5:array=ctx.getResources().getStringArray(R.array.singing);
                 break;
-            case 6:array=ctx.getResources().getStringArray(R.array.singing);
-                isCheckedArray=isCheckedSinging;
-                break;
+
         }
     }
-    public void getData() {
-        DatabaseReference indoorGamesRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("IndoorGames");
-        indoorGamesRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedIndoorGames.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            }
+    public hobbyAdapter(Context ctx, int arrayNum, DatabaseReference reference) {
+        this.ctx = ctx;
+        ArrayNum = arrayNum;
+        this.reference = reference;
+        switch (arrayNum)
+        {
+            case 0:array=ctx.getResources().getStringArray(R.array.IndoorGames);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.IndoorGames).length,false));
+                break;
+            case 1:array=ctx.getResources().getStringArray(R.array.OutdoorGames);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.OutdoorGames).length,false));
+                break;
+            case 2:array=ctx.getResources().getStringArray(R.array.Instruments);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.Instruments).length,false));
+                break;
+            case 3:array=ctx.getResources().getStringArray(R.array.Dance);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.Dance).length,false));
+                break;
+            case 4:array=ctx.getResources().getStringArray(R.array.Music);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.Music).length,false));
+                break;
+            case 5:array=ctx.getResources().getStringArray(R.array.singing);
+                list=new ArrayList<Boolean>(Collections.nCopies(ctx.getResources().getStringArray(R.array.singing).length,false));
+                break;
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference outdoorGamesRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("OutdoorGames");
-        indoorGamesRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedOutdoorGames.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference danceRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("Dance");
-        danceRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedDancing.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference musicRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("Music");
-        musicRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedMusic.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference singingRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("IndoorGames");
-        singingRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedSinging.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        DatabaseReference instrumentsRef=database.getReference(auth.getCurrentUser().getUid())
-                .child("Hobbies")
-                .child("Instruments");
-        instrumentsRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(dataSnapshot.getKey(),""+dataSnapshot.getValue());
-                isCheckedInstruments.put(Integer.parseInt(dataSnapshot.getKey()),dataSnapshot.getValue(Boolean.class));
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
     }
+
     @Override
     public hobbyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(ctx).inflate(R.layout.hobby_item,parent,false);
@@ -252,17 +94,14 @@ public class hobbyAdapter extends RecyclerView.Adapter<hobbyAdapter.hobbyHolder>
 
     @Override
     public void onBindViewHolder(hobbyHolder holder, final int position) {
-        getData();
         holder.hobbyItem.setText(array[position]);
-        if(!isCheckedArray.isEmpty()) {
-            holder.hobbyItem.setChecked(isCheckedArray.get(position));
-            holder.hobbyItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    isCheckedArray.put(position, isChecked);
-                }
-            });
-        }
+        holder.hobbyItem.setChecked(list.get(position));
+        holder.hobbyItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                list.set(position,isChecked);
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -275,41 +114,8 @@ public class hobbyAdapter extends RecyclerView.Adapter<hobbyAdapter.hobbyHolder>
             hobbyItem=(CheckBox)itemView.findViewById(R.id.hobbyItem);
         }
     }
-
     public void saveChanges()
     {
-        switch (ArrayNum){
-            case 1:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("IndoorGames")
-                    .setValue(isCheckedIndoorGames);
-                break;
-            case 2:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("OutdoorGames")
-                    .setValue(isCheckedOutdoorGames);
-                break;
-            case 5:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("Dance")
-                    .setValue(isCheckedDancing);
-                break;
-            case 3:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("Instruments")
-                    .setValue(isCheckedInstruments);
-                break;
-            case 4:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("Music")
-                    .setValue(isCheckedMusic);
-                break;
-            case 6:database.getReference(auth.getCurrentUser().getUid())
-                    .child("Hobbies")
-                    .child("Singing")
-                    .setValue(isCheckedSinging);
-                break;
-
-        }
+        reference.setValue(list);
     }
 }

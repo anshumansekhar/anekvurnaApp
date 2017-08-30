@@ -2,6 +2,7 @@ package com.example.anshuman_hp.internship;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
@@ -40,6 +42,7 @@ import java.util.Arrays;
 
 public class NavigationDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final int REQUEST_INVITE =1 ;
     BottomNavigationView bottomNavigationView;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FloatingActionButton floatingActionButton;
@@ -52,6 +55,8 @@ public class NavigationDrawer extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
+
+        RateUs.app_launched(this);
 
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,8 +109,10 @@ public class NavigationDrawer extends AppCompatActivity
                         break;
                     case R.id.education:
                         EducationFragment educationFragment=EducationFragment.newInstance();
+                        floatingActionButton.show();
+                        floatingActionButton.setOnClickListener(educationFragment.listener());
+                        floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
                         selectedFragment = educationFragment;
-                        floatingActionButton.hide();
                         actionBar.setTitle("Education");
                         break;
                 }
@@ -149,6 +156,19 @@ public class NavigationDrawer extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    //Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
     }
 
     @Override
@@ -195,12 +215,18 @@ public class NavigationDrawer extends AppCompatActivity
             shareApplication();
 
         } else if (id == R.id.nav_send) {
-
+            //TODO send app invite request
+            onInviteClicked();
         }
         else if(id==R.id.videos)
         {
             Intent i=new Intent(NavigationDrawer.this,AnotherActivity.class);
             startActivity(i);
+        }
+        else if(id==R.id.rateUs)
+        {
+            SharedPreferences prefs = getSharedPreferences("rateus", 0);
+            RateUs.showRateDialog(NavigationDrawer.this,prefs.edit());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -254,25 +280,10 @@ public class NavigationDrawer extends AppCompatActivity
             e.printStackTrace();
         }
     }
-    public void showDialog()
-    {
-        AlertDialog.Builder builder=new AlertDialog.Builder(NavigationDrawer.this);
-        builder.setTitle("Confirm");
-        builder.setMessage("You have some unsaved chages!!");
-        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-
-            }
-        }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-
-            }
-        });
-        AlertDialog dialog=builder.create();
-        dialog.show();
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder("Invite Your Friends")
+                .setMessage("I am Using This awesome Message")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
     }
 }

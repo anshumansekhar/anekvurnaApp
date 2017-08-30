@@ -11,16 +11,18 @@ public class video {
     String videoDuration;
     String videoUrl;
     String videoID;
+    String ratings;
 
     public video() {
     }
 
-    public video(String videoThumbnailUrl, String videoCaption, String videoDuration, String videoUrl, String videoID) {
+    public video(String videoThumbnailUrl, String videoCaption, String videoDuration, String videoUrl, String videoID, String ratings) {
         this.videoThumbnailUrl = videoThumbnailUrl;
         this.videoCaption = videoCaption;
         this.videoDuration = videoDuration;
         this.videoUrl = videoUrl;
         this.videoID = videoID;
+        this.ratings = ratings;
     }
 
     public String getVideoID() {
@@ -61,5 +63,13 @@ public class video {
 
     public void setVideoDuration(String videoDuration) {
         this.videoDuration = videoDuration;
+    }
+
+    public String getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(String ratings) {
+        this.ratings = ratings;
     }
 }

@@ -91,7 +91,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return bitmap;
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
 

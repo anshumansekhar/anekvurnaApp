@@ -17,6 +17,8 @@ public class videoHolder extends RecyclerView.ViewHolder{
     TextView videoCaption;
     TextView videoDuration;
     ImageButton shareVideo;
+    ImageButton favorites;
+    ImageButton rateTheVideo;
     public videoHolder(View itemView) {
         super(itemView);
         view=(CardView)itemView.findViewById(R.id.videoItemLayout);
@@ -24,5 +26,7 @@ public class videoHolder extends RecyclerView.ViewHolder{
         videoCaption=(TextView)itemView.findViewById(R.id.videoCaption);
         videoDuration=(TextView)itemView.findViewById(R.id.videoDuration);
         shareVideo=(ImageButton)itemView.findViewById(R.id.shareVideo);
+        favorites=(ImageButton)itemView.findViewById(R.id.favorites);
+        rateTheVideo=(ImageButton)itemView.findViewById(R.id.rate);
     }
 }

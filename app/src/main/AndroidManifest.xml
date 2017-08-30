@@ -65,10 +65,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Main2Activity" />
-        <activity android:name=".addFamily"
-            android:theme="@style/AppTheme"
+        <activity
+            android:name=".addFamily"
             android:label="AddFamily"
-            />
+            android:theme="@style/AppTheme" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -84,10 +84,13 @@
         <activity android:name=".AnotherActivity" />
         <activity android:name=".YoutubeActivity" />
         <activity android:name=".Registration" />
-        <activity android:name=".AddHobbyActivityt"></activity>
-        <activity android:name=".fullImageActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity android:name=".AddHobbyActivityt" />
+        <activity
+            android:name=".fullImageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".FavoriteVideosActivity" />
+        <activity android:name=".AddNewSubject" />
+        <activity android:name=".ForgotPasswordActivity"></activity>
     </application>
 
 </manifest>

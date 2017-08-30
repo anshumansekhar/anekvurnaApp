@@ -11,7 +11,6 @@ import android.widget.TextView;
  */
 
 public class subjectHolder extends RecyclerView.ViewHolder {
-    ConstraintLayout layout;
     TextView subjectName;
     EditText subjectMarks;
     EditText totalMArks;
@@ -20,7 +19,5 @@ public class subjectHolder extends RecyclerView.ViewHolder {
         subjectName=(TextView) itemView.findViewById(R.id.subjectNameEducation);
         subjectMarks=(EditText)itemView.findViewById(R.id.marksSubject);
         totalMArks=(EditText)itemView.findViewById(R.id.totalMarksSubject);
-        layout=(ConstraintLayout)itemView.findViewById(R.id.layout);
     }
-
 }

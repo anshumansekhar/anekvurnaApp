@@ -73,17 +73,24 @@ public class addFamily extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage(relation);
-                member=new FamilyMember(name.getText().toString()
-                ,"https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
-                ,relation
-                ,email.getText().toString()
-                ,phoneNumber.getText().toString());
-
-                database.getReference(auth.getCurrentUser().getUid())
-                        .child("Family")
-                        .child(member.getMemberRelation())
-                        .setValue(member);
+                if(MainActivity.checkEmailPattern(email.getText().toString())) {
+                    if(MainActivity.checkPhonePattern(phoneNumber.getText().toString())) {
+                        uploadImage(relation);
+                        member = new FamilyMember(name.getText().toString()
+                                , "https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
+                                , relation
+                                , email.getText().toString()
+                                , phoneNumber.getText().toString());
+                        database.getReference(auth.getCurrentUser().getUid())
+                                .child("Family")
+                                .child(member.getMemberRelation())
+                                .setValue(member);
+                    }
+                    else
+                        phoneNumber.setError("Enter a Valid 10 digit mobile number");
+                }
+                else
+                    email.setError("Enter a Valid email Address");
             }
         });
     }

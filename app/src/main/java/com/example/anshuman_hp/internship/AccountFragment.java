@@ -39,7 +39,6 @@ public class AccountFragment extends Fragment {
         isChanged = changed;
     }
 
-    User user;
 
     EditText email;
     EditText password;
@@ -59,23 +58,13 @@ public class AccountFragment extends Fragment {
         email=(EditText)v.findViewById(R.id.emailaccount);
         password=(EditText)v.findViewById(R.id.passwordaccount);
         mobileNumber=(EditText)v.findViewById(R.id.mobilenumberaccount);
-        database.getReference("Users")
-                .child(firebaseAuth.getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            user = dataSnapshot.getValue(User.class);
-                            email.setText(user.getEmail());
-                            password.setText(user.getPassword());
-                            mobileNumber.setText(user.getMobileNumber());
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+        if(!firebaseAuth.getCurrentUser().getEmail().isEmpty()) {
+            email.setText(firebaseAuth.getCurrentUser().getEmail());
+        }
+        if(!firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty())
+        {
+            mobileNumber.setText(firebaseAuth.getCurrentUser().getPhoneNumber());
+        }
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -85,11 +74,11 @@ public class AccountFragment extends Fragment {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(user!=null)
-                if(!user.getEmail().equals(s.toString().trim())) {
-                    isChanged=true;
-                    user.setEmail(s.toString());
-                }
+//                if(user!=null)
+//                if(!user.getEmail().equals(s.toString().trim())) {
+//                    isChanged=true;
+//                    user.setEmail(s.toString());
+//                }
             }
         });
         password.addTextChangedListener(new TextWatcher() {
@@ -101,11 +90,14 @@ public class AccountFragment extends Fragment {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(user!=null)
-                if(!user.getPassword().equals(s.toString().trim())) {
-                    isChanged = true;
-                    user.setPassword(s.toString());
-                }
+//                if(user!=null)
+//                if(!user.getPassword().equals(s.toString().trim())) {
+//                    isChanged = true;
+//                    if(MainActivity.checkEmailPattern(s.toString()))
+//                        user.setPassword(s.toString());
+//                    else
+//                        password.setError("Enter a Valid Email Address");
+//                }
             }
         });
         mobileNumber.addTextChangedListener(new TextWatcher() {
@@ -117,11 +109,14 @@ public class AccountFragment extends Fragment {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(user!=null)
-                if(!user.getMobileNumber().equals(s.toString().trim())){
-                    isChanged=true;
-                    user.setMobileNumber(s.toString());
-                }
+//                if(user!=null)
+//                if(!user.getMobileNumber().equals(s.toString().trim())){
+//                    isChanged=true;
+//                    if(MainActivity.checkPhonePattern(s.toString()))
+//                        user.setMobileNumber(s.toString());
+//                    else
+//                        mobileNumber.setError("Enter a Valid 10 digit Mobile Number");
+//                }
             }
         });
         return v;
@@ -133,16 +128,16 @@ public class AccountFragment extends Fragment {
         builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, int which) {
-                database.getReference("Users")
-                        .child(firebaseAuth.getCurrentUser().getUid())
-                        .setValue(user)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                isChanged=false;
-                                dialog.cancel();
-                            }
-                        });
+//                database.getReference("Users")
+//                        .child(firebaseAuth.getCurrentUser().getUid())
+//                        .setValue(user)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                isChanged=false;
+//                                dialog.cancel();
+//                            }
+//                        });
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
             @Override

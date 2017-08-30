@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="beforeDescendants"
-    xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -117,7 +113,7 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:minLines="10"
-                android:inputType="textPostalAddress"
+                android:inputType="textPostalAddress|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -142,6 +138,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="BirthDate"
+                    android:drawableRight="@drawable/ic_date_range_black_24dp"
                     android:inputType="date" />
             </android.support.design.widget.TextInputLayout>
 
@@ -167,8 +164,4 @@
                     android:inputType="textPersonName" />
             </android.support.design.widget.TextInputLayout>
         </android.support.constraint.ConstraintLayout>
-
-
-
 </LinearLayout>
-</ScrollView>

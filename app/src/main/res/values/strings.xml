@@ -95,4 +95,27 @@
         <item>Group-2</item>
         <item>Group-3</item>
     </string-array>
+    <string-array name="Stream">
+        <item>Arts</item>
+        <item>Commerce</item>
+        <item>Science</item>
+    </string-array>
+    <string-array name="Subjects">
+        <item>Hindi</item>
+        <item>Maths</item>
+        <item>English</item>
+        <item>Social Science</item>
+        <item>History</item>
+        <item>Political Science</item>
+        <item>Geography</item>
+        <item>Physics</item>
+        <item>Chemistry</item>
+        <item>Computer Science</item>
+        <item>Information Technology</item>
+        <item>Accountancy</item>
+        <item>Business Studies</item>
+        <item>Economics</item>
+        <item>Disaster Management</item>
+        <item>Sanskrit</item>
+    </string-array>
 </resources>

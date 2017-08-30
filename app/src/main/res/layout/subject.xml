@@ -8,5 +8,6 @@
         android:id="@+id/subject"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="TextView" />
+        android:text="TextView"
+        android:background="@color/cardview_dark_background"/>
 </LinearLayout>

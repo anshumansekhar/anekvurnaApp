@@ -1,6 +1,7 @@
 package com.example.anshuman_hp.internship;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
@@ -120,9 +121,43 @@ public class EducationFragment extends Fragment {
     }
     public void setUp(final String classN) {
         map.clear();
-        ref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                .child(classN)
-                .child("SchoolName");
+        if(classN.equals("10") || classN.equals("11"))
+        {
+            AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+            builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ref=database.getReference(auth.getCurrentUser().getUid())
+                            .child("ClassDetails")
+                            .child(classN)
+                            .child(""+which)
+                            .child("SchoolName");
+                    dref=database.getReference(auth.getCurrentUser().getUid())
+                            .child("ClassDetails")
+                            .child(classN)
+                            .child(""+which)
+                            .child("percentage");
+                    subjectsRef=database.getReference(auth.getCurrentUser().getUid())
+                            .child("ClassDetails")
+                            .child(classN)
+                            .child(""+which)
+                            .child("Subjects");
+                }
+            });
+            AlertDialog dialog=builder.create();
+            dialog.show();
+        }
+        else {
+            ref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+                    .child(classN)
+                    .child("SchoolName");
+            dref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+                    .child(classN)
+                    .child("percentage");
+            subjectsRef = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+                    .child(classN)
+                    .child("Subjects");
+        }
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,9 +168,6 @@ public class EducationFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        dref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                .child(classN)
-                .child("percentage");
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -159,9 +191,6 @@ public class EducationFragment extends Fragment {
                 }
             }
         });
-        subjectsRef = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                .child(classN)
-                .child("Subjects");
         recyclerAdapter = new FirebaseRecyclerAdapter<subject, subjectHolder>(subject.class,
                 R.layout.subject_entry
                 , subjectHolder.class
@@ -245,5 +274,19 @@ public class EducationFragment extends Fragment {
                             return;
                         }
                     });
+    }
+    public View.OnClickListener listener() {
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getActivity(), AddNewSubject.class);
+                i.putExtra("Position",map.size());
+                i.putExtra("Ref",subjectsRef.getRef().toString());
+                startActivity(i);
+            }
+        };
+        return listener;
+
+
     }
 }

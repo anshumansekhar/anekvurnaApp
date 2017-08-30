@@ -1,45 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="368dp"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="4"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp">
-            <TextView
-                android:id="@+id/subjectNameEducation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="4"
-                android:text="SubjectName" />
+        android:textAlignment="center"
+        android:id="@+id/subjectNameEducation"
+        android:text="SubjectName"/>
+    <EditText
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/marksSubject"
+        android:text="20"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/"/>
+    <EditText
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/totalMarksSubject"
+        android:text="100"/>
+</LinearLayout>
 
-            <EditText
-                android:id="@+id/marksSubject"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:text="23" />
-
-            <TextView android:text="/"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                />
-
-            <EditText
-                android:id="@+id/totalMarksSubject"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="100" />
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>

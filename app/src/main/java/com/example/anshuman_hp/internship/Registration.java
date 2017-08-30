@@ -22,9 +22,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -41,6 +43,7 @@ public class Registration extends AppCompatActivity {
     ImageView ProfileImage;
     Button register;
     String ismale;
+    String email,password;
 
     final String TAG="Registartion";
 
@@ -60,6 +63,11 @@ public class Registration extends AppCompatActivity {
         Intent j=getIntent();
         mobile=j.getStringExtra("Mobile");
         phoneauth=j.getBooleanExtra("PhoneAuth",false);
+        email=j.getStringExtra("Email");
+        password=j.getStringExtra("Password");
+
+        Log.e(TAG,email +""+ password);
+
 
 
         emailText=(EditText)findViewById(R.id.emailRegister);
@@ -70,16 +78,17 @@ public class Registration extends AppCompatActivity {
         female=(RadioButton)findViewById(R.id.femaleRegister);
         ProfileImage=(ImageView)findViewById(R.id.profileImage);
         register=(Button)findViewById(R.id.registerButton);
-        if(male.isChecked())
-        {
+        emailText.setText(email);
+        passwordText.setText(password);
+        if(male.isChecked()) {
             ismale="true";
         }
         else
             ismale="false";
-
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e(TAG,"Register CLicked");
                 if(phoneauth) {
                     if (checkEmailPattern(emailText.getText().toString())) {
                         authCredential = EmailAuthProvider.getCredential(emailText.getText().toString().trim(), passwordText.getText().toString().trim());
@@ -90,8 +99,10 @@ public class Registration extends AppCompatActivity {
                         emailText.setError("Enter a Valid email Address");
                     }
                 }
-                else
+                else {
+                    Log.e(TAG,"Creating user");
                     createUser();
+                }
             }
         });
 
@@ -111,13 +122,11 @@ public class Registration extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
+                        if(task.isSuccessful()) {
                             Log.d("tag", "linkWithCredential:success");
-                            pushUserDetails(makeNewUser(mobile));
+                            pushUserProfileDetails();
                         }
-                        else
-                        {
+                        else {
                             Log.w("tag", "linkWithCredential:failure", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -125,37 +134,36 @@ public class Registration extends AppCompatActivity {
                     }
                 });
     }
-    public void pushUserDetails(User d)
-    {
-        firebaseDatabase.getReference("Users")
-                .child(firebaseAuth.getCurrentUser().getUid())
-                .setValue(d)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        pushClassDetails();
-                        startActivity(new Intent(Registration.this,NavigationDrawer.class));
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,e.toString());
-
-            }
-        });
-
-    }
     public void pushUserProfileDetails()
     {
+        Log.e(TAG,"Pushing user Details");
         firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .setValue(new user_profile(name.getText().toString()
                 ,birthDate.getText().toString()
                 ,""
                 ,ismale
-                ,""
+                ,"1"
                 ,""));
+        Log.e(TAG,"Pushing class deatils");
+        pushClassDetails();
+        UserProfileChangeRequest.Builder profileChangeRequest=new UserProfileChangeRequest.Builder();
+        profileChangeRequest.setDisplayName(name.getText().toString());
+        //TODO photo uri
+        Log.e(TAG,"Changong user data");
+        firebaseAuth.getCurrentUser().updateProfile(profileChangeRequest.build())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e(TAG,"Updating succesful");
+                        startActivity(new Intent(Registration.this,NavigationDrawer.class));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,e.toString());
+            }
+        });
     }
     public void createUser()
     {
@@ -164,7 +172,7 @@ public class Registration extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            pushUserDetails(makeNewUser(""));
+                            Log.e(TAG,"User Created");
                             pushUserProfileDetails();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -177,22 +185,33 @@ public class Registration extends AppCompatActivity {
         else
             Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT);
     }
-    public User makeNewUser(String mob)
-    {
-       User d=new User(emailText.getText().toString()
-               ,firebaseAuth.getCurrentUser().getUid()
-       ,passwordText.getText().toString()
-       ,mob);
-        return  d;
-
-    }
     public void pushClassDetails()
     {
         ArrayList<ClassDetails> list=new ArrayList<>();
         for(int i=0;i<12;i++) {
-            list.add(new ClassDetails());
+            if (i != 10 && i != 11) {
+                list.add(new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails").setValue(list);
+            } else if (i == 11) {
+                HashMap<String, ClassDetails> map = new HashMap<>();
+                map.put("Arts", new ClassDetails());
+                map.put("Commerce", new ClassDetails());
+                map.put("Science", new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails")
+                        .child("11")
+                        .setValue(map);
+            } else if (1 == 10) {
+                HashMap<String, ClassDetails> map = new HashMap<>();
+                map.put("Arts", new ClassDetails());
+                map.put("Commerce", new ClassDetails());
+                map.put("Science", new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails")
+                        .child("10")
+                        .setValue(map);
+            }
         }
-        firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                .child("ClassDetails").setValue(list);
     }
 }

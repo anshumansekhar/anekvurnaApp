@@ -64,12 +64,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-
 
     EditText email;
     EditText password;
@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
     LoginButton fbLogin;
     SignInButton googleSignin;
     Button submit;
-    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase firebaseDatabase;
-    String emailText,passwordText,phoneText;
+    String emailText, passwordText, phoneText;
     CallbackManager callbackManager;
     ShareLinkContent shareLinkContent;
     ShareDialog shareDialog;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
-    public static final String TAG="MainActivity";
+    public static final String TAG = "MainActivity";
 
     @Override
     protected void onStart() {
@@ -105,10 +105,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         //subscribeToPushService();
-        if(firebaseAuth.getCurrentUser()!=null) {
-            startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
+        if (firebaseAuth.getCurrentUser() != null) {
+            startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
         }
     }
+
     private void subscribeToPushService() {
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         Log.d("AndroidBash", "Subscribed");
@@ -117,29 +118,31 @@ public class MainActivity extends AppCompatActivity {
         Log.d("AndroidBash", token);
         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        callbackManager=CallbackManager.Factory.create();
-        Log.e(TAG,"Building sharelink");
-        shareLinkContent=new ShareLinkContent.Builder()
+        callbackManager = CallbackManager.Factory.create();
+        Log.e(TAG, "Building sharelink");
+        shareLinkContent = new ShareLinkContent.Builder()
                 .setContentUrl(Uri.parse("https://internship2-4d772.firebaseapp.com/"))
                 .setQuote("I am Using this Awesome App")
                 .setShareHashtag(new ShareHashtag.Builder()
                         .setHashtag(getResources().getString(R.string.app_name))
                         .build())
                 .build();
-        shareDialog=new ShareDialog(this);
-        mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        shareDialog = new ShareDialog(this);
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 Log.e(TAG, "onVerificationCompleted:" + phoneAuthCredential);
-                if(phoneAuthCredential!=null)
-                signInWithPhoneAuthCredential(phoneAuthCredential);
+                if (phoneAuthCredential != null)
+                    signInWithPhoneAuthCredential(phoneAuthCredential);
             }
+
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 Log.e(TAG, "onVerificationFailed", e);
@@ -149,20 +152,21 @@ public class MainActivity extends AppCompatActivity {
                     // The SMS quota for the project has been exceeded
                 }
             }
+
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 Log.e(TAG, "onCodeSent:" + s);
-                final String id=s;
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                final String id = s;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Verification");
-                builder.setMessage("Enter the Code sent to "+phoneText);
-                final EditText code=new EditText(getApplicationContext());
+                builder.setMessage("Enter the Code sent to " + phoneText);
+                final EditText code = new EditText(getApplicationContext());
                 builder.setView(code);
                 builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PhoneAuthCredential credential=PhoneAuthProvider.getCredential(id,code.getText().toString().trim());
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, code.getText().toString().trim());
                         signInWithPhoneAuthCredential(credential);
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -171,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-                AlertDialog dialog=builder.create();
+                AlertDialog dialog = builder.create();
                 dialog.setCancelable(false);
                 dialog.show();
             }
@@ -184,29 +188,29 @@ public class MainActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.e(TAG,"connection failed with google client");
+                        Log.e(TAG, "connection failed with google client");
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         setContentView(R.layout.activity_main);
-        email=(EditText)findViewById(R.id.email);
-        password=(EditText)findViewById(R.id.password);
-        phone=(EditText)findViewById(R.id.mobile);
-        fbLogin=(LoginButton)findViewById(R.id.fbloginButton);
-        googleSignin=(SignInButton)findViewById(R.id.googlelogin);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
+        phone = (EditText) findViewById(R.id.mobile);
+        fbLogin = (LoginButton) findViewById(R.id.fbloginButton);
+        googleSignin = (SignInButton) findViewById(R.id.googlelogin);
         googleSignin.setSize(SignInButton.SIZE_STANDARD);
-        submit=(Button)findViewById(R.id.Submit);
+        submit = (Button) findViewById(R.id.Submit);
 
-        firebaseDatabase=FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"Submit Clicked");
-                emailText=email.getText().toString();
-                passwordText=password.getText().toString();
-                phoneText=phone.getText().toString();
-                if(!emailText.isEmpty()) {
+                Log.e(TAG, "Submit Clicked");
+                emailText = email.getText().toString();
+                passwordText = password.getText().toString();
+                phoneText = phone.getText().toString();
+                if (!emailText.isEmpty()) {
                     if (checkEmailPattern(emailText)) {
                         firebaseAuth.signInWithEmailAndPassword(emailText, passwordText)
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -218,16 +222,18 @@ public class MainActivity extends AppCompatActivity {
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Sign In Failed", Toast.LENGTH_SHORT).show();
                                 Log.e(TAG, e.toString());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setTitle("Confirmation");
-                                builder.setMessage("The entered Emailt has not Yet been Registered.Do you want to Register now?");
+                                builder.setMessage("The entered Emaild has not Yet been Registered.Do you want to Register now?");
                                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent f=new Intent(MainActivity.this,Registration.class);
-                                        f.putExtra("PhoneAuth",false);
+                                        Intent f = new Intent(MainActivity.this, Registration.class);
+                                        f.putExtra("PhoneAuth", false);
+                                        f.putExtra("Email", emailText);
+                                        f.putExtra("Password", passwordText);
+                                        Log.e(TAG, "Staring Registration");
                                         startActivity(f);
                                     }
                                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -243,9 +249,8 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!checkEmailPattern(emailText)) {
                         email.setError("Enter a Valid Email Address");
                     }
-                }
-                else{
-                    if(checkPhonePattern(phoneText)){
+                } else {
+                    if (checkPhonePattern(phoneText)) {
                         signInWithPhone(phoneText);
                     }
                 }
@@ -256,156 +261,121 @@ public class MainActivity extends AppCompatActivity {
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d( "facebook:onSuccess:", loginResult.toString());
-                Profile currentFbProfile=Profile.getCurrentProfile();
-                handleFacebookAccessToken(loginResult.getAccessToken(),currentFbProfile);
+                Log.d("facebook:onSuccess:", loginResult.toString());
+                Profile currentFbProfile = Profile.getCurrentProfile();
+                handleFacebookAccessToken(loginResult.getAccessToken(), currentFbProfile);
             }
 
             @Override
             public void onCancel() {
-                Log.e(TAG,"Cancelled");
+                Log.e(TAG, "Cancelled");
             }
+
             @Override
             public void onError(FacebookException error) {
-                Log.e(TAG,error.toString());
+                Log.e(TAG, error.toString());
             }
         });
         googleSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"Signing with Google");
+                Log.e(TAG, "Signing with Google");
                 signInWithGoogle();
             }
         });
     }
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
         firebaseAuth.signInWithCredential(phoneAuthCredential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            DatabaseReference ref = firebaseDatabase.getReference("Users")
-                                    .child(firebaseAuth.getCurrentUser().getUid())
-                                    .child("email");
-                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (!dataSnapshot.exists()) {
-                                        Intent i = new Intent(MainActivity.this, Registration.class);
-                                        i.putExtra("Mobile", phoneText);
-                                        i.putExtra("PhoneAuth", true);
-                                        startActivity(i);
-                                    } else {
-                                        startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.e(TAG, databaseError.toString());
-                                }
-                            });
-                        }
-                        else
-                            Log.e(TAG,"TaskFailed");
+                        if (task.isSuccessful()) {
+                            if (firebaseAuth.getCurrentUser().getEmail().isEmpty()) {
+                                Intent i = new Intent(MainActivity.this, Registration.class);
+                                i.putExtra("Mobile", phoneText);
+                                i.putExtra("PhoneAuth", true);
+                                startActivity(i);
+                            }
+                        } else
+                            Log.e(TAG, "TaskFailed");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,e.toString());
+                Log.e(TAG, e.toString());
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                Log.e(TAG,"Siging with google successful");
+                Log.e(TAG, "Siging with google successful");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                }
             }
         }
-    public void signInWithGoogle()
-    {
+    }
+
+    public void signInWithGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     public void handleFacebookAccessToken(final AccessToken token, final Profile currentProfile) {
         Log.d("handle", token.toString());
-        Log.e(TAG,"Loginning with firrbase from facebook");
+        Log.e(TAG, "Loginning with firrbase from facebook");
         final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if(currentProfile!=null) {
-                                Log.e(TAG, "sign in successful adding user to database");
-                                User user = new User(""
-                                ,firebaseAuth.getCurrentUser().getUid()
-                                ,""
-                                ,"");
-                                firebaseDatabase.
-                                        getReference("Users").
-                                        child(firebaseAuth.getCurrentUser().getUid()).
-                                        setValue(user);
-                            }
-                            else
-                            {
-                                Log.e(TAG, "sign in successful adding user to database");
-                                User user = new User(""
-                                ,firebaseAuth.getCurrentUser().getUid()
-                                ,""
-                                ,"");
-                                firebaseDatabase.
-                                        getReference("Users").
-                                        child(firebaseAuth.getCurrentUser().getUid()).
-                                        setValue(user);
-                            }
-                            user_profile userProfile=new user_profile(currentProfile.getName()
-                            ,""
-                            ,""
-                            ,"true"
-                            ,""
-                            ,currentProfile.getProfilePictureUri(200,200).toString());
                             firebaseDatabase.getReference("UserProfile")
                                     .child(firebaseAuth.getCurrentUser().getUid())
-                                    .setValue(userProfile);
-                            DatabaseReference edf=firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                                    .child("ClassDetails");
-                            edf.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.exists()){
-                                        Log.e(TAG,"Already added class Details");
-                                    }
-                                    else
-                                        pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
-                            Log.e(TAG,"Starting Activity");
-                            startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
-                            Log.e(TAG,"Facebook dialog");
-                            shareDialog.show(shareLinkContent);
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                            } else {
+                                                user_profile userProfile = new user_profile(currentProfile.getName()
+                                                        , ""
+                                                        , ""
+                                                        , "true"
+                                                        , ""
+                                                        , currentProfile.getProfilePictureUri(200, 200).toString());
+                                                firebaseDatabase.getReference("UserProfile")
+                                                        .child(firebaseAuth.getCurrentUser().getUid())
+                                                        .setValue(userProfile);
+                                                pushClassDetails(firebaseAuth.getCurrentUser().getUid());
+                                                shareDialog.show(shareLinkContent);
+                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
                         } else {
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,"Failure not looged in");
-                Log.e(TAG,e.toString());
+                Log.e(TAG, "Failure not looged in");
+                Log.e(TAG, e.toString());
 
             }
         });
     }
+
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
@@ -413,66 +383,57 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.e(TAG,"Sign in with google firebase succesful");
-                            User user=new User(acct.getEmail().toString()
-                            ,firebaseAuth.getCurrentUser().getUid()
-                            ,""
-                            ,"");
-                            firebaseDatabase
-                                    .getReference("Users")
-                                    .child(firebaseAuth.getCurrentUser().getUid())
-                                    .setValue(user);
-                            user_profile userProfile=new user_profile(acct.getDisplayName()
-                            ,""
-                            ,""
-                            ,"true"
-                            ,""
-                            ,acct.getPhotoUrl().toString());
                             firebaseDatabase.getReference("UserProfile")
                                     .child(firebaseAuth.getCurrentUser().getUid())
-                                    .setValue(userProfile);
-                            DatabaseReference edf=firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                                    .child("ClassDetails");
-                            edf.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.exists()){
-                                        Log.e(TAG,"Already added class Details");
-                                    }
-                                    else
-                                        pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
-                            startActivity(new Intent(MainActivity.this,NavigationDrawer.class));
-                            Log.e(TAG,"opening plushare");
-                            Intent shareIntent = new PlusShare.Builder(getApplicationContext())
-                                    .setType("text/plain")
-                                    .setText("I am Using This awesome App"+getResources().getString(R.string.app_name))
-                                    .setContentUrl(Uri.parse("https://internship2-4d772.firebaseapp.com/"))
-                                    .getIntent();
-                            Log.e(TAG,"starting activity");
-                            startActivityForResult(shareIntent, 0);
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                            } else {
+                                                user_profile userProfile = new user_profile(acct.getDisplayName()
+                                                        , ""
+                                                        , ""
+                                                        , "true"
+                                                        , ""
+                                                        , acct.getPhotoUrl().toString());
+                                                firebaseDatabase.getReference("UserProfile")
+                                                        .child(firebaseAuth.getCurrentUser().getUid())
+                                                        .setValue(userProfile);
+                                                pushClassDetails(firebaseAuth.getCurrentUser().getUid());
+                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                                Intent shareIntent = new PlusShare.Builder(getApplicationContext())
+                                                        .setType("text/plain")
+                                                        .setText("I am Using This awesome App" + getResources().getString(R.string.app_name))
+                                                        .setContentUrl(Uri.parse("https://internship2-4d772.firebaseapp.com/"))
+                                                        .getIntent();
+                                                startActivityForResult(shareIntent, 0);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
                         } else {
                         }
                     }
                 });
     }
-    public boolean checkEmailPattern(String email)
-    {
-        String emailRegex="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+
+    public static boolean checkEmailPattern(String email) {
+        String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        boolean value=Pattern.matches(emailRegex,email);
-        return value ;
+        boolean value = Pattern.matches(emailRegex, email);
+        return value;
     }
-    public boolean checkPhonePattern(String Phone)
-    {
-        String phoneRegex="[789]{1}[1234567890]{9}";
-        boolean value1=Pattern.matches(phoneRegex,Phone);
+
+    public static boolean checkPhonePattern(String Phone) {
+        String phoneRegex = "[789]{1}[1234567890]{9}";
+        boolean value1 = Pattern.matches(phoneRegex, Phone);
         return value1;
     }
+
     public void signInWithPhone(String number) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 number,        // Phone number to verify
@@ -481,15 +442,33 @@ public class MainActivity extends AppCompatActivity {
                 this,               // Activity (for callback binding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
     }
-    public void pushClassDetails(String id)
-    {
-        ArrayList<ClassDetails> list=new ArrayList<>();
-        for(int i=0;i<12;i++)
-        {
-            list.add(new ClassDetails());
-        }
-        firebaseDatabase.getReference(id)
-                .child("ClassDetails").setValue(list);
 
+    public void pushClassDetails(String id) {
+        ArrayList<ClassDetails> list = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            if (i != 10 && i != 11) {
+                list.add(new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails").setValue(list);
+            } else if (i == 11) {
+                HashMap<String, ClassDetails> map = new HashMap<>();
+                map.put("Arts", new ClassDetails());
+                map.put("Commerce", new ClassDetails());
+                map.put("Science", new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails")
+                        .child("11")
+                        .setValue(map);
+            } else if (1 == 10) {
+                HashMap<String, ClassDetails> map = new HashMap<>();
+                map.put("Arts", new ClassDetails());
+                map.put("Commerce", new ClassDetails());
+                map.put("Science", new ClassDetails());
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("ClassDetails")
+                        .child("10")
+                        .setValue(map);
+            }
+        }
     }
 }

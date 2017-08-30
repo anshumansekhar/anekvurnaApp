@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.internship;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -37,11 +39,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 /**
  * Created by Anshuman-HP on 12-08-2017.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     ImageView profileImage;
@@ -54,12 +60,20 @@ public class ProfileFragment extends Fragment {
     EditText address;
     String presentClassText;
 
+    String myFormat = "MM/dd/yy"; //In which you need put here
+    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
+
+    Calendar myCalendar = Calendar.getInstance();
+
+    DatePickerDialog datePickerDialog;
+
     boolean isChanged=false;
 
 
     user_profile user_profile;
 
     public static ProfileFragment newInstance() {
+        Log.e("TAG","Creating profile fragment");
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
     }
@@ -73,15 +87,7 @@ public class ProfileFragment extends Fragment {
         isChanged = changed;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-         }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,6 +105,60 @@ public class ProfileFragment extends Fragment {
         ,android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
+
+        datePickerDialog=new DatePickerDialog(getActivity(),this,2000,1,1);
+
+        Log.e("getting","User Profile");
+        database.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("UserProfile")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user_profile=dataSnapshot.getValue(user_profile.class);
+                        Log.e("USER PROFILE",user_profile.toString());
+                        if(getActivity()==null) {
+                            return;
+                        }
+                        Glide.with(getActivity())
+                                .load(user_profile.getPhotourl())
+                                .into(profileImage);
+                        name.setText(user_profile.getName());
+                        birthDate.setText(user_profile.getBirthdate());
+                        if(user_profile.getIsMale().equals("true")) {
+                            male.setChecked(true);
+                            female.setChecked(false);
+                        }
+                        else {
+                            male.setChecked(false);
+                            female.setChecked(true);
+                        }
+                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
+                        address.setText(user_profile.getAddress());
+                        presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                if(Integer.valueOf(user_profile.getPresentClass())!=position) {
+                                    isChanged=true;
+                                    user_profile.setPresentClass(""+position);
+                                }
+                            }
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                            }
+                        });
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+        birthDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
+
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,6 +229,7 @@ public class ProfileFragment extends Fragment {
         return v;
     }
     public void saveChanges() {
+        Log.e("Showing","Dialog");
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle("Confirm");
         builder.setMessage("You have some unsaved chages!!");
@@ -182,6 +243,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 isChanged=false;
+                                Log.e("User","Changed");
                                 dialog.cancel();
                             }
                         });
@@ -192,60 +254,19 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-
             }
         });
         AlertDialog dialog=builder.create();
         dialog.show();
     }
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        database.getReference("UserProfile")
-                .child(firebaseAuth.getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        user_profile=dataSnapshot.getValue(user_profile.class);
-                        if(getActivity()==null) {
-                            return;
-                        }
-                        Glide.with(getActivity())
-                                .load(user_profile.getPhotourl())
-                                .into(profileImage);
-                        name.setText(user_profile.getName());
-                        birthDate.setText(user_profile.getBirthdate());
-                        if(user_profile.getIsMale().equals("true")) {
-                            male.setChecked(true);
-                            female.setChecked(false);
-                        }
-                        else {
-                            male.setChecked(false);
-                            female.setChecked(true);
-                        }
-                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
-                        address.setText(user_profile.getAddress());
-                        presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if(Integer.valueOf(user_profile.getPresentClass())!=position)
-                                {
-                                    isChanged=true;
-                                    user_profile.setPresentClass(""+position);
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                                }
-                            }
+        myCalendar.set(Calendar.YEAR, year);
+        myCalendar.set(Calendar.MONTH, month);
+        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+        birthDate.setText(sdf.format(myCalendar.getTime()));
 
-                            }
-                        });
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
     }
 }

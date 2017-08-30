@@ -1,15 +1,20 @@
 package com.example.anshuman_hp.internship;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -85,6 +90,7 @@ public class AnotherActivity extends AppCompatActivity {
 
             }
         });
+        if(ref!=null)
         adapter=new FirebaseRecyclerAdapter<video, videoHolder>(video.class,
                 R.layout.video_item,
                 videoHolder.class,
@@ -116,9 +122,52 @@ public class AnotherActivity extends AppCompatActivity {
                                 startActivity(i);
                             }
                         });
+                viewHolder.favorites
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
+                            }
+                        });
+                viewHolder.rateTheVideo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder=new AlertDialog.Builder(AnotherActivity.this);
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        RatingBar ratingBar=new RatingBar(AnotherActivity.this);
+                        ratingBar.setNumStars(5);
+                        builder.setView(ratingBar);
+                        AlertDialog dialog=builder.create();
+                        dialog.show();
+                    }
+                });
             }
         };
         videoRecycler.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.videoactivitymenu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.favoritesMenu)
+        {
+            startActivity(new Intent(AnotherActivity.this,MainActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
