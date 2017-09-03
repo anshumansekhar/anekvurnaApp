@@ -14,8 +14,7 @@
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="You have not selected your hobbies, please select your hobbies
-                            Click Here"
+        android:text="@string/addHobby"
         android:visibility="gone"
         android:id="@id/android:empty"/>
 </LinearLayout>

@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,17 +44,17 @@ import java.util.HashMap;
  */
 
 public class EducationFragment extends Fragment {
-    ArrayAdapter adapter;
     Spinner selectClass;
-    EditText schoolName;
-    TextView percentage;
-    RecyclerView subjectsList;
-    Button save,addnewSubject;
+    ViewPager pager;
+    TabLayout tabLayout;
+
+
+
     HashMap<String,subject> map=new HashMap<>();
-    FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
+
 
     String SchoolName;
-    String className="-1";
+    static String className="-1";
 
     boolean isChanged = false;
 
@@ -70,17 +72,22 @@ public class EducationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.new_education_details, container, false);
-        selectClass = (Spinner) view.findViewById(R.id.selectclassEducation);
-        schoolName = (EditText) view.findViewById(R.id.schoolnameEducation);
-        percentage = (TextView) view.findViewById(R.id.percentageEducation);
-        subjectsList = (RecyclerView) view.findViewById(R.id.subjectRecyclerEducation);
-        save=(Button)view.findViewById(R.id.save);
-        addnewSubject=(Button)view.findViewById(R.id.addnewSubject);
-        subjectsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectClass.setAdapter(adapter);
+        final View view = inflater.inflate(R.layout.educationnew, container, false);
+        selectClass = (Spinner) view.findViewById(R.id.selectClassEducation);
+        pager=(ViewPager)view.findViewById(R.id.pager);
+        tabLayout=(TabLayout)view.findViewById(R.id.tabLayout);
+
+        ArrayAdapter classAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.Class,android.R.layout.simple_spinner_item);
+        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectClass.setAdapter(classAdapter);
+
+        pagerAdapter pagerAdapter=new pagerAdapter(getActivity().getSupportFragmentManager());
+        pager.setAdapter(pagerAdapter);
+
+        tabLayout.setupWithViewPager(pager);
+
+
+
         classes = getResources().getStringArray(R.array.Class);
         selectClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -145,22 +152,22 @@ public class EducationFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveChanges(ref,dref,subjectsRef);
-            }
-        });
-        addnewSubject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(getActivity(), AddNewSubject.class);
-                Log.e("size",""+map.size());
-                i.putExtra("Position",map.size());
-                i.putExtra("Ref",subjectsRef.getRef().toString());
-                startActivity(i);
-            }
-        });
+//        save.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                saveChanges(ref,dref,subjectsRef);
+//            }
+//        });
+//        addnewSubject.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i=new Intent(getActivity(), AddNewSubject.class);
+//                Log.e("size",""+map.size());
+//                i.putExtra("Position",map.size());
+//                i.putExtra("Ref",subjectsRef.getRef().toString());
+//                startActivity(i);
+//            }
+//        });
         return view;
     }
     public void setUp(final String classN) {
@@ -181,7 +188,7 @@ public class EducationFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                     SchoolName = dataSnapshot.getValue().toString();
-                    schoolName.setText(SchoolName);
+                   // schoolName.setText(SchoolName);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -190,27 +197,27 @@ public class EducationFragment extends Fragment {
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-              percentage.setText("Percentage: "+dataSnapshot.getValue().toString());
+             // percentage.setText("Percentage: "+dataSnapshot.getValue().toString());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        schoolName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!SchoolName.equals(s.toString().trim())) {
-                    isChanged=true;
-                }
-            }
-        });
-        setUpAdapter(subjectsRef);
+//        schoolName.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if(!SchoolName.equals(s.toString().trim())) {
+//                    isChanged=true;
+//                }
+//            }
+//        });
+        //setUpAdapter(subjectsRef);
     }
     public void saveChanges(DatabaseReference sref,DatabaseReference pref,DatabaseReference subref) {
         float percentage=0;
@@ -223,7 +230,7 @@ public class EducationFragment extends Fragment {
             marks=marks+e.getSubMarks();
         }
         percentage=(marks/totalmarks)*100;
-        sref.setValue(schoolName.getText().toString());
+//        sref.setValue(schoolName.getText().toString());
         isChanged=false;
        pref.setValue(""+percentage);
         isChanged=false;
@@ -235,57 +242,69 @@ public class EducationFragment extends Fragment {
                             return;
                         }
                     });
-    }
-    public void setUpAdapter(DatabaseReference subjectReference)
-    {
-        recyclerAdapter = new FirebaseRecyclerAdapter<subject, subjectHolder>(subject.class,
-                R.layout.subject_entry
-                , subjectHolder.class
-                , subjectReference) {
-            @Override
-            protected void populateViewHolder(subjectHolder viewHolder, subject model, final int position) {
-                map.put(""+position,new subject(model.getSubMarks(),model.getTotalMarks(),model.getSubjectName()));
-                Log.e("psotiotion",""+position);
-                viewHolder.subjectName.setText(model.getSubjectName());
-                viewHolder.totalMArks.setText(""+model.getTotalMarks());
-                viewHolder.subjectMarks.setText(""+model.getSubMarks());
-                viewHolder.totalMArks.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if(!s.toString().equals(""))
-                            if(!(map.get(""+position).getTotalMarks()==Float.parseFloat(s.toString().trim()))) {
-                                isChanged=true;
-                                map.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
-                            }
-                    }
-                });
-                viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if(!s.toString().equals(""))
-                            if(!(map.get(""+position).getSubMarks()==Float.parseFloat(s.toString().trim()))) {
-                                isChanged=true;
-                                if(!s.toString().equals("")) {
-                                    map.get("" + position).setSubMarks(Float.parseFloat(s.toString()));
-                                }
-                            }
-                    }
-                });
-            }
-        };
-        subjectsList.setAdapter(recyclerAdapter);
-
-    }
-}
+    }}
+//    public void setUpAdapter(DatabaseReference subjectReference)
+//    {
+//        recyclerAdapter = new FirebaseRecyclerAdapter<subject, subjectHolder>(subject.class,
+//                R.layout.subject_entry
+//                , subjectHolder.class
+//                , subjectReference) {
+//            @Override
+//            protected void populateViewHolder(final subjectHolder viewHolder, subject model, final int position) {
+//                map.put(""+position,new subject(model.getSubMarks(),model.getTotalMarks(),model.getSubjectName()));
+//                Log.e("psotiotion",""+position);
+//                viewHolder.subjectName.setText(model.getSubjectName());
+//                viewHolder.totalMArks.setText(""+model.getTotalMarks());
+//                viewHolder.subjectMarks.setText(""+model.getSubMarks());
+//                viewHolder.totalMArks.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        viewHolder.totalMArks.setText("");
+//                    }
+//                });
+//                viewHolder.subjectMarks.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        viewHolder.subjectMarks.setText("");
+//                    }
+//                });
+//                viewHolder.totalMArks.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                    @Override
+//                    public void afterTextChanged(Editable s) {
+//                        if(!s.toString().equals(""))
+//                            if(!(map.get(""+position).getTotalMarks()==Float.parseFloat(s.toString().trim()))) {
+//                                isChanged=true;
+//                                map.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
+//                            }
+//                    }
+//                });
+//                viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                    @Override
+//                    public void afterTextChanged(Editable s) {
+//                        if(!s.toString().equals(""))
+//                            if(!(map.get(""+position).getSubMarks()==Float.parseFloat(s.toString().trim()))) {
+//                                isChanged=true;
+//                                if(!s.toString().equals("")) {
+//                                    map.get("" + position).setSubMarks(Float.parseFloat(s.toString()));
+//                                }
+//                            }
+//                    }
+//                });
+//            }
+//        };
+//        subjectsList.setAdapter(recyclerAdapter);
+//
+//    }
+//}

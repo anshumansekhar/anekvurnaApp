@@ -2,6 +2,7 @@ package com.example.anshuman_hp.internship;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,7 @@ public class addFamily extends AppCompatActivity {
     FirebaseAuth auth=FirebaseAuth.getInstance();
     String relation;
     StorageReference ref;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,9 @@ public class addFamily extends AppCompatActivity {
         famMemImage=(ImageView)findViewById(R.id.photoFamily);
         relations=(Spinner)findViewById(R.id.familyMemberRelation);
         add=(Button)findViewById(R.id.addFamilyMem);
+
+        actionBar=getSupportActionBar();
+        actionBar.setTitle("Add Family Member");
 
         ref=FirebaseStorage.getInstance()
                 .getReference()

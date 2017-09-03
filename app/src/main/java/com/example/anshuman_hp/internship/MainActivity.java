@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
+
     public static final String TAG = "MainActivity";
 
     @Override
@@ -335,16 +336,18 @@ public class MainActivity extends AppCompatActivity {
                                             } else {
                                                 user_profile userProfile = new user_profile(Profile.getCurrentProfile().getName()
                                                         , ""
-                                                        , ""
                                                         , "true"
                                                         , "1"
-                                                        , Profile.getCurrentProfile().getProfilePictureUri(200, 200).toString());
+                                                        , Profile.getCurrentProfile().getProfilePictureUri(200, 200).toString()
+                                                        ,""
+                                                        ,""
+                                                        ,"");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
                                                 pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                                shareDialog.show(shareLinkContent);
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+                                                shareDialog.show(shareLinkContent);
                                             }
                                         }
 
@@ -383,10 +386,12 @@ public class MainActivity extends AppCompatActivity {
                                             } else {
                                                 user_profile userProfile = new user_profile(acct.getDisplayName()
                                                         , ""
-                                                        , ""
                                                         , "true"
                                                         , "1"
-                                                        , acct.getPhotoUrl().toString());
+                                                        , acct.getPhotoUrl().toString()
+                                                        , ""
+                                                        ,""
+                                                        ,"");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);

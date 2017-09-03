@@ -7,21 +7,25 @@ package com.example.anshuman_hp.internship;
 public class user_profile {
     String name;
     String birthdate;
-    String address;
     String isMale;
     String presentClass;
     String photourl;
+    String atAddress;
+    String cityAddress;
+    String state;
 
     public user_profile() {
     }
 
-    public user_profile(String name, String birthdate, String address, String isMale, String presentClass, String photourl) {
+    public user_profile(String name, String birthdate, String isMale, String presentClass, String photourl, String atAddress, String cityAddress, String state) {
         this.name = name;
         this.birthdate = birthdate;
-        this.address = address;
         this.isMale = isMale;
         this.presentClass = presentClass;
         this.photourl = photourl;
+        this.atAddress = atAddress;
+        this.cityAddress = cityAddress;
+        this.state = state;
     }
 
     public String getName() {
@@ -40,13 +44,6 @@ public class user_profile {
         this.birthdate = birthdate;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getIsMale() {
         return isMale;
@@ -70,5 +67,29 @@ public class user_profile {
 
     public void setPhotourl(String photourl) {
         this.photourl = photourl;
+    }
+
+    public String getAtAddress() {
+        return atAddress;
+    }
+
+    public void setAtAddress(String atAddress) {
+        this.atAddress = atAddress;
+    }
+
+    public String getCityAddress() {
+        return cityAddress;
+    }
+
+    public void setCityAddress(String cityAddress) {
+        this.cityAddress = cityAddress;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

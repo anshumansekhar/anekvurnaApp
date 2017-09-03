@@ -257,4 +257,10 @@ public class HobbiesFragment extends Fragment {
         });
         return v;
     }
+    View.OnClickListener listener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(getActivity(),AddHobbyActivityt.class));
+        }
+    };
 }

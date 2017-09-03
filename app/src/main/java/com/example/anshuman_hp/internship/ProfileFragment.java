@@ -39,9 +39,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -60,10 +62,12 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     RadioButton male;
     RadioButton female;
     Spinner presentClass;
-    EditText address;
+    EditText Ataddress;
+    EditText city;
+    Spinner stateSpinner;
     String presentClassText;
 
-    String myFormat = "dd/mm/yyyy"; //In which you need put here
+    String myFormat = "dd-MM-yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
     Calendar myCalendar = Calendar.getInstance();
@@ -101,16 +105,18 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         gender=(RadioGroup)v.findViewById(R.id.genderRadioGroup);
         male=(RadioButton)v.findViewById(R.id.male);
         female=(RadioButton)v.findViewById(R.id.female);
-        address=(EditText)v.findViewById(R.id.addressProfile);
+        Ataddress=(EditText)v.findViewById(R.id.AtAddress);
+        city=(EditText)v.findViewById(R.id.CityAddress);
         presentClass=(Spinner)v.findViewById(R.id.presentClassSpinnerProfile);
-        ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity()
-        ,R.array.Class
-        ,android.R.layout.simple_spinner_item);
+        stateSpinner=(Spinner)v.findViewById(R.id.stateSpinner);
+        ArrayAdapter stateAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.states,android.R.layout.simple_spinner_item);
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        stateSpinner.setAdapter(stateAdapter);
+        ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.Class,android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
 
         datePickerDialog=new DatePickerDialog(getActivity(),this,2000,1,1);
-
         Log.e("getting","User Profile");
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
@@ -136,7 +142,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             female.setChecked(true);
                         }
                         presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
-                        address.setText(user_profile.getAddress());
+                        //address.setText(user_profile.getAddress());
                         presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -208,7 +214,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 }
             }
         });
-        address.addTextChangedListener(new TextWatcher() {
+        Ataddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -221,11 +227,45 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user_profile.getAddress().equals(s.toString().trim())) {
-                    isChanged=true;
-                    user_profile.setAddress(s.toString());
+                if(!user_profile.getAtAddress().equals(s.toString().trim())) {
+                    isChanged = true;
+                    user_profile.setAtAddress(s.toString());
                 }
 
+            }
+        });
+        city.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!user_profile.getCityAddress().equals(s.toString().trim())) {
+                    isChanged = true;
+                    user_profile.setCityAddress(s.toString());
+                }
+
+            }
+        });
+        final String[] states=getActivity().getResources().getStringArray(R.array.states);
+        int indexState=Arrays.asList(states).indexOf(user_profile.getState());
+        stateSpinner.setSelection(indexState);
+        stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //TODO get the state and push the profile details
+                isChanged=true;
+                user_profile.setState(states[position]);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         return v;
@@ -260,19 +300,16 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         });
         AlertDialog dialog=builder.create();
         dialog.show();
+        database.getReference("Cities")
+                .child(user_profile.getState())
+                .child(user_profile.getCityAddress())
+                .setValue(user_profile.getCityAddress());
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        myCalendar.setLenient(false);
-        try {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             birthDate.setText(sdf.format(myCalendar.getTime()));
-        }catch (Exception e)
-        {
-            birthDate.setError("Enter a Valid Date");
-        }
-
     }
 }

@@ -9,14 +9,16 @@ import java.util.HashMap;
 
 public class ClassDetails {
     String SchoolName;
+    HashMap<String,ArrayList<subject>> map=new HashMap<>();
     ArrayList<subject> Subjects=new ArrayList<>();
-    String percentage;
 
     public ClassDetails() {
         SchoolName = "";
-        percentage = "";
         Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"English"));
         Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Maths"));
         Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Hindi"));
+        map.put("UnitTest",Subjects);
+
+
     }
 }

@@ -59,15 +59,14 @@ public class RateUs {
         ll.setOrientation(LinearLayout.VERTICAL);
 
         TextView tv = new TextView(mContext);
-        tv.setText("If you like " + TITLE
-                + ", please give us some stars and comment");
+        tv.setText("Give us 5 stars");
         tv.setWidth(240);
         tv.setPadding(4, 0, 4, 10);
         ll.addView(tv);
 
         // First Button
         Button b1 = new Button(mContext);
-        b1.setText("Rate " + TITLE);
+        b1.setText("Rate 5 Stars");
         b1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
@@ -79,7 +78,7 @@ public class RateUs {
 
         // Second Button
         Button b2 = new Button(mContext);
-        b2.setText("Remind me later");
+        b2.setText("Not Right Now");
         b2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
@@ -88,19 +87,6 @@ public class RateUs {
         ll.addView(b2);
 
         // Third Button
-        Button b3 = new Button(mContext);
-        b3.setText("Stop Bugging me");
-        b3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (editor != null) {
-                    editor.putBoolean("dontshowagain", true);
-                    editor.commit();
-                }
-                dialog.dismiss();
-            }
-        });
-        ll.addView(b3);
-
         dialog.setContentView(ll);
 
         // Show Dialog

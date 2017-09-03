@@ -103,7 +103,9 @@ public class NavigationDrawer extends AppCompatActivity
                         break;
                     case R.id.Hobbies:
                         HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
-                        floatingActionButton.hide();
+                        floatingActionButton.show();
+                        floatingActionButton.setOnClickListener(hobbiesFragment.listener);
+                        floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
                         selectedFragment=hobbiesFragment;
                         actionBar.setTitle("Hobbies");
                         break;
@@ -197,7 +199,33 @@ public class NavigationDrawer extends AppCompatActivity
             startActivity(new Intent(NavigationDrawer.this,MainActivity.class));
             return true;
         }
+        else if(id==R.id.save)
+        {
+            Log.e("Clciked","agd");
+            Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+            if(f instanceof EducationFragment)
+            {
 
+                    Log.e("Tag","Show Dialog");
+
+            }
+            else if(f instanceof ProfileFragment)
+            {
+
+                    ((ProfileFragment) f).saveChanges();
+                    Log.e("Tag","Show Dialog");
+
+            }
+            else if(f instanceof AccountFragment)
+            {
+
+
+                    ((AccountFragment) f).saveChanges();
+                    Log.e("Tag","Show Dialog");
+
+            }
+
+        }
         return super.onOptionsItemSelected(item);
     }
 

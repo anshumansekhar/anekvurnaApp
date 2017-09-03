@@ -159,14 +159,17 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     public void pushUserProfileDetails()
     {
         Log.e(TAG,"Pushing user Details");
+        user_profile profile=new user_profile(name.getText().toString(),
+                birthDate.getText().toString()
+        ,ismale
+        ,"1"
+        ,"https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
+        ,""
+        ,""
+        ,"");
         firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
-                .setValue(new user_profile(name.getText().toString()
-                ,birthDate.getText().toString()
-                ,""
-                ,ismale
-                ,"1"
-                ,""));
+                .setValue(profile);
         Log.e(TAG,"Pushing class deatils");
         pushClassDetails();
         UserProfileChangeRequest.Builder profileChangeRequest=new UserProfileChangeRequest.Builder();
