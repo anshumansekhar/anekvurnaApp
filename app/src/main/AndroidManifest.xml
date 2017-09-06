@@ -104,7 +104,8 @@
                     android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddNewSubject" />
+        <activity android:name=".AddNewSubject"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ForgotPasswordActivity"></activity>
     </application>
 

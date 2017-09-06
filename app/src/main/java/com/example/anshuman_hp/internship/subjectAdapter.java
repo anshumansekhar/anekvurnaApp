@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
 
     ArrayList<subject> list=new ArrayList();
-    HashMap<Integer,subject> map=new HashMap<>();
+    HashMap<String,subject> map=new HashMap<>();
 
     DatabaseReference reference;
     int post;
@@ -45,9 +45,7 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     @Override
     public void onBindViewHolder(SubjectNameHolder holder, int position) {
         holder.subjectName.setText(""+list.get(position).getSubjectName());
-        map.put((post+position),list.get(position));
-        Log.e(""+(post+position),list.get(position).getSubjectName());
-
+        map.put(""+(post+position),list.get(position));
     }
 
     @Override
@@ -59,9 +57,9 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     {
         Log.e("Uploading","DAta");
         for (int i=post;i<(post+map.size());i++) {
-            reference.child("" + i)
-                    .setValue(map.get(i));
-            Log.e("Pushing",map.get(i).toString());
+            reference.child(""+i)
+                    .setValue(map.get(""+i));
+            Log.e("Pushing",map.get(""+i).toString());
         }
     }
 

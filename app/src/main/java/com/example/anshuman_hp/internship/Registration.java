@@ -171,7 +171,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
                 .child("UserProfile")
                 .setValue(profile);
         Log.e(TAG,"Pushing class deatils");
-        pushClassDetails();
+        //pushClassDetails();
         UserProfileChangeRequest.Builder profileChangeRequest=new UserProfileChangeRequest.Builder();
         profileChangeRequest.setDisplayName(name.getText().toString());
         //TODO photo uri
@@ -210,35 +210,35 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         else
             Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT);
     }
-    public void pushClassDetails()
-    {
-        ArrayList<ClassDetails> list=new ArrayList<>();
-        for(int i=0;i<12;i++) {
-            if (i != 10 && i != 11) {
-                list.add(new ClassDetails());
-                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                        .child("ClassDetails").setValue(list);
-            } else if (i == 11) {
-                HashMap<String, ClassDetails> map = new HashMap<>();
-                map.put("Arts", new ClassDetails());
-                map.put("Commerce", new ClassDetails());
-                map.put("Science", new ClassDetails());
-                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                        .child("ClassDetails")
-                        .child("11")
-                        .setValue(map);
-            } else if (1 == 10) {
-                HashMap<String, ClassDetails> map = new HashMap<>();
-                map.put("Arts", new ClassDetails());
-                map.put("Commerce", new ClassDetails());
-                map.put("Science", new ClassDetails());
-                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-                        .child("ClassDetails")
-                        .child("10")
-                        .setValue(map);
-            }
-        }
-    }
+//    public void pushClassDetails()
+//    {
+//        ArrayList<ClassDetails> list=new ArrayList<>();
+//        for(int i=0;i<12;i++) {
+//            if (i != 10 && i != 11) {
+//                list.add(new ClassDetails());
+//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+//                        .child("ClassDetails").setValue(list);
+//            } else if (i == 11) {
+//                HashMap<String, ClassDetails> map = new HashMap<>();
+//                map.put("Arts", new ClassDetails());
+//                map.put("Commerce", new ClassDetails());
+//                map.put("Science", new ClassDetails());
+//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+//                        .child("ClassDetails")
+//                        .child("11")
+//                        .setValue(map);
+//            } else if (i== 10) {
+//                HashMap<String, ClassDetails> map = new HashMap<>();
+//                map.put("Arts", new ClassDetails());
+//                map.put("Commerce", new ClassDetails());
+//                map.put("Science", new ClassDetails());
+//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+//                        .child("ClassDetails")
+//                        .child("10")
+//                        .setValue(map);
+//            }
+//        }
+//    }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

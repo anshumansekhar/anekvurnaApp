@@ -18,7 +18,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -40,12 +40,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/subjectRecyclerEducation"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="match_parent"
             android:layout_margin="15dp"
-            android:scrollbars="vertical"
-            android:scrollIndicators="left"
+            android:descendantFocusability="beforeDescendants"
             android:fadeScrollbars="false"
-            android:descendantFocusability="beforeDescendants"></android.support.v7.widget.RecyclerView>
+            android:scrollIndicators="left"
+            android:scrollbars="vertical"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 
     <Spinner
         android:id="@+id/selectTestType"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -96,7 +96,7 @@
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

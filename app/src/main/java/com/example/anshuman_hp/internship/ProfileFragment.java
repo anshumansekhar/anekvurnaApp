@@ -77,6 +77,9 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     boolean isChanged=false;
 
 
+
+
+
     user_profile user_profile;
 
     public static ProfileFragment newInstance() {
@@ -115,6 +118,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.Class,android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
+        final String[] states=getActivity().getResources().getStringArray(R.array.states);
 
         datePickerDialog=new DatePickerDialog(getActivity(),this,2000,1,1);
         Log.e("getting","User Profile");
@@ -124,7 +128,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         user_profile=dataSnapshot.getValue(user_profile.class);
-                        Log.e("USER PROFILE",user_profile.toString());
+                        Log.e("USER_PROFILE",user_profile.toString());
                         if(getActivity()==null) {
                             return;
                         }
@@ -133,6 +137,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                 .into(profileImage);
                         name.setText(user_profile.getName());
                         birthDate.setText(user_profile.getBirthdate());
+                        Ataddress.setText(user_profile.getAtAddress());
+                        city.setText(user_profile.getCityAddress());
                         if(user_profile.getIsMale().equals("true")) {
                             male.setChecked(true);
                             female.setChecked(false);
@@ -142,7 +148,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             female.setChecked(true);
                         }
                         presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
-                        //address.setText(user_profile.getAddress());
+                        int indexState=Arrays.asList(states).indexOf(user_profile.getState());
+                        stateSpinner.setSelection(indexState);
                         presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -254,9 +261,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
             }
         });
-        final String[] states=getActivity().getResources().getStringArray(R.array.states);
-        int indexState=Arrays.asList(states).indexOf(user_profile.getState());
-        stateSpinner.setSelection(indexState);
         stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -289,8 +293,10 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                 dialog.cancel();
                             }
                         });
-
-
+                database.getReference("Cities")
+                        .child(user_profile.getState())
+                        .child(user_profile.getCityAddress())
+                        .setValue(user_profile.getCityAddress());
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
             @Override
@@ -300,10 +306,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         });
         AlertDialog dialog=builder.create();
         dialog.show();
-        database.getReference("Cities")
-                .child(user_profile.getState())
-                .child(user_profile.getCityAddress())
-                .setValue(user_profile.getCityAddress());
+
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

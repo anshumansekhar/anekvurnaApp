@@ -8,17 +8,13 @@ import java.util.HashMap;
  */
 
 public class ClassDetails {
-    String SchoolName;
-    HashMap<String,ArrayList<subject>> map=new HashMap<>();
-    ArrayList<subject> Subjects=new ArrayList<>();
+    HashMap<String,subjects> Tests=new HashMap<>();
 
     public ClassDetails() {
-        SchoolName = "";
-        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"English"));
-        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Maths"));
-        Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Hindi"));
-        map.put("UnitTest",Subjects);
-
-
+        Tests.put("UnitTest",new subjects());
+        Tests.put("CycleTest",new subjects());
+        Tests.put("HalfYearly",new subjects());
+        Tests.put("PreBoard",new subjects());
+        Tests.put("Boards",new subjects());
     }
 }

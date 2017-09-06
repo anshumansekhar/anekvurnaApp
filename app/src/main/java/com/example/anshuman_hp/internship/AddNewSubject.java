@@ -42,12 +42,9 @@ public class AddNewSubject extends AppCompatActivity {
 
         a=getIntent();
         post=a.getIntExtra("Position",0);
-        Log.e("postion",""+post);
         reference=a.getStringExtra("Ref");
-        Log.e("REFEG",reference);
-
         ref= FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
-        Log.e("Ref",ref.toString());
+
 
 
         addSubjectRecycler=(RecyclerView)findViewById(R.id.addSubjectRecycler);
@@ -56,7 +53,7 @@ public class AddNewSubject extends AppCompatActivity {
         submit=(Button)findViewById(R.id.submitAddSubject);
         subjectChoose=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView);
 
-        subjectChoose.setDropDownBackgroundResource(R.color.cardview_dark_background);
+        //subjectChoose.setDropDownBackgroundResource(R.color.cardview_dark_background);
 
         adapter=new subjectAdapter(list,post,ref);
         addSubjectRecycler.setAdapter(adapter);
@@ -76,6 +73,7 @@ public class AddNewSubject extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 adapter.uploadData();
+
             }
         });
     }

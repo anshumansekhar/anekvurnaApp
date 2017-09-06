@@ -48,52 +48,141 @@ public class EducationFragment extends Fragment {
     ViewPager pager;
     TabLayout tabLayout;
 
-
-
-    HashMap<String,subject> map=new HashMap<>();
-
+    HashMap<String, subject> map = new HashMap<>();
 
     String SchoolName;
-    static String className="-1";
+    static String className = "Class-1";
 
     boolean isChanged = false;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    DatabaseReference ref;
-    DatabaseReference dref;
-    DatabaseReference subjectsRef;
+    static DatabaseReference classRef;
     String[] classes;
 
     public static EducationFragment newInstance() {
         EducationFragment fragment = new EducationFragment();
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.educationnew, container, false);
         selectClass = (Spinner) view.findViewById(R.id.selectClassEducation);
-        pager=(ViewPager)view.findViewById(R.id.pager);
-        tabLayout=(TabLayout)view.findViewById(R.id.tabLayout);
+        pager = (ViewPager) view.findViewById(R.id.pager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
 
-        ArrayAdapter classAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.Class,android.R.layout.simple_spinner_item);
+        ArrayAdapter classAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, android.R.layout.simple_spinner_item);
         classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectClass.setAdapter(classAdapter);
 
-        pagerAdapter pagerAdapter=new pagerAdapter(getActivity().getSupportFragmentManager());
+        pagerAdapter pagerAdapter = new pagerAdapter(getActivity().getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
         tabLayout.setupWithViewPager(pager);
-
-
-
         classes = getResources().getStringArray(R.array.Class);
+
         selectClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!className.equals("-1") && isChanged)
-                {
+                className=classes[position];
+                if(!className.equals("Class-11")&&!className.equals("Class-12")) {
+                    classRef = database.getReference(auth.getCurrentUser().getUid())
+                            .child("ClassDetails")
+                            .child(className);
+
+                    classRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                //TODO get the data
+                            }
+                            else {
+                                classRef.setValue(new ClassDetails());
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                else{
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+                        builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                classRef=database.getReference(auth.getCurrentUser().getUid())
+                                        .child("ClassDetails")
+                                        .child(className)
+                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which]);
+
+                                classRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()){
+                                            //TODO get the data
+                                        }
+                                        else {
+                                            classRef.setValue(new ClassDetails());
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+                    AlertDialog dialog=builder.create();
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        return view;
+    }
+}
+//        selectClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                className = classes[position];
+//                final DatabaseReference classRef = database.getReference(auth.getCurrentUser().getUid())
+//                        .child("ClassDetails")
+//                        .child(className);
+//                classRef.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.exists()) {
+//                            //TODO load the subject Details
+//                        } else {
+//                            classRef.setValue(new ClassDetails());
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//                @Override
+//                     public void onNothingSelected(AdapterView<?> parent) {
+//           }
+//            }
+//        }
+//        return view;
+//    }
+
+//                if(!className.equals("-1") && isChanged)
+//                {
 //                    AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 //                    builder.setTitle("Confirm");
 //                    builder.setMessage("You have some unsaved chages!!");
@@ -111,47 +200,20 @@ public class EducationFragment extends Fragment {
 //                    AlertDialog dialog=builder.create();
 //                    dialog.show();
 
-                }
-                className = "" + position ;
-                if(!className.equals("-1")){
-                    AlertDialog dialog=null;
-                    if(className.equals("10") || className.equals("11"))
-                    {
-                        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                        builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ref=database.getReference(auth.getCurrentUser().getUid())
-                                        .child("ClassDetails")
-                                        .child(className)
-                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
-                                        .child("SchoolName");
-                                dref=database.getReference(auth.getCurrentUser().getUid())
-                                        .child("ClassDetails")
-                                        .child(className)
-                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
-                                        .child("percentage");
-                                subjectsRef=database.getReference(auth.getCurrentUser().getUid())
-                                        .child("ClassDetails")
-                                        .child(className)
-                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which])
-                                        .child("Subjects");
-                                setUp(className);
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog=builder.create();
-                        dialog.setCancelable(false);
-                        dialog.show();
-                    }
-                    else
-                        setUp(className);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+//                }
+//                className = "" + position ;
+//                if(!className.equals("-1")){
+//                    AlertDialog dialog=null;
+//                    if(className.equals("10") || className.equals("11"))
+//                    {
+//
+//                    }
+//                    else
+//                        setUp(className);
+//                }
+//            }
+//
+//        });
 //        save.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -168,81 +230,82 @@ public class EducationFragment extends Fragment {
 //                startActivity(i);
 //            }
 //        });
-        return view;
-    }
-    public void setUp(final String classN) {
-        map.clear();
-        Log.e("Class",""+classN);
-        if(!classN.equals("10") && !classN.equals("11")) {
-            ref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                    .child(classN)
-                    .child("SchoolName");
-            dref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                    .child(classN)
-                    .child("percentage");
-            subjectsRef = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
-                    .child(classN)
-                    .child("Subjects");
-        }
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                    SchoolName = dataSnapshot.getValue().toString();
-                   // schoolName.setText(SchoolName);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        dref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-             // percentage.setText("Percentage: "+dataSnapshot.getValue().toString());
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-//        schoolName.addTextChangedListener(new TextWatcher() {
+
+
+//    public void setUp(final String classN) {
+//        map.clear();
+//        Log.e("Class",""+classN);
+//        if(!classN.equals("10") && !classN.equals("11")) {
+//            ref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+//                    .child(classN)
+//                    .child("SchoolName");
+//            dref = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+//                    .child(classN)
+//                    .child("percentage");
+//            subjectsRef = database.getReference(auth.getCurrentUser().getUid()).child("ClassDetails")
+//                    .child(classN)
+//                    .child("Subjects");
+//        }
+//        ref.addValueEventListener(new ValueEventListener() {
 //            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.exists())
+//                    SchoolName = dataSnapshot.getValue().toString();
+//                   // schoolName.setText(SchoolName);
 //            }
 //            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if(!SchoolName.equals(s.toString().trim())) {
-//                    isChanged=true;
-//                }
+//            public void onCancelled(DatabaseError databaseError) {
 //            }
 //        });
-        //setUpAdapter(subjectsRef);
-    }
-    public void saveChanges(DatabaseReference sref,DatabaseReference pref,DatabaseReference subref) {
-        float percentage=0;
-        float marks = 0;
-        float totalmarks = 0;
-        for(subject e:map.values())
-        {
-            Log.e(e.getSubjectName(),""+e.getSubMarks());
-            totalmarks=totalmarks+ e.getTotalMarks();
-            marks=marks+e.getSubMarks();
-        }
-        percentage=(marks/totalmarks)*100;
-//        sref.setValue(schoolName.getText().toString());
-        isChanged=false;
-       pref.setValue(""+percentage);
-        isChanged=false;
-            subref.setValue(map)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            isChanged=false;
-                            return;
-                        }
-                    });
-    }}
+//        dref.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//             // percentage.setText("Percentage: "+dataSnapshot.getValue().toString());
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+////        schoolName.addTextChangedListener(new TextWatcher() {
+////            @Override
+////            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+////            }
+////            @Override
+////            public void onTextChanged(CharSequence s, int start, int before, int count) {
+////            }
+////            @Override
+////            public void afterTextChanged(Editable s) {
+////                if(!SchoolName.equals(s.toString().trim())) {
+////                    isChanged=true;
+////                }
+////            }
+////        });
+//        //setUpAdapter(subjectsRef);
+//    }
+//    public void saveChanges(DatabaseReference sref,DatabaseReference pref,DatabaseReference subref) {
+//        float percentage=0;
+//        float marks = 0;
+//        float totalmarks = 0;
+//        for(subject e:map.values())
+//        {
+//            Log.e(e.getSubjectName(),""+e.getSubMarks());
+//            totalmarks=totalmarks+ e.getTotalMarks();
+//            marks=marks+e.getSubMarks();
+//        }
+//        percentage=(marks/totalmarks)*100;
+////        sref.setValue(schoolName.getText().toString());
+//        isChanged=false;
+//       pref.setValue(""+percentage);
+//        isChanged=false;
+//            subref.setValue(map)
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            isChanged=false;
+//                            return;
+//                        }
+//                    });
+//    }}
 //    public void setUpAdapter(DatabaseReference subjectReference)
 //    {
 //        recyclerAdapter = new FirebaseRecyclerAdapter<subject, subjectHolder>(subject.class,
