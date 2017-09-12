@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -63,6 +64,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,6 +75,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
 
+    TextView forgotPassword;
     EditText email;
     EditText password;
     EditText phone;
@@ -190,6 +194,14 @@ public class MainActivity extends AppCompatActivity {
         googleSignin = (SignInButton) findViewById(R.id.googlelogin);
         googleSignin.setSize(SignInButton.SIZE_STANDARD);
         submit = (Button) findViewById(R.id.Submit);
+        forgotPassword=(TextView)findViewById(R.id.forgotPassword);
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ForgotPassword.class));
+            }
+        });
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         submit.setOnClickListener(new View.OnClickListener() {

@@ -161,7 +161,6 @@ public class EducationFragment extends Fragment {
 //                    @Override
 //                    public void onDataChange(DataSnapshot dataSnapshot) {
 //                        if (dataSnapshot.exists()) {
-//                            //TODO load the subject Details
 //                        } else {
 //                            classRef.setValue(new ClassDetails());
 //                        }

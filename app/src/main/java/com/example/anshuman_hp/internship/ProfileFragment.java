@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -264,9 +265,10 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //TODO get the state and push the profile details
-                isChanged=true;
-                user_profile.setState(states[position]);
+                if(states[position]!=user_profile.getState()) {
+                    isChanged = true;
+                    user_profile.setState(states[position]);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -297,6 +299,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                         .child(user_profile.getState())
                         .child(user_profile.getCityAddress())
                         .setValue(user_profile.getCityAddress());
+                isChanged=false;
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
             @Override

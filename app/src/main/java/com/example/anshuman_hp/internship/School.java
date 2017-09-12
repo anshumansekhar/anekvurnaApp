@@ -5,6 +5,7 @@ package com.example.anshuman_hp.internship;
  */
 
 public class School {
+    String schoolAddress;
     String schoolName;
     String state;
     String city;
@@ -12,10 +13,19 @@ public class School {
     public School() {
     }
 
-    public School(String schoolName, String state, String city) {
+    public School(String schoolAddress, String schoolName, String state, String city) {
+        this.schoolAddress = schoolAddress;
         this.schoolName = schoolName;
         this.state = state;
         this.city = city;
+    }
+
+    public String getSchoolAddress() {
+        return schoolAddress;
+    }
+
+    public void setSchoolAddress(String schoolAddress) {
+        this.schoolAddress = schoolAddress;
     }
 
     public String getSchoolName() {

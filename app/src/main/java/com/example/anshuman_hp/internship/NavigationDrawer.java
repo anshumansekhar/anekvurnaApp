@@ -239,7 +239,6 @@ public class NavigationDrawer extends AppCompatActivity
             shareApplication();
 
         } else if (id == R.id.nav_send) {
-            //TODO send app invite request
             onInviteClicked();
         }
         else if(id==R.id.videos)

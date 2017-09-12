@@ -9,16 +9,24 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 
 public class pagerAdapter extends FragmentStatePagerAdapter {
+    Fragment currentFragment;
     public pagerAdapter(FragmentManager fm) {
         super(fm);
+        currentFragment=fm.findFragmentById(R.id.pager);
     }
 
     @Override
     public Fragment getItem(int position) {
         if(position==0) {
+            if(currentFragment instanceof schoolDetails) {
+                ((schoolDetails) currentFragment).saveChanges();
+            }
             return new schoolDetails();
         }
         else if(position==1){
+            if(currentFragment instanceof schoolDetails) {
+                ((schoolDetails) currentFragment).saveChanges();
+            }
             return new marksFragments();
         }
         else

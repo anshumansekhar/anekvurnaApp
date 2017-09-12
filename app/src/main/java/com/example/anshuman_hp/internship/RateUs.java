@@ -60,13 +60,15 @@ public class RateUs {
 
         TextView tv = new TextView(mContext);
         tv.setText("Give us 5 stars");
-        tv.setWidth(240);
+        tv.setTextSize(30);
+        tv.setWidth(700);
         tv.setPadding(4, 0, 4, 10);
         ll.addView(tv);
 
         // First Button
         Button b1 = new Button(mContext);
         b1.setText("Rate 5 Stars");
+        b1.setBackgroundColor(mContext.getResources().getColor(R.color.cardview_light_background));
         b1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
@@ -79,6 +81,7 @@ public class RateUs {
         // Second Button
         Button b2 = new Button(mContext);
         b2.setText("Not Right Now");
+        b2.setBackgroundColor(mContext.getResources().getColor(R.color.cardview_light_background));
         b2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();

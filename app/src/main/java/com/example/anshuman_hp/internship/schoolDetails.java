@@ -49,11 +49,11 @@ public class schoolDetails extends Fragment {
 
     School schoolObject;
 
-    ArrayList<String> Cities=new ArrayList();
+    ArrayList<String> Cities=new ArrayList<>();
     ArrayList<String> Schools=new ArrayList<>();
 
     String selectedState="Odisha";
-    String currentCity="nothing";
+    String currentCity="";
 
     ArrayAdapter schoolAdapter;
     ArrayAdapter CityAdapter;
@@ -79,7 +79,7 @@ public class schoolDetails extends Fragment {
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         state.setAdapter(stateAdapter);
 
-        CityAdapter=new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item, Cities);
+        CityAdapter=new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, Cities);
         CityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         city.setAdapter(CityAdapter);
 
@@ -87,22 +87,28 @@ public class schoolDetails extends Fragment {
         schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         school.setAdapter(schoolAdapter);
 
+        final String states[]=getResources().getStringArray(R.array.states);
+
 
         final DatabaseReference schoolDetail=firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("SchoolDetails")
                 .child(EducationFragment.className);
-        final ArrayList<String> statesList=new ArrayList();
         schoolDetail.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
                             schoolObject = dataSnapshot.getValue(School.class);
-                            state.setSelection(Arrays.asList(statesList).indexOf(schoolObject.getState()));
-                            city.setSelection(Arrays.asList(Cities).indexOf(schoolObject.getCity()));
-                            school.setSelection(Arrays.asList(Schools).indexOf(schoolObject.getSchoolName()));
+                            fetchSchools(schoolObject.getCity());
+                            fetchCities(schoolObject.getState());
+                            if(Cities.size()>0 && Schools.size()>0) {
+                                Log.e("setting","School Details");
+                                city.setSelection(Cities.indexOf(schoolObject.getCity()));
+                                school.setSelection(Schools.indexOf(schoolObject.getSchoolName()));
+                            }
+                            state.setSelection(Arrays.asList(states).indexOf(schoolObject.getState()));
                         }
                         else {
-                            schoolDetail.setValue(new School("","Anadaman and Nicobar Islands",""));
+                            schoolDetail.setValue(new School("","Anadaman and Nicobar Islands","",""));
                         }
                     }
 
@@ -111,8 +117,6 @@ public class schoolDetails extends Fragment {
 
                     }
                 });
-
-        final String[] states=getActivity().getResources().getStringArray(R.array.states);
         state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -122,13 +126,14 @@ public class schoolDetails extends Fragment {
                   schoolObject.setState(states[position]);
                   selectedState = states[position];
                   fetchCities(selectedState);
-
+                  Schools.clear();
               }
               else
               {
                   Log.e("novoject","Ststee");
                   isChanged=true;
                   fetchCities(selectedState);
+                  Schools.clear();
 
               }
             }
@@ -140,33 +145,37 @@ public class schoolDetails extends Fragment {
         city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("onadn",Cities.get(position));
-                fetchSchools(Cities.get(position));
+                if(Cities.size()>0){
+                    fetchSchools(Cities.get(position));
+                }
                 currentCity=Cities.get(position);
-
                 if(schoolObject!=null && !schoolObject.getSchoolName().equals(""))
                     school.setSelection(Schools.indexOf(schoolObject.getSchoolName()));
-                school.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if(Schools.get(position).equals("Add School")){
-                            layout.setVisibility(View.VISIBLE);
-                        }
-                        else
-                            schoolObject.setSchoolName(Schools.get(position));
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Log.e("onadn","on item nothing");
+
+            }
+        });
+        school.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(Schools.size()>0) {
+
+                    if (Schools.get(position).equals("Add School")) {
+                        layout.setVisibility(View.VISIBLE);
+                    } else {
+                        layout.setVisibility(View.GONE);
+                        schoolObject.setSchoolName(Schools.get(position));
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -181,7 +190,12 @@ public class schoolDetails extends Fragment {
                         .child(selectedState)
                         .child(currentCity)
                         .setValue(currentCity);
-                layout.setVisibility(View.INVISIBLE);
+                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                        .child("SchoolDetails")
+                        .child(EducationFragment.className)
+                        .child("schoolName")
+                        .setValue(schoolNameEdit.getText().toString());
+                layout.setVisibility(View.GONE);
                 schoolAdapter.notifyDataSetChanged();
                 CityAdapter.notifyDataSetChanged();
             }
@@ -212,59 +226,73 @@ public class schoolDetails extends Fragment {
     }
     void fetchSchools(String city)
     {
-        Schools.clear();
-        firebaseDatabase.getReference("Schools")
-                .child(city)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if(dataSnapshot.exists()) {
-                            if (!Schools.contains(dataSnapshot.getValue().toString())) {
-                                Schools.add(dataSnapshot.getValue().toString());
-                                Log.e("Schools",Schools.get(0));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        if(dataSnapshot.exists()) {
-                            if (!Schools.contains(dataSnapshot.getValue().toString())) {
-                                Schools.add(dataSnapshot.getValue().toString());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            if (!Schools.contains(dataSnapshot.getValue().toString())) {
-                                Schools.add(dataSnapshot.getValue().toString());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        if(dataSnapshot.exists()) {
-                            if (!Schools.contains(dataSnapshot.getValue().toString())) {
-                                Schools.add(dataSnapshot.getValue().toString());
+        if(!city.equals("") && city!=null) {
+            Schools.clear();
+            firebaseDatabase.getReference("Schools")
+                    .child(city)
+                    .addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            if (dataSnapshot.exists()) {
+                                if (!Schools.contains(dataSnapshot.getValue().toString())) {
+                                    Schools.add(dataSnapshot.getValue().toString());
+                                    Log.e("Schools", Schools.get(0));
+//                                    school.setSelection(Schools.indexOf(schoolObject.getSchoolName()));
+                                    if(schoolAdapter!=null){
+                                        Log.e("notifying","darts");
+                                        schoolAdapter.notifyDataSetChanged();
+                                    }
+                                }
                             }
                         }
 
-                    }
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            if (dataSnapshot.exists()) {
+                                if (!Schools.contains(dataSnapshot.getValue().toString())) {
+                                    Schools.add(dataSnapshot.getValue().toString());
+                                    if(schoolAdapter!=null){
+                                        Log.e("notifying","darts");
+                                        schoolAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                if (!Schools.contains(dataSnapshot.getValue().toString())) {
+                                    Schools.add(dataSnapshot.getValue().toString());
+                                    if(schoolAdapter!=null){
+                                        Log.e("notifying","darts");
+                                        schoolAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            if (dataSnapshot.exists()) {
+                                if (!Schools.contains(dataSnapshot.getValue().toString())) {
+                                    Schools.add(dataSnapshot.getValue().toString());
+                                    if(schoolAdapter!=null){
+                                        Log.e("notifying","darts");
+                                        schoolAdapter.notifyDataSetChanged();
+                                    }
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
 
-                    }
-                });
-        Schools.add("Add School");
-        if(schoolAdapter!=null) {
-            Log.e("notifying","darts");
-            schoolAdapter.notifyDataSetChanged();
-
+                        }
+                    });
+            Schools.add("Add School");
         }
     }
 
@@ -280,7 +308,8 @@ public class schoolDetails extends Fragment {
                         if(dataSnapshot.exists()) {
                             if (!Cities.contains(dataSnapshot.getValue().toString())) {
                                 Cities.add(dataSnapshot.getValue().toString());
-                                Log.e("cities",Cities.get(0));
+                                //city.setSelection(Cities.indexOf(schoolObject.getCity()));
+                                //Log.e("cities",Cities.get(0));
                                 if(CityAdapter!=null){
                                     Log.e("notifying","darts");
                                     CityAdapter.notifyDataSetChanged();
