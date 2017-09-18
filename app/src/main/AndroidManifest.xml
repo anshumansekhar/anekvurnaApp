@@ -4,6 +4,8 @@
     package="com.example.anshuman_hp.internship">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Anekvurna"
@@ -64,11 +66,14 @@
             android:name=".NavigationDrawer"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
         <activity android:name=".Main2Activity" />
         <activity
             android:name=".addFamily"
             android:label="AddFamily"
+            android:parentActivityName=".NavigationDrawer"
             android:theme="@style/AppTheme" />
 
         <service android:name=".MyFirebaseMessagingService">
@@ -82,43 +87,30 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".AnotherActivity"
-            android:label="Videos"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".YoutubeActivity" />
         <activity android:name=".Registration" />
-        <activity android:name=".AddHobbyActivityt" />
+        <activity
+            android:name=".AddHobbyActivityt"
+            android:parentActivityName=".NavigationDrawer" />
         <activity
             android:name=".fullImageActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FavoriteVideosActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="www.youtube.com"
-                    android:mimeType="text/*"
-                    android:scheme="http" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="m.youtube.com"
-                    android:mimeType="text/*"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
+            android:parentActivityName=".addFamily" />
         <activity
             android:name=".AddNewSubject"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".ForgotPassword"></activity>
+            android:parentActivityName=".NavigationDrawer" />
+        <activity android:name=".ForgotPassword" />
+        <activity
+            android:name=".EditSchoolDetails"
+            android:parentActivityName=".NavigationDrawer" />
+        <activity android:name=".AddVideoActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/*" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -43,9 +43,10 @@ import java.util.Arrays;
 public class NavigationDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_INVITE =1 ;
-    BottomNavigationView bottomNavigationView;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FloatingActionButton floatingActionButton;
+
+    static FragmentManager fm;
 
     int selected;
     Toolbar toolbar;
@@ -61,7 +62,6 @@ public class NavigationDrawer extends AppCompatActivity
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
-        bottomNavigationView=(BottomNavigationView)findViewById(R.id.bottomNavigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,85 +70,18 @@ public class NavigationDrawer extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        fm=getSupportFragmentManager();
+
+
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, new AnotherActivity());
+            transaction.commit();
 
         floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
         floatingActionButton.hide();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
-                switch(item.getItemId())
-                {
-                    case R.id.account:
-                        AccountFragment accountFragment=AccountFragment.newInstance();
-                        selectedFragment = accountFragment;
-                        floatingActionButton.hide();
-                        actionBar.setTitle("Account");
-                        break;
-                    case R.id.profile:
-                        ProfileFragment profileFragment=ProfileFragment.newInstance();
-                        selectedFragment=profileFragment;
-                        floatingActionButton.hide();
-                        actionBar.setTitle("Profile");
-                        break;
-                    case R.id.Family:
-                        FamilyFragment fragment = FamilyFragment.newInstance();
-                        floatingActionButton.show();
-                        floatingActionButton.setOnClickListener(fragment.listener());
-                        floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
-                        selectedFragment=fragment;
-                        actionBar.setTitle("Family");
-                        break;
-                    case R.id.Hobbies:
-                        HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
-                        floatingActionButton.show();
-                        floatingActionButton.setOnClickListener(hobbiesFragment.listener);
-                        floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
-                        selectedFragment=hobbiesFragment;
-                        actionBar.setTitle("Hobbies");
-                        break;
-                    case R.id.education:
-                        EducationFragment educationFragment=EducationFragment.newInstance();
-                        floatingActionButton.hide();
-                        selectedFragment = educationFragment;
-                        actionBar.setTitle("Education");
-                        break;
-                }
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-                if(f instanceof EducationFragment)
-                {
-                    if(((EducationFragment)f).isChanged) {
-                        Log.e("Tag","Show Dialog");
-                    }
-                }
-                else if(f instanceof ProfileFragment)
-                {
-                    if(((ProfileFragment)f).isChanged())
-                    {
-                        ((ProfileFragment) f).saveChanges();
-                        Log.e("Tag","Show Dialog");
-                    }
-                }
-                else if(f instanceof AccountFragment)
-                {
-                    if(((AccountFragment)f).isChanged)
-                    {
-                        ((AccountFragment) f).saveChanges();
-                        Log.e("Tag","Show Dialog");
-                    }
-                }
-                transaction.replace(R.id.frame_layout, selectedFragment);
-                transaction.commit();
-                return true;
-            }
-        });
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, ProfileFragment.newInstance());
-        actionBar.setTitle("Profile");
-        transaction.commit();
     }
 
     @Override
@@ -234,23 +167,75 @@ public class NavigationDrawer extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment selectedFragment = null;
+        switch (id){
+            case R.id.nav_share:
+                shareApplication();
+                floatingActionButton.hide();
+                break;
+            case R.id.nav_send:
+                onInviteClicked();
+                floatingActionButton.hide();
+                break;
+            case R.id.nav_profile:
+                ProfileFragment profileFragment=ProfileFragment.newInstance();
+                selectedFragment=profileFragment;
+                floatingActionButton.hide();
+                actionBar.setTitle("Profile");
+                break;
+            case R.id.nav_hobby:
+                HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
+                floatingActionButton.show();
+                floatingActionButton.setOnClickListener(hobbiesFragment.listener);
+                floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+                selectedFragment=hobbiesFragment;
+                actionBar.setTitle("Hobbies");
+                break;
+            case R.id.presentClassVideos:
+                AnotherActivity anotherActivityFrag=new AnotherActivity();
+                selectedFragment=anotherActivityFrag;
+                floatingActionButton.hide();
+                break;
+            case R.id.favoritesVideos:
+                FavoriteVideosActivity favoriteVideosFrag=new FavoriteVideosActivity();
+                selectedFragment =favoriteVideosFrag;
+                actionBar.setTitle("Favourites");
+                floatingActionButton.hide();
+                break;
+            case R.id.EducationDetails:
+                EducationFragment educationFragment=EducationFragment.newInstance();
+                floatingActionButton.hide();
+                selectedFragment = educationFragment;
+                actionBar.setTitle("Education");
+                break;
+            case R.id.rateUs:
+                SharedPreferences prefs = getSharedPreferences("rateus", 0);
+                selectedFragment=loadRateFragment();
+                actionBar.setTitle("Rate US");
+                floatingActionButton.hide();
+                break;
+            case R.id.nav_family:
+                FamilyFragment fragment = FamilyFragment.newInstance();
+                floatingActionButton.show();
+                floatingActionButton.setOnClickListener(fragment.listener());
+                floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+                selectedFragment=fragment;
+                actionBar.setTitle("Family");
+                break;
+            case R.id.nav_account:
+                AccountFragment accountFragment=AccountFragment.newInstance();
+                selectedFragment = accountFragment;
+                floatingActionButton.hide();
+                actionBar.setTitle("Account");
+                break;
 
-        if (id == R.id.nav_share) {
-            shareApplication();
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
 
-        } else if (id == R.id.nav_send) {
-            onInviteClicked();
-        }
-        else if(id==R.id.videos)
-        {
-            Intent i=new Intent(NavigationDrawer.this,AnotherActivity.class);
-            startActivity(i);
-        }
-        else if(id==R.id.rateUs)
-        {
-            SharedPreferences prefs = getSharedPreferences("rateus", 0);
-            RateUs.showRateDialog(NavigationDrawer.this,prefs.edit());
-        }
+        transaction.replace(R.id.frame_layout, selectedFragment);
+        transaction.commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -308,5 +293,9 @@ public class NavigationDrawer extends AppCompatActivity
                 .setMessage("I am Using This awesome Message")
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+    }
+    public static Fragment loadRateFragment(){
+        return new AppRatingActivity();
+
     }
 }

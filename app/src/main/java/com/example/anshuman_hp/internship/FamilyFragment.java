@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -19,10 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,13 +39,14 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class FamilyFragment extends Fragment {
-    //ImageView familyBackgroundImage;
-    RecyclerView familyMembers;
+    ListView familyMembers;
     String[] relations;
+    TextView emptyView;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder> adapter;
     ArrayAdapter relationsSpinnerAdapter;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    FirebaseListAdapter<FamilyMember> listAdapter;
 
     public static FamilyFragment newInstance() {
         FamilyFragment fragment = new FamilyFragment();
@@ -55,36 +60,59 @@ public class FamilyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.family_details, container, false);
-        //familyBackgroundImage = (ImageView) v.findViewById(R.id.familyBackgroungImage);
-        familyMembers = (RecyclerView) v.findViewById(R.id.familyMembersrecyclerView);
+        familyMembers = (ListView) v.findViewById(R.id.familyMembersrecyclerView);
+        emptyView=(TextView)v.findViewById(android.R.id.empty);
+        familyMembers.setEmptyView(emptyView);
         relations = getResources().getStringArray(R.array.Relation);
         relationsSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Relation, android.R.layout.simple_spinner_dropdown_item);
         relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        familyMembers.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         DatabaseReference ref = database.getReference(auth.getCurrentUser().getUid()).child("Family");
-        adapter = new FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder>
-                (FamilyMember.class,
-                        R.layout.family_member,
-                        FamilyMemberHolder.class,
-                        ref) {
+        listAdapter=new FirebaseListAdapter<FamilyMember>(getActivity(),
+                FamilyMember.class,
+                R.layout.family_member,
+                ref) {
             @Override
-            protected void populateViewHolder(FamilyMemberHolder viewHolder, FamilyMember model, int position) {
-                viewHolder.memberName.setText(model.getMemberName());
-                viewHolder.memRelation.setAdapter(relationsSpinnerAdapter);
-                viewHolder.memRelation.setSelection(Integer.valueOf(model.getMemberRelation()));
-                viewHolder.emailId.setText(model.getEmail());
-                viewHolder.phoneNumber.setText(model.getPhoneNumber());
-                Glide.with(getActivity().getApplicationContext())
+            protected void populateView(View v, FamilyMember model, int position) {
+                ((EditText)v.findViewById(R.id.familyMemberName)).setText(model.getMemberName());
+                ((EditText)v.findViewById(R.id.EmailIdFamily)).setText(model.getMemberName());
+                ((EditText)v.findViewById(R.id.PhoneNumberFamily)).setText(model.getMemberName());
+                ((Spinner)v.findViewById(R.id.familyMemberRelation)).setAdapter(relationsSpinnerAdapter);
+                ((Spinner)v.findViewById(R.id.familyMemberRelation)).setSelection(Integer.valueOf(model.getMemberRelation()));
+                        Glide.with(getActivity())
                         .load(model.getMemberPhotoUrl())
-                        .into(viewHolder.memPhoto);
-
-            }
-            @Override
-            public int getItemViewType(int position) {
-                return super.getItemViewType(position);
+                        .into((ImageView)v.findViewById(R.id.photoFamily));
             }
         };
-        familyMembers.setAdapter(adapter);
+//        adapter = new FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder>
+//                (FamilyMember.class,
+//                        R.layout.family_member,
+//                        FamilyMemberHolder.class,
+//                        ref) {
+//            @Override
+//            protected void populateViewHolder(FamilyMemberHolder viewHolder, FamilyMember model, int position) {
+//                viewHolder.memberName.setText(model.getMemberName());
+//                viewHolder.memRelation.setAdapter(relationsSpinnerAdapter);
+//                viewHolder.memRelation.setSelection(Integer.valueOf(model.getMemberRelation()));
+//                viewHolder.emailId.setText(model.getEmail());
+//                viewHolder.phoneNumber.setText(model.getPhoneNumber());
+//                Glide.with(getActivity().getApplicationContext())
+//                        .load(model.getMemberPhotoUrl())
+//                        .into(viewHolder.memPhoto);
+//
+//            }
+//            @Override
+//            public int getItemViewType(int position) {
+//                return super.getItemViewType(position);
+//            }
+//        };
+        familyMembers.setAdapter(listAdapter);
+
+        emptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), addFamily.class));
+            }
+        });
         return v;
     }
 

@@ -1,11 +1,18 @@
 package com.example.anshuman_hp.internship;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.gesture.GestureLibraries;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +35,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +63,11 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     String ismale;
     String email,password;
 
+    String imageUri;
+
     final String TAG="Registartion";
+
+    public static final int IMAGE_REQUEST=234;
 
     String myFormat = "dd/mm/yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
@@ -61,9 +78,13 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
 
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+    StorageReference ref= FirebaseStorage.getInstance().getReference();
 
     String mobile;
     boolean phoneauth;
+
+    NotificationManager notificationManager;
+    NotificationCompat.Builder builder;
 
 
     AuthCredential authCredential;
@@ -100,6 +121,13 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         }
         else
             ismale="false";
+
+        ProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Registration.this,fullImageActivity.class), IMAGE_REQUEST);
+            }
+        });
 
         birthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +187,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     public void pushUserProfileDetails()
     {
         Log.e(TAG,"Pushing user Details");
+
         user_profile profile=new user_profile(name.getText().toString(),
                 birthDate.getText().toString()
         ,ismale
@@ -166,15 +195,15 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         ,"https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
         ,""
         ,""
+        ,""
         ,"");
         firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .setValue(profile);
         Log.e(TAG,"Pushing class deatils");
-        //pushClassDetails();
         UserProfileChangeRequest.Builder profileChangeRequest=new UserProfileChangeRequest.Builder();
         profileChangeRequest.setDisplayName(name.getText().toString());
-        //TODO photo uri
+        UploadImage();
         Log.e(TAG,"Changong user data");
         firebaseAuth.getCurrentUser().updateProfile(profileChangeRequest.build())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -210,36 +239,6 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         else
             Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT);
     }
-//    public void pushClassDetails()
-//    {
-//        ArrayList<ClassDetails> list=new ArrayList<>();
-//        for(int i=0;i<12;i++) {
-//            if (i != 10 && i != 11) {
-//                list.add(new ClassDetails());
-//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-//                        .child("ClassDetails").setValue(list);
-//            } else if (i == 11) {
-//                HashMap<String, ClassDetails> map = new HashMap<>();
-//                map.put("Arts", new ClassDetails());
-//                map.put("Commerce", new ClassDetails());
-//                map.put("Science", new ClassDetails());
-//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-//                        .child("ClassDetails")
-//                        .child("11")
-//                        .setValue(map);
-//            } else if (i== 10) {
-//                HashMap<String, ClassDetails> map = new HashMap<>();
-//                map.put("Arts", new ClassDetails());
-//                map.put("Commerce", new ClassDetails());
-//                map.put("Science", new ClassDetails());
-//                firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
-//                        .child("ClassDetails")
-//                        .child("10")
-//                        .setValue(map);
-//            }
-//        }
-//    }
-
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         myCalendar.set(Calendar.YEAR, year);
@@ -247,5 +246,60 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         birthDate.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==IMAGE_REQUEST){
+            if(resultCode==RESULT_OK){
+                imageUri=data.getStringExtra("ImageURI");
+                Glide.with(getApplicationContext())
+                        .load(imageUri)
+                        .apply(new RequestOptions().override(200,200))
+                        .into(ProfileImage);
+            }
+        }
+    }
+    public void showProgressNotification(){
+        notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        builder=new NotificationCompat.Builder(this);
+        builder = new NotificationCompat.Builder(this);
+        builder.setContentTitle("Picture Upload")
+                .setContentText("Upload in progress")
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp);
+
+
+    }
+    public void UploadImage(){
+        if(imageUri!=null) {
+            StorageReference photoRef=ref.child(firebaseAuth.getCurrentUser().getUid());
+            showProgressNotification();
+            UploadTask task = photoRef.putFile(Uri.parse(imageUri));
+            task.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    int progress=(int)(taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount())*100;
+                    builder.setProgress(100,progress,false);
+                    notificationManager.notify(1,builder.build());
+
+                }
+            });
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    builder.setContentText("Upload complete")
+                            .setProgress(0,0,false);
+                    notificationManager.notify(1, builder.build());
+                    String url=taskSnapshot.getDownloadUrl().toString();
+                    firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+                            .child("UserProfile")
+                            .child("photourl")
+                            .setValue(url);
+                }
+            });
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"No image",Toast.LENGTH_SHORT).show();
+        }
     }
 }

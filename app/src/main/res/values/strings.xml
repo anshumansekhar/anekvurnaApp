@@ -89,12 +89,10 @@
     <string name="addHobby">You have Not added any Hobbies\n
                                 <u>Click Here to Add</u>
     </string>
+    <string name="addFamily">You have Not Added any family Members\n
+        <u>Click Here to Add</u>
+    </string>
 
-    <string-array name="videoGroup">
-        <item>Group-1</item>
-        <item>Group-2</item>
-        <item>Group-3</item>
-    </string-array>
     <string-array name="Stream">
         <item>Arts</item>
         <item>Commerce</item>
@@ -156,11 +154,17 @@
         <item>Uttrakhand</item>
         <item>West Bengal</item>
     </string-array>
-    <string-array name="tests">
+    <string-array name="testsBoard">
         <item>UnitTest</item>
         <item>CycleTest</item>
         <item>HalfYearly</item>
-        <item>Preboard</item>
+        <item>Pre-Boards</item>
         <item>Boards</item>
+    </string-array>
+    <string-array name="testsNormal">
+        <item>UnitTest</item>
+        <item>CycleTest</item>
+        <item>HalfYearly</item>
+        <item>Yearly</item>
     </string-array>
 </resources>

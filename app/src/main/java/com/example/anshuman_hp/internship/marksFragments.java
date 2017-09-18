@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.internship;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,16 +36,18 @@ import java.util.HashMap;
 
 public class marksFragments extends Fragment {
     Spinner testType;
-    RecyclerView subjectsList;
+    static RecyclerView subjectsList;
     Button save,addnewSubject;
     TextView percentage;
-
-
+    ArrayAdapter testAdapter;
     public static HashMap<String,subject> Subjects=new HashMap<>();
 
-    FirebaseRecyclerAdapter<subject,subjectHolder> Adapter;
+    static FirebaseRecyclerAdapter<subject,subjectHolder> Adapter;
 
     DatabaseReference testRef;
+
+    String[] tests;
+
 
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
     @Nullable
@@ -58,16 +61,13 @@ public class marksFragments extends Fragment {
         addnewSubject=(Button)v.findViewById(R.id.addnewSubject);
         percentage=(TextView)v.findViewById(R.id.percentageEducation);
 
-        ArrayAdapter testAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.tests,android.R.layout.simple_spinner_item);
-        testAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        testType.setAdapter(testAdapter);
-        final String[] tests=getActivity().getResources().getStringArray(R.array.tests);
+
         testType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                testRef=EducationFragment.classRef.child("Tests").child(tests[position]);
-                setUpRecyclerView(testRef.child("Subjects"));
-                testRef.child("percentage")
+                testRef=EducationFragment.classRef.child("tests").child(tests[position]);
+                setUpRecyclerView(EducationFragment.classRef.child("tests").child(tests[position]).child("subjects"),getActivity());
+                EducationFragment.classRef.child("tests").child(tests[position]).child("percentage")
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,13 +98,31 @@ public class marksFragments extends Fragment {
             public void onClick(View v) {
                 Intent i=new Intent(getActivity(),AddNewSubject.class);
                 i.putExtra("Position",Subjects.size());
-                i.putExtra("Ref",testRef.child("Subjects").toString());
+                i.putExtra("Ref",testRef.child("subjects").toString());
                 startActivity(i);
             }
         });
         return v;
     }
-    void setUpRecyclerView(final DatabaseReference ref)
+    public void setSpinnerAdapter(){
+        if(EducationFragment.className.equals("Class-10")||EducationFragment.className.equals("Class-12")) {
+            testAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.testsBoard, android.R.layout.simple_spinner_item);
+            testAdapter.notifyDataSetChanged();
+            tests=getActivity().getResources().getStringArray(R.array.testsBoard);
+            testAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            testType.setAdapter(testAdapter);
+        }
+        else{
+            testAdapter=ArrayAdapter.createFromResource(getActivity(), R.array.testsNormal, android.R.layout.simple_spinner_item);
+            testAdapter.notifyDataSetChanged();
+            tests=getActivity().getResources().getStringArray(R.array.testsNormal);
+            testAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            testType.setAdapter(testAdapter);
+
+        }
+
+    }
+    public  void setUpRecyclerView(final DatabaseReference ref, final Context ctx)
     {
         fillHashmap(ref);
         Adapter=new FirebaseRecyclerAdapter<subject, subjectHolder>
@@ -134,7 +152,7 @@ public class marksFragments extends Fragment {
                 viewHolder.deleteSubject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder=new AlertDialog.Builder(ctx);
                         builder.setTitle("Confirmation");
                         builder.setMessage("Are you Sure to Delete the Subject");
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -153,55 +171,55 @@ public class marksFragments extends Fragment {
                         dialog.show();
                     }
                 });
-//                viewHolder.totalMArks.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                    }
-//
-//                    @Override
-//                    public void afterTextChanged(Editable s) {
-//                        Log.e("post",""+position);
-//                        if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
-//                           Subjects.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
-//                        }
-//
-//                    }
-//                });
-//                viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                    }
-//
-//                    @Override
-//                    public void afterTextChanged(Editable s) {
-//                        Log.e("pos",""+position);
-//                        if(!s.toString().equals("")&&model.getSubMarks()!=Float.parseFloat(s.toString())){
-//                            Subjects.get(""+position).setSubMarks(Float.parseFloat(s.toString()));
-//                        }
-//                    }
-//                });
+                viewHolder.totalMArks.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        Log.e("post",""+position);
+                        if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
+                           Subjects.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
+                        }
+
+                    }
+                });
+                viewHolder.subjectMarks.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        Log.e("pos",""+position);
+                        if(!s.toString().equals("")&&model.getSubMarks()!=Float.parseFloat(s.toString())){
+                            Subjects.get(""+position).setSubMarks(Float.parseFloat(s.toString()));
+                        }
+                    }
+                });
             }
         };
         subjectsList.setAdapter(Adapter);
     }
     public void saveChanges(DatabaseReference testReference){
 
-        testReference.child("Subjects").setValue(Subjects);
+        testReference.child("subjects").setValue(Subjects);
         testReference.child("percentage").setValue(""+calculatePercentage());
     }
-    public void fillHashmap(DatabaseReference ref)
+    public static void fillHashmap(DatabaseReference ref)
     {
         Subjects.clear();
         ref.addChildEventListener(new ChildEventListener() {

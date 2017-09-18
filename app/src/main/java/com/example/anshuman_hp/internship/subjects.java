@@ -8,11 +8,17 @@ import java.util.ArrayList;
 
 public class subjects {
     ArrayList<subject> Subjects=new ArrayList<>();
-    String percentage;
     public subjects() {
-        percentage="";
         Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"English"));
         Subjects.add(new subject(Float.valueOf(0),Float.valueOf(0),"Maths"));
+    }
+
+    public ArrayList<subject> getSubjects() {
+        return Subjects;
+    }
+
+    public void setSubjects(ArrayList<subject> subjects) {
+        Subjects = subjects;
     }
 
 }

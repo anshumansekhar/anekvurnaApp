@@ -94,13 +94,13 @@ public class VideosFragment extends Fragment {
                                 if(v.isSelected()) {
                                     FirebaseDatabase.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                             .child("Favorites")
-                                            .child(model.getVideoCaption())
+                                            .child(model.getVideoID())
                                             .setValue(model);
                                 }
                                 else {
                                     DatabaseReference ref=FirebaseDatabase.getInstance().getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                             .child("Favorites")
-                                            .child(model.getVideoCaption());
+                                            .child(model.getVideoID());
                                     if(ref!=null)
                                     {
                                         ref.removeValue();

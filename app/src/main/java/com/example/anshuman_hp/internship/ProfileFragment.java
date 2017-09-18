@@ -65,6 +65,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     Spinner presentClass;
     EditText Ataddress;
     EditText city;
+    EditText pinCode;
     Spinner stateSpinner;
     String presentClassText;
 
@@ -111,6 +112,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         female=(RadioButton)v.findViewById(R.id.female);
         Ataddress=(EditText)v.findViewById(R.id.AtAddress);
         city=(EditText)v.findViewById(R.id.CityAddress);
+        pinCode=(EditText)v.findViewById(R.id.PinCode);
         presentClass=(Spinner)v.findViewById(R.id.presentClassSpinnerProfile);
         stateSpinner=(Spinner)v.findViewById(R.id.stateSpinner);
         ArrayAdapter stateAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.states,android.R.layout.simple_spinner_item);
@@ -128,6 +130,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.e("dagd",dataSnapshot.getValue(com.example.anshuman_hp.internship.user_profile.class).toString());
                         user_profile=dataSnapshot.getValue(user_profile.class);
                         Log.e("USER_PROFILE",user_profile.toString());
                         if(getActivity()==null) {
@@ -140,6 +143,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                         birthDate.setText(user_profile.getBirthdate());
                         Ataddress.setText(user_profile.getAtAddress());
                         city.setText(user_profile.getCityAddress());
+                        pinCode.setText(user_profile.getPinCode());
                         if(user_profile.getIsMale().equals("true")) {
                             male.setChecked(true);
                             female.setChecked(false);
@@ -148,15 +152,17 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             male.setChecked(false);
                             female.setChecked(true);
                         }
-                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
+                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass())-1);
                         int indexState=Arrays.asList(states).indexOf(user_profile.getState());
                         stateSpinner.setSelection(indexState);
                         presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if(Integer.valueOf(user_profile.getPresentClass())!=position) {
-                                    isChanged=true;
-                                    user_profile.setPresentClass(""+position);
+                                if(user_profile!=null) {
+                                    if (Integer.valueOf(user_profile.getPresentClass()) != position) {
+                                        isChanged = true;
+                                        user_profile.setPresentClass("" + (position + 1));
+                                    }
                                 }
                             }
                             @Override
@@ -168,7 +174,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
-
         birthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,9 +190,11 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user_profile.getName().equals(s.toString().trim())) {
-                    isChanged=true;
-                    user_profile.setName(s.toString());
+                if(user_profile!=null) {
+                    if (!user_profile.getName().equals(s.toString().trim())) {
+                        isChanged = true;
+                        user_profile.setName(s.toString());
+                    }
                 }
             }
         });
@@ -200,25 +207,29 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user_profile.getBirthdate().equals(s.toString().trim())) {
-                    user_profile.setBirthdate(s.toString());
+                if(user_profile!=null) {
+                    if (!user_profile.getBirthdate().equals(s.toString().trim())) {
+                        user_profile.setBirthdate(s.toString());
+                    }
                 }
             }
         });
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                if(user_profile.getIsMale().equals("false") && group.getCheckedRadioButtonId()==R.id.male) {
-                    male.setChecked(true);
-                    female.setChecked(false);
-                    user_profile.setIsMale("true");
-                    isChanged=true;
-                }
-                else if(user_profile.getIsMale().equals("true") && group.getCheckedRadioButtonId()==R.id.female){
-                    female.setChecked(true);
-                    male.setChecked(false);
-                    user_profile.setIsMale("false");
-                    isChanged=true;
+                if(user_profile!=null) {
+
+                    if (user_profile.getIsMale().equals("false") && group.getCheckedRadioButtonId() == R.id.male) {
+                        male.setChecked(true);
+                        female.setChecked(false);
+                        user_profile.setIsMale("true");
+                        isChanged = true;
+                    } else if (user_profile.getIsMale().equals("true") && group.getCheckedRadioButtonId() == R.id.female) {
+                        female.setChecked(true);
+                        male.setChecked(false);
+                        user_profile.setIsMale("false");
+                        isChanged = true;
+                    }
                 }
             }
         });
@@ -235,9 +246,11 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user_profile.getAtAddress().equals(s.toString().trim())) {
-                    isChanged = true;
-                    user_profile.setAtAddress(s.toString());
+                if(user_profile!=null) {
+                    if (!user_profile.getAtAddress().equals(s.toString().trim())) {
+                        isChanged = true;
+                        user_profile.setAtAddress(s.toString());
+                    }
                 }
 
             }
@@ -255,23 +268,50 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!user_profile.getCityAddress().equals(s.toString().trim())) {
-                    isChanged = true;
-                    user_profile.setCityAddress(s.toString());
-                }
+                if (user_profile != null) {
+                    if (!user_profile.getCityAddress().equals(s.toString().trim())) {
+                        isChanged = true;
+                        user_profile.setCityAddress(s.toString());
+                    }
 
+                }
+            }
+        });
+
+        pinCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(user_profile!=null) {
+                    if (!user_profile.getPinCode().equals(s.toString().trim())) {
+                        isChanged = true;
+                        user_profile.setPinCode(s.toString());
+                    }
+                }
             }
         });
         stateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(states[position]!=user_profile.getState()) {
-                    isChanged = true;
-                    user_profile.setState(states[position]);
+                if(user_profile!=null) {
+                    if (states[position] != user_profile.getState()) {
+                        isChanged = true;
+                        user_profile.setState(states[position]);
+                    }
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         return v;

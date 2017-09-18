@@ -47,6 +47,8 @@ public class AddHobbyActivityt extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hobby_activityt);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         indoorGamesRef=database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("Hobbies")
                 .child("IndoorGames");

@@ -20,22 +20,22 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_navigation_drawer" />
-    <android.support.design.widget.BottomNavigationView
+    <FrameLayout android:id="@+id/frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom"
-        app:menu="@menu/bottom_navigation"
-        app:itemTextColor="@color/com_facebook_button_background_color_focused_disabled"
-        android:id="@+id/bottomNavigation"
-        >
-    </android.support.design.widget.BottomNavigationView>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/navigation"
+        android:animateLayoutChanges="true"
+        android:layout_marginTop="50dp"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    </FrameLayout>
+
+
     <android.support.design.widget.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:layout_anchor="@id/bottomNavigation"
+        app:layout_anchor="@id/frame_layout"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
         android:src="@android:drawable/ic_input_add"
         android:layout_marginRight="16dp"

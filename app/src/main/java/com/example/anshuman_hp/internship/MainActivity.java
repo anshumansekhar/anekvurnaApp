@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         .setHashtag(getResources().getString(R.string.app_name))
                         .build())
                 .build();
+        shareDialog=new ShareDialog(MainActivity.this);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -353,13 +354,15 @@ public class MainActivity extends AppCompatActivity {
                                                         , Profile.getCurrentProfile().getProfilePictureUri(200, 200).toString()
                                                         ,""
                                                         ,""
-                                                        ,"");
+                                                        ,""
+                                                ,"");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
                                                 pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
                                                 shareDialog.show(shareLinkContent);
+                                                startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
+
                                             }
                                         }
 
@@ -403,11 +406,11 @@ public class MainActivity extends AppCompatActivity {
                                                         , acct.getPhotoUrl().toString()
                                                         , ""
                                                         ,""
-                                                        ,"");
+                                                        ,""
+                                                ,"");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
-                                                pushClassDetails(firebaseAuth.getCurrentUser().getUid());
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
                                                 Intent shareIntent = new PlusShare.Builder(getApplicationContext())
                                                         .setType("text/plain")

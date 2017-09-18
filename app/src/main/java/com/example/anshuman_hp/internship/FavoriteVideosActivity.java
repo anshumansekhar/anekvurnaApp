@@ -3,13 +3,18 @@ package com.example.anshuman_hp.internship;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
@@ -18,10 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Scanner;
 
-public class FavoriteVideosActivity extends AppCompatActivity {
+public class FavoriteVideosActivity extends Fragment{
     ActionBar ab;
     RecyclerView favorites;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
@@ -32,46 +40,15 @@ public class FavoriteVideosActivity extends AppCompatActivity {
 
 
     FirebaseRecyclerAdapter<video,videoHolder> adapter;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite_videos);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v=inflater.inflate(R.layout.activity_favorite_videos,container,false);
 
-        j=getIntent();
-        String action=j.getAction();
-        String type=j.getType();
 
-        if (Intent.ACTION_SEND.equals(action)) {
-            String sharedText = j.getStringExtra(Intent.EXTRA_TEXT);
-            if(sharedText!=null)
-            {
-                AlertDialog.Builder builder=new AlertDialog.Builder(FavoriteVideosActivity.this);
-                View v=getLayoutInflater().inflate(R.layout.edittextdialog,null,false);
-                builder.setView(v);
-                final EditText ed=(EditText)v.findViewById(R.id.editText);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        caption=ed.getText().toString().trim();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                Scanner s=new Scanner(sharedText).useDelimiter("\\s*https://youtu.be/");
-                String videoID=s.next();
-                video video=new video("https://img.youtube.com/vi/"+videoID+"/default.jpg",caption,"",sharedText,videoID,"");
-                database.getReference(auth.getCurrentUser().getUid())
-                        .child("Favorites")
-                        .child(caption)
-                        .setValue(video);
-            }
-        }
-
-        favorites=(RecyclerView)findViewById(R.id.favoriteVideos);
-        favorites.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        favorites=(RecyclerView)v.findViewById(R.id.favoriteVideos);
+        favorites.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         reference=database.getReference(auth.getCurrentUser().getUid())
                 .child("Favorites");
@@ -85,7 +62,7 @@ public class FavoriteVideosActivity extends AppCompatActivity {
             protected void populateViewHolder(videoHolder viewHolder,final video model, int position) {
                 viewHolder.videoCaption.setText(model.getVideoCaption());
                 viewHolder.videoDuration.setText(model.getVideoDuration());
-                Glide.with(getApplicationContext())
+                Glide.with(getActivity())
                         .load(model.getVideoThumbnailUrl())
                         .into(viewHolder.videoThumbnail);
                 viewHolder.favorites.setVisibility(View.GONE);
@@ -103,7 +80,7 @@ public class FavoriteVideosActivity extends AppCompatActivity {
                         .setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(FavoriteVideosActivity.this, YoutubeActivity.class);
+                                Intent i = new Intent(getActivity(), YoutubeActivity.class);
                                 i.putExtra("VideoID", model.getVideoID());
                                 i.putExtra("VideoURL", model.getVideoUrl());
                                 startActivity(i);
@@ -113,9 +90,8 @@ public class FavoriteVideosActivity extends AppCompatActivity {
 
             }
         };
-
-        ab=getSupportActionBar();
-        ab.setTitle("Favorites");
         favorites.setAdapter(adapter);
+        return v;
     }
 }
+

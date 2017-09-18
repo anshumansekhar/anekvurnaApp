@@ -145,7 +145,7 @@ public class HobbiesFragment extends Fragment {
                 if(dataSnapshot.exists()) {
                     outdoorGamesValues = dataSnapshot.getValue(t);
                     for (int i=0;i<outdoorGamesValues.size();i++) {
-                        if (outdoorGamesValues.get(1)) {
+                        if (outdoorGamesValues.get(i)) {
                             if(!header.contains(hobby[1]))
                                  header.add(hobby[1]);
                             outdoorGamesValuesS.add( outdoorGames[i]);

@@ -69,6 +69,7 @@ public class TopicListFragment extends Fragment {
                         .beginConfig()
                         .width(100)
                         .height(100)
+                        .fontSize(25)
                         .endConfig()
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
 
@@ -85,8 +86,7 @@ public class TopicListFragment extends Fragment {
                         topicsBundle.putString("SubjectName",subjectName);
                         topicsBundle.putString("TopicName",model.getSubjectName());
 
-                        ((AnotherActivity)getActivity()).changeFragmentWithVideo(topicsBundle);
-
+                        ((AnotherActivity)getParentFragment()).changeFragmentWithVideo(topicsBundle);
                     }
                 });
 

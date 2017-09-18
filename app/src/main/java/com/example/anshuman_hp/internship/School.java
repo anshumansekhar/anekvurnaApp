@@ -7,17 +7,21 @@ package com.example.anshuman_hp.internship;
 public class School {
     String schoolAddress;
     String schoolName;
-    String state;
-    String city;
+    String schoolLogo;
+    String schoolPin;
+    String schoolState;
+    String schoolCity;
 
     public School() {
     }
 
-    public School(String schoolAddress, String schoolName, String state, String city) {
+    public School(String schoolAddress, String schoolName, String schoolLogo, String schoolPin, String schoolState, String schoolCity) {
         this.schoolAddress = schoolAddress;
         this.schoolName = schoolName;
-        this.state = state;
-        this.city = city;
+        this.schoolLogo = schoolLogo;
+        this.schoolPin = schoolPin;
+        this.schoolState = schoolState;
+        this.schoolCity = schoolCity;
     }
 
     public String getSchoolAddress() {
@@ -36,19 +40,35 @@ public class School {
         this.schoolName = schoolName;
     }
 
-    public String getState() {
-        return state;
+    public String getSchoolLogo() {
+        return schoolLogo;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
     }
 
-    public String getCity() {
-        return city;
+    public String getSchoolPin() {
+        return schoolPin;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setSchoolPin(String schoolPin) {
+        this.schoolPin = schoolPin;
+    }
+
+    public String getSchoolState() {
+        return schoolState;
+    }
+
+    public void setSchoolState(String schoolState) {
+        this.schoolState = schoolState;
+    }
+
+    public String getSchoolCity() {
+        return schoolCity;
+    }
+
+    public void setSchoolCity(String schoolCity) {
+        this.schoolCity = schoolCity;
     }
 }

@@ -3,6 +3,7 @@ package com.example.anshuman_hp.internship;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RatingBar;
@@ -38,60 +40,52 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AnotherActivity extends AppCompatActivity {
+public class AnotherActivity extends Fragment {
 
-    subjectListFragment subjectListFragment=new subjectListFragment();
-    TopicListFragment topicListFragment=new TopicListFragment();
-    VideosFragment videosFragment=new VideosFragment();
+    subjectListFragment subjectListFragment = new subjectListFragment();
+    TopicListFragment topicListFragment = new TopicListFragment();
+    VideosFragment videosFragment = new VideosFragment();
 
 
-    Bundle classNameBundle=new Bundle();
+    Bundle classNameBundle = new Bundle();
 
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     DatabaseReference ref;
-    FirebaseRecyclerAdapter<video,videoHolder> adapter;
-    ActionBar actionBar;
-    Spinner selectSubject;
-    Spinner selectTopic;
-    TextView groupNameText;
-    String groupName;
+    FirebaseRecyclerAdapter<video, videoHolder> adapter;
 
-    String className;
-    String selectedSubject;
-    String selectedTopic;
 
-    ArrayList subjectsList=new ArrayList();
-    HashMap<String,String> topicsList=new HashMap<>();
-    ArrayAdapter spinnerAdapter;
-    ArrayAdapter topicsAdapter;
+    String className = "";
 
+
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_another);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_another, container, false);
 
 
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .child("presentClass")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             className = dataSnapshot.getValue().toString();
-                        } else
-                            className = "1";
-                        actionBar = getSupportActionBar();
-                        actionBar.setTitle("Class " + className);
-                        classNameBundle.putString("ClassNumber", className);
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                            ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
+                            ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
+                            classNameBundle.putString("ClassNumber", className);
+                            subjectListFragment.setArguments(classNameBundle);
 
-                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-                        subjectListFragment.setArguments(classNameBundle);
-                        fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
-                        fragmentTransaction.commit();
-                        fragmentTransaction.addToBackStack(null);
+                            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
+                            fragmentTransaction.commit();
+                            fragmentTransaction.addToBackStack(null);
+                        }
+                        //TODO class name set
+                            //className = "1";
+
                     }
 
                     @Override
@@ -99,39 +93,23 @@ public class AnotherActivity extends AppCompatActivity {
 
                     }
                 });
+        return v;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.videoactivitymenu,menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.favoritesMenu)
-        {
-            startActivity(new Intent(AnotherActivity.this,FavoriteVideosActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public  void  changeFragmentWithTopic(Bundle b)
-    {
+    public void changeFragmentWithTopic(Bundle b) {
         topicListFragment.setArguments(b);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.videoFrame,topicListFragment);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, topicListFragment);
         fragmentTransaction.commit();
         fragmentTransaction.addToBackStack(null);
 
     }
-    public  void  changeFragmentWithVideo(Bundle b)
-    {
+
+    public void changeFragmentWithVideo(Bundle b) {
         videosFragment.setArguments(b);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.videoFrame,videosFragment);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, videosFragment);
         fragmentTransaction.commit();
         fragmentTransaction.addToBackStack(null);
     }
-
 }

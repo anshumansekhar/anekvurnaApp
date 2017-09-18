@@ -59,7 +59,8 @@ public class subjectListFragment extends Fragment {
 
                 TextDrawable drawable=TextDrawable.builder()
                                         .beginConfig()
-                                            .width(100)
+                                            .width(80)
+                                            .fontSize(25)
                                             .height(100)
                                         .endConfig()
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
@@ -74,7 +75,9 @@ public class subjectListFragment extends Fragment {
                         //TODO load topic list
                         subjectNameBundle.putString("ClassName",className);
                         subjectNameBundle.putString("SubjectName",model.getSubjectName());
-                        ((AnotherActivity)getActivity()).changeFragmentWithTopic(subjectNameBundle);
+                        Log.e("gd",getParentFragment().toString());
+                        ((AnotherActivity)getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+
 
                     }
                 });

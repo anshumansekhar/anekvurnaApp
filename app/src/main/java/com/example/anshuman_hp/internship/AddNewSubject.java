@@ -40,6 +40,8 @@ public class AddNewSubject extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_subject);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         a=getIntent();
         post=a.getIntExtra("Position",0);
         reference=a.getStringExtra("Ref");
@@ -57,7 +59,7 @@ public class AddNewSubject extends AppCompatActivity {
 
         adapter=new subjectAdapter(list,post,ref);
         addSubjectRecycler.setAdapter(adapter);
-        arrayAdapter=ArrayAdapter.createFromResource(getApplicationContext(),R.array.Subjects,android.R.layout.simple_dropdown_item_1line);
+        arrayAdapter=ArrayAdapter.createFromResource(AddNewSubject.this,R.array.Subjects,android.R.layout.simple_dropdown_item_1line);
         subjectChoose.setAdapter(arrayAdapter);
         subjectChoose.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

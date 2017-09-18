@@ -3,86 +3,102 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="5dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/familyMemberName"
-            android:layout_width="0dp"
-            android:layout_height="43dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Name"
-            android:inputType="textPersonName"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/photoFamily"
-            android:layout_marginLeft="8dp" />
-
-        <EditText
-            android:id="@+id/PhoneNumberFamily"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="7dp"
-            android:ems="10"
-            android:hint="Contact Number"
-            android:inputType="phone"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/familyMemberRelation"
-            app:layout_constraintLeft_toRightOf="@+id/photoFamily"
-            android:layout_marginLeft="8dp" />
 
         <EditText
             android:id="@+id/EmailIdFamily"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="Email id"
             android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PhoneNumberFamily"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-        <Spinner
-            android:id="@+id/familyMemberRelation"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/black_overlay"
-            android:spinnerMode="dropdown"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/familyMemberName"
-            app:layout_constraintLeft_toRightOf="@+id/photoFamily"
-            android:layout_marginLeft="20dp" />
 
         <ImageView
             android:id="@+id/photoFamily"
             android:layout_width="100dp"
             android:layout_height="120dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_box_black_24dp"
-            android:layout_marginStart="8dp" />
+            app:srcCompat="@drawable/ic_add_box_black_24dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toRightOf="@+id/photoFamily"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/familyMemberName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                app:layout_constraintLeft_toRightOf="@+id/photoFamily"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/familyMemberRelation"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/black_overlay"
+                android:spinnerMode="dropdown"
+                app:layout_constraintLeft_toRightOf="@+id/photoFamily"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/familyMemberName" />
+
+
+            <EditText
+                android:id="@+id/PhoneNumberFamily"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Contact Number"
+                android:inputType="phone"
+                android:maxLength="10"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="116dp" />
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
