@@ -118,7 +118,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         ArrayAdapter stateAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.states,android.R.layout.simple_spinner_item);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(stateAdapter);
-        ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.Class,android.R.layout.simple_spinner_item);
+        ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.ClassWithStream,android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
         final String[] states=getActivity().getResources().getStringArray(R.array.states);
@@ -338,6 +338,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 database.getReference("Cities")
                         .child(user_profile.getState())
                         .child(user_profile.getCityAddress())
+                        .push()
                         .setValue(user_profile.getCityAddress());
                 isChanged=false;
             }

@@ -51,6 +51,7 @@ public class NavigationDrawer extends AppCompatActivity
     int selected;
     Toolbar toolbar;
     ActionBar actionBar;
+    Fragment selectedFragment = new AnotherActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +130,7 @@ public class NavigationDrawer extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.sign_out) {
             firebaseAuth.signOut();
-            startActivity(new Intent(NavigationDrawer.this,MainActivity.class));
+            startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
             return true;
         }
         else if(id==R.id.save)
@@ -167,7 +168,6 @@ public class NavigationDrawer extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment selectedFragment = null;
         switch (id){
             case R.id.nav_share:
                 shareApplication();

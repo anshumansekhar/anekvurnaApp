@@ -24,6 +24,24 @@
         <item>Class-11</item>
         <item>Class-12</item>
     </string-array>
+    <string-array name="ClassWithStream">
+        <item>Class-1</item>
+        <item>Class-2</item>
+        <item>Class-3</item>
+        <item>Class-4</item>
+        <item>Class-5</item>
+        <item>Class-6</item>
+        <item>Class-7</item>
+        <item>Class-8</item>
+        <item>Class-9</item>
+        <item>Class-10</item>
+        <item>Class-11(Arts)</item>
+        <item>Class-11(Commerce)</item>
+        <item>Class-11(Science)</item>
+        <item>Class-12(Arts)</item>
+        <item>Class-12(Commerce)</item>
+        <item>Class-12(Science)</item>
+    </string-array>
     <string-array name="Relation">
         <item>Choose A Relation</item>
         <item>Father</item>
@@ -167,4 +185,8 @@
         <item>HalfYearly</item>
         <item>Yearly</item>
     </string-array>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="login">Have an account? Log In</string>
+    
 </resources>

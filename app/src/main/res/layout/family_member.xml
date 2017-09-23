@@ -79,7 +79,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="20dp"
-                android:background="@color/black_overlay"
                 android:spinnerMode="dropdown"
                 app:layout_constraintLeft_toRightOf="@+id/photoFamily"
                 app:layout_constraintRight_toRightOf="parent"

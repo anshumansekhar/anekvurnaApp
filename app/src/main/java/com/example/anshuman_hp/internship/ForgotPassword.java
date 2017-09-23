@@ -22,6 +22,7 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password2);
         emailToReset=(EditText)findViewById(R.id.emailToReset);
+        resetPassword=(Button)findViewById(R.id.resetPassword);
 
         resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override

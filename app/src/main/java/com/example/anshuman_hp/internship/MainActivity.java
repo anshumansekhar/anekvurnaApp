@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         .setHashtag(getResources().getString(R.string.app_name))
                         .build())
                 .build();
-        shareDialog=new ShareDialog(MainActivity.this);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -294,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if (firebaseAuth.getCurrentUser().getEmail().isEmpty()) {
+                            if (firebaseAuth.getCurrentUser().getEmail()==null) {
                                 Intent i = new Intent(MainActivity.this, Registration.class);
                                 i.putExtra("Mobile", phoneText);
                                 i.putExtra("PhoneAuth", true);
@@ -347,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
                                             if (dataSnapshot.exists()) {
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
                                             } else {
+                                                //TODO goto to registration
                                                 user_profile userProfile = new user_profile(Profile.getCurrentProfile().getName()
                                                         , ""
                                                         , "true"
@@ -360,9 +360,8 @@ public class MainActivity extends AppCompatActivity {
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
                                                 pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                                shareDialog.show(shareLinkContent);
                                                 startActivity(new Intent(MainActivity.this, NavigationDrawer.class));
-
+                                                shareDialog.show(shareLinkContent);
                                             }
                                         }
 

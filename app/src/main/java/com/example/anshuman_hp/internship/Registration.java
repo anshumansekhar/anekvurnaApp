@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.gesture.GestureLibraries;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
@@ -20,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -62,6 +64,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     Button register;
     String ismale;
     String email,password;
+    RadioGroup gender;
 
     String imageUri;
 
@@ -81,6 +84,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     StorageReference ref= FirebaseStorage.getInstance().getReference();
 
     String mobile;
+    String presentClass;
     boolean phoneauth;
 
     NotificationManager notificationManager;
@@ -104,8 +108,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
 
         datePickerDialog=new DatePickerDialog(Registration.this,this,2000,1,1);
 
-
-
+        gender=(RadioGroup)findViewById(R.id.genderRadio);
         emailText=(EditText)findViewById(R.id.emailRegister);
         passwordText=(EditText)findViewById(R.id.passwordRegister);
         name=(EditText)findViewById(R.id.nameRegister);
@@ -116,16 +119,23 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         register=(Button)findViewById(R.id.registerButton);
         emailText.setText(email);
         passwordText.setText(password);
-        if(male.isChecked()) {
-            ismale="true";
-        }
-        else
-            ismale="false";
+
 
         ProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(Registration.this,fullImageActivity.class), IMAGE_REQUEST);
+            }
+        });
+        gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if(checkedId==R.id.maleRegister){
+                    ismale="true";
+                }
+                else if(checkedId==R.id.femaleRegister){
+                    ismale="false";
+                }
             }
         });
 
@@ -139,19 +149,22 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onClick(View v) {
                 Log.e(TAG,"Register CLicked");
-                if(phoneauth) {
-                    if (checkEmailPattern(emailText.getText().toString())) {
-                        authCredential = EmailAuthProvider.getCredential(emailText.getText().toString().trim(), passwordText.getText().toString().trim());
-                        Log.e(TAG,authCredential.toString());
-                        linkPhoneWithEmail(authCredential);
-                    }
-                    else{
-                        emailText.setError("Enter a Valid email Address");
+                if(!passwordText.getText().toString().isEmpty()) {
+                    if (phoneauth) {
+                        if (checkEmailPattern(emailText.getText().toString())) {
+                            authCredential = EmailAuthProvider.getCredential(emailText.getText().toString().trim(), passwordText.getText().toString().trim());
+                            Log.e(TAG, authCredential.toString());
+                            linkPhoneWithEmail(authCredential);
+                        } else {
+                            emailText.setError("Enter a Valid email Address");
+                        }
+                    } else {
+                        Log.e(TAG, "Creating user");
+                        createUser();
                     }
                 }
-                else {
-                    Log.e(TAG,"Creating user");
-                    createUser();
+                else{
+                    passwordText.setError("Enter a 8 characters Long Password");
                 }
             }
         });
@@ -191,7 +204,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         user_profile profile=new user_profile(name.getText().toString(),
                 birthDate.getText().toString()
         ,ismale
-        ,"1"
+        ,presentClass
         ,"https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
         ,""
         ,""
@@ -245,6 +258,16 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         myCalendar.set(Calendar.MONTH, month);
         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+        int currentClass;
+        int currentYear=Calendar.getInstance().get(Calendar.YEAR);
+        if(Calendar.getInstance().get(Calendar.MONTH)>3) {
+            currentClass= currentYear-year + 6;
+        }else
+            currentClass=currentYear-year +5;
+        if(currentClass>17){
+            currentClass=currentClass+2;
+        }
+        presentClass=""+currentClass;
         birthDate.setText(sdf.format(myCalendar.getTime()));
     }
 

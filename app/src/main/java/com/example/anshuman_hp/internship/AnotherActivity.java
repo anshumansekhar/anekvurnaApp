@@ -73,6 +73,24 @@ public class AnotherActivity extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             className = dataSnapshot.getValue().toString();
+                            if(className.equals("11")){
+                                className=className+"(Arts)";
+                            }
+                            else if(className.equals("12")){
+                                className=className+"(Commerce)";
+                            }
+                            else if(className.equals("13")){
+                                className=className+"(Science)";
+                            }
+                            else if(className.equals("14")){
+                                className=className+"(Arts)";
+                            }
+                            else if(className.equals("15")){
+                                className=className+"(Commerce)";
+                            }
+                            else if(className.equals("16")){
+                                className=className+"(Science)";
+                            }
                             ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
                             ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
                             classNameBundle.putString("ClassNumber", className);
