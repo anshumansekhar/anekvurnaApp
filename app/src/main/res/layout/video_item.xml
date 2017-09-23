@@ -29,6 +29,8 @@
             app:layout_constraintLeft_toRightOf="@+id/videoThumbnail"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
+            android:maxEms="20"
+            android:ellipsize="end"
             app:layout_constraintBottom_toTopOf="@+id/videoDuration"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/buttonsVideoItem" />
@@ -39,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
-            android:text="Duration"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/videoThumbnail" />
 <LinearLayout

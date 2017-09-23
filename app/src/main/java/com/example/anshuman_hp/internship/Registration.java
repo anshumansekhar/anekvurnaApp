@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
 
 public class Registration extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    private static final int RESULT_LOAD_IMG = 345;
     EditText emailText;
     EditText passwordText;
     EditText name;
@@ -124,7 +125,8 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         ProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(Registration.this,fullImageActivity.class), IMAGE_REQUEST);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             }
         });
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -273,13 +275,11 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==IMAGE_REQUEST){
+        if(requestCode==RESULT_LOAD_IMG){
             if(resultCode==RESULT_OK){
-                imageUri=data.getStringExtra("ImageURI");
-                Glide.with(getApplicationContext())
-                        .load(imageUri)
-                        .apply(new RequestOptions().override(200,200))
-                        .into(ProfileImage);
+                Uri selectedImage = data.getData();
+                imageUri=selectedImage.toString();
+                ProfileImage.setImageURI(selectedImage);
             }
         }
     }

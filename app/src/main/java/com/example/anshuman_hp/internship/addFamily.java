@@ -1,12 +1,20 @@
 package com.example.anshuman_hp.internship;
 
+import android.app.Dialog;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -18,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,7 +43,15 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+
 public class addFamily extends AppCompatActivity {
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int PIC_CROP = 189;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA =456 ;
+    private static final int RESULT_LOAD_IMG = 654;
+
+
     ArrayAdapter relationsSpinnerAdapter;
     Spinner relations;
     EditText name;
@@ -77,7 +94,7 @@ public class addFamily extends AppCompatActivity {
                 .getReference()
                 .child(auth.getCurrentUser().getUid())
                 .child("FamilyMemPhotos");
-        relationsSpinnerAdapter= ArrayAdapter.createFromResource(getApplicationContext(),R.array.Relation,android.R.layout.simple_spinner_dropdown_item);
+        relationsSpinnerAdapter= ArrayAdapter.createFromResource(addFamily.this,R.array.Relation,android.R.layout.simple_spinner_dropdown_item);
         relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         relations.setAdapter(relationsSpinnerAdapter);
         relations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -93,8 +110,8 @@ public class addFamily extends AppCompatActivity {
         famMemImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(addFamily.this,fullImageActivity.class),IMAGE_REQUEST);
-
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             }
         });
         add.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +127,7 @@ public class addFamily extends AppCompatActivity {
                                 , phoneNumber.getText().toString());
                         database.getReference(auth.getCurrentUser().getUid())
                                 .child("Family")
-                                .child(member.getMemberRelation())
+                                .child(member.getMemberName())
                                 .setValue(member)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -155,7 +172,7 @@ public class addFamily extends AppCompatActivity {
                     notificationManager.notify(1, builder.build());
                     String url=taskSnapshot.getDownloadUrl().toString();
                     database.getReference(auth.getCurrentUser().getUid())
-                            .child("Famliy")
+                            .child("Family")
                             .child(relation)
                             .child("memberPhotoUrl")
                             .setValue(url);
@@ -178,15 +195,87 @@ public class addFamily extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==IMAGE_REQUEST){
+        if(requestCode==REQUEST_IMAGE_CAPTURE){
             if(resultCode==RESULT_OK){
-                imageURI=data.getStringExtra("ImageURI");
-                Log.e("ashsc",imageURI.toString());
-                Glide.with(getApplicationContext())
-                        .load(imageURI)
-                        .apply(new RequestOptions().override(100,120))
-                        .into(famMemImage);
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                famMemImage.setImageBitmap(imageBitmap);
             }
         }
+        else if(requestCode == PIC_CROP){
+            Bundle extras = data.getExtras();
+            Bitmap thePic = extras.getParcelable("data");
+            famMemImage.setImageBitmap(thePic);
+            imageURI=getImageUri(addFamily.this,thePic).toString();
+        }
+        else if(requestCode==RESULT_LOAD_IMG){
+            if(resultCode==RESULT_OK){
+                Uri selectedImage = data.getData();
+                imageURI=selectedImage.toString();
+                famMemImage.setImageURI(selectedImage);
+            }
+
+        }
+    }
+    public void performCrop(Uri uri){
+        try {
+            //call the standard crop action intent (the user device may not support it)
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            //indicate image type and Uri
+            cropIntent.setDataAndType(uri, "image/*");
+            //set crop properties
+            cropIntent.putExtra("crop", "true");
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            //retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+
+        }
+        catch(ActivityNotFoundException anfe){
+            //display an error message
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Log.e("sg",errorMessage);
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        Log.e("sdg",path);
+        Log.e("GH",Uri.parse(path).toString());
+        return Uri.parse(path);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

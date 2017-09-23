@@ -18,8 +18,11 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginBehavior;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
@@ -94,6 +97,22 @@ public class SignUpChooseActivity extends AppCompatActivity {
                         .build())
                 .build();
         shareDialog=new ShareDialog(SignUpChooseActivity.this);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result) {
+                startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -114,12 +133,12 @@ public class SignUpChooseActivity extends AppCompatActivity {
         googleSignIn = (SignInButton) findViewById(R.id.GLogin);
         login=(TextView)findViewById(R.id.loginText);
         emailSignUp=(Button)findViewById(R.id.EmailSignUp);
-
         fbLogin.setReadPermissions(Arrays.asList(
                 "public_profile", "email"));
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                LoginManager.getInstance().logInWithPublishPermissions(SignUpChooseActivity.this, Arrays.asList("publish_actions"));
                 Log.e("dv",loginResult.getAccessToken().toString());
                 Log.d("facebook:onSuccess:", loginResult.toString());
                 Profile currentFbProfile = Profile.getCurrentProfile();
@@ -202,10 +221,14 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
-                                                //pushClassDetails(firebaseAuth.getCurrentUser().getUid());
-                                                shareDialog.show(shareLinkContent);
-                                                startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
-
+                                                if(shareDialog.canShow(ShareLinkContent.class)) {
+                                                    Log.e("adg","Opening share dialog");
+                                                    shareDialog.show(shareLinkContent, ShareDialog.Mode.AUTOMATIC);
+                                                }
+                                                else {
+                                                    startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
+                                                    Log.e("ad", "not showing share dialog");
+                                                }
                                             }
                                         }
 

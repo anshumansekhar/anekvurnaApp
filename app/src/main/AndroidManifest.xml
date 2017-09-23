@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
 
@@ -39,7 +42,7 @@
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider471372649889909"
+            android:authorities="com.facebook.app.FacebookContentProvider125804031382567"
             android:exported="true" />
 
         <activity android:name=".MainActivity">
@@ -66,12 +69,17 @@
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".Main2Activity" />
+        <activity android:name=".Main2Activity"
+            android:parentActivityName=".NavigationDrawer"/>
         <activity
             android:name=".addFamily"
             android:label="AddFamily"
             android:parentActivityName=".NavigationDrawer"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NavigationDrawer" />
+        </activity>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -88,17 +96,29 @@
         <activity android:name=".Registration" />
         <activity
             android:name=".AddHobbyActivityt"
-            android:parentActivityName=".NavigationDrawer" />
+            android:parentActivityName=".NavigationDrawer" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NavigationDrawer" />
+            </activity>
         <activity
             android:name=".fullImageActivity"
             android:parentActivityName=".addFamily" />
         <activity
             android:name=".AddNewSubject"
-            android:parentActivityName=".NavigationDrawer" />
+            android:parentActivityName=".NavigationDrawer" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NavigationDrawer" />
+            </activity>
         <activity android:name=".ForgotPassword" />
         <activity
             android:name=".EditSchoolDetails"
-            android:parentActivityName=".NavigationDrawer" />
+            android:parentActivityName=".NavigationDrawer" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NavigationDrawer" />
+            </activity>
         <activity android:name=".AddVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

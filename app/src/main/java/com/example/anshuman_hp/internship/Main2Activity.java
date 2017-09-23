@@ -25,7 +25,7 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        layout=(FrameLayout)findViewById(R.id.frame);
+        //layout=(FrameLayout)findViewById(R.id.frame);
 
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
@@ -36,13 +36,13 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         }
-        for(int i=0;i<MyFirebaseMessagingService.map.size();i++)
-        {
-            if(!MyFirebaseMessagingService.map.get(""+i).isEmpty()){
-                RadioButton rb=new RadioButton(getApplicationContext());
-                rb.setText(MyFirebaseMessagingService.map.get(""+i));
-            }
-        }
+//        for(int i=0;i<MyFirebaseMessagingService.map.size();i++)
+//        {
+//            if(!MyFirebaseMessagingService.map.get(""+i).isEmpty()){
+//                RadioButton rb=new RadioButton(getApplicationContext());
+//                rb.setText(MyFirebaseMessagingService.map.get(""+i));
+//            }
+//        }
         notificationImage=(ImageView)findViewById(R.id.notificationImage);
         Glide.with(getApplicationContext())
                 .load(photoUrl)

@@ -8,20 +8,34 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Anshuman-HP on 11-08-2017.
@@ -38,11 +52,13 @@ public class AccountFragment extends Fragment {
     public void setChanged(boolean changed) {
         isChanged = changed;
     }
+    String phoneText;
 
 
     EditText email;
-    EditText password;
     EditText mobileNumber;
+    Button registerPhone;
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     public static AccountFragment newInstance() {
         AccountFragment fragment = new AccountFragment();
         return fragment;
@@ -56,8 +72,59 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.account_details,container,false);
         email=(EditText)v.findViewById(R.id.emailaccount);
-        password=(EditText)v.findViewById(R.id.passwordaccount);
         mobileNumber=(EditText)v.findViewById(R.id.mobilenumberaccount);
+        registerPhone=(Button)v.findViewById(R.id.registerPhone);
+
+        if(!firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()){
+            registerPhone.setVisibility(View.INVISIBLE);
+        }
+        else
+            registerPhone.setVisibility(View.VISIBLE);
+
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                if (phoneAuthCredential != null){
+                    linkWithAccount(phoneAuthCredential);
+                }
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    // Invalid request
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                }
+            }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                final String id = s;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Verification");
+                builder.setMessage("Enter the Code sent to " + phoneText);
+                final EditText code = new EditText(getActivity());
+                builder.setView(code);
+                builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(id, code.getText().toString().trim());
+                        linkWithAccount(credential);
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        };
+
         if(!firebaseAuth.getCurrentUser().getEmail().isEmpty()) {
             email.setText(firebaseAuth.getCurrentUser().getEmail());
         }
@@ -81,42 +148,12 @@ public class AccountFragment extends Fragment {
 //                }
             }
         });
-        password.addTextChangedListener(new TextWatcher() {
+        registerPhone.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-//                if(user!=null)
-//                if(!user.getPassword().equals(s.toString().trim())) {
-//                    isChanged = true;
-//                    if(MainActivity.checkEmailPattern(s.toString()))
-//                        user.setPassword(s.toString());
-//                    else
-//                        password.setError("Enter a Valid Email Address");
-//                }
-            }
-        });
-        mobileNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-//                if(user!=null)
-//                if(!user.getMobileNumber().equals(s.toString().trim())){
-//                    isChanged=true;
-//                    if(MainActivity.checkPhonePattern(s.toString()))
-//                        user.setMobileNumber(s.toString());
-//                    else
-//                        mobileNumber.setError("Enter a Valid 10 digit Mobile Number");
-//                }
+            public void onClick(View v) {
+                if(MainActivity.checkPhonePattern(mobileNumber.getText().toString())){
+                    signInWithPhone(mobileNumber.getText().toString());
+                }
             }
         });
         return v;
@@ -148,5 +185,28 @@ public class AccountFragment extends Fragment {
         });
         AlertDialog dialog=builder.create();
         dialog.show();
+    }
+    public void linkWithAccount(AuthCredential credential){
+        firebaseAuth.getCurrentUser().linkWithCredential(credential)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        Toast.makeText(getActivity(),"Successfully Added Mobile Number Login",Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(),"Failed to add Mobile Number",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+    public void signInWithPhone(String number) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                number,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                getActivity(),               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
     }
 }

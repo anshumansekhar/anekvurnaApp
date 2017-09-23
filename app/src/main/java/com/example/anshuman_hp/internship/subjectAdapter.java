@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.internship;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,15 +25,19 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     HashMap<String,subject> map=new HashMap<>();
 
     DatabaseReference reference;
+    DatabaseReference ClassName;
+    Context ctx;
     int post;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth auth=FirebaseAuth.getInstance();
 
 
-    public subjectAdapter(ArrayList list,int position,DatabaseReference ref) {
+    public subjectAdapter(ArrayList list,int position,DatabaseReference ref,DatabaseReference Class,Context context) {
         this.list = list;
         post=position;
         reference=ref;
+        ClassName=Class;
+        ctx=context;
     }
 
     @Override

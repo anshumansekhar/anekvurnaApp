@@ -1,8 +1,12 @@
 package com.example.anshuman_hp.internship;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -114,9 +118,10 @@ public class EditSchoolDetails extends AppCompatActivity {
                 }
                 else{
                     addSubjectCard.setVisibility(View.GONE);
+                    Log.e("fqeah",""+position);
                     database.getReference("Schools")
                             .child(currentCity)
-                            .child(""+position)
+                            .child(schoolNames.get(position))
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -159,6 +164,11 @@ public class EditSchoolDetails extends AppCompatActivity {
                     else if(schoolAddressEnter.getText().toString().isEmpty()){
                         schoolAddressEnter.setError("This Field Cant be Empty");
                     }
+                    Log.e("sf",s.getSchoolName());
+                    database.getReference("Schools")
+                            .child(s.getSchoolCity())
+                            .child(s.getSchoolName())
+                            .setValue(s);
                     database.getReference(auth.getCurrentUser().getUid())
                             .child("SchoolDetails")
                             .child(className)
@@ -275,5 +285,26 @@ public class EditSchoolDetails extends AppCompatActivity {
                 });
         schoolNames.add(0,"Add a New School");
         schoolAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

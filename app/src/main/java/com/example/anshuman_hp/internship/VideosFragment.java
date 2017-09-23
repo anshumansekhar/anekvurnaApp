@@ -61,7 +61,10 @@ public class VideosFragment extends Fragment {
                 ,ref) {
             @Override
             protected void populateViewHolder(videoHolder viewHolder, final video model, final int position) {
-                viewHolder.videoDuration.setText("Duration " + model.getVideoDuration());
+                if(!model.getVideoDuration().equals(""))
+                    viewHolder.videoDuration.setText("Duration " + model.getVideoDuration());
+                else
+                    viewHolder.videoDuration.setText("");
                 viewHolder.videoCaption.setText(model.getVideoCaption());
                 Glide.with(getActivity())
                         .load(model.getVideoThumbnailUrl())
@@ -72,7 +75,8 @@ public class VideosFragment extends Fragment {
                             public void onClick(View v) {
                                 Intent share = new Intent(Intent.ACTION_SEND);
                                 share.setType("text/plain");
-                                share.putExtra(Intent.EXTRA_STREAM, Uri.parse(model.getVideoUrl()));
+                                share.putExtra(Intent.EXTRA_TEXT, model.getVideoUrl());
+                                share.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this Video");
                                 startActivity(Intent.createChooser(share, "Share Video"));
                             }
                         });
@@ -126,13 +130,19 @@ public class VideosFragment extends Fragment {
                         }).setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                float g=(Float.parseFloat(model.getRatings())+ratingBar.getRating())/2;
+                                float g;
+                                if(model.getRatings().equals("")){
+                                    g=ratingBar.getRating();
+                                }
+                                else {
+                                    g=(Float.parseFloat(model.getRatings())+ratingBar.getRating())/2;
+                                }
                                 model.setRatings(""+g);
                                 FirebaseDatabase.getInstance().getReference("Videos")
                                         .child(className)
                                         .child(subjectName)
                                         .child(topicName)
-                                        .child(""+position)
+                                        .child(model.getVideoID())
                                         .setValue(model);
                             }
                         });

@@ -74,8 +74,8 @@ public class FamilyFragment extends Fragment {
             @Override
             protected void populateView(View v, FamilyMember model, int position) {
                 ((EditText)v.findViewById(R.id.familyMemberName)).setText(model.getMemberName());
-                ((EditText)v.findViewById(R.id.EmailIdFamily)).setText(model.getMemberName());
-                ((EditText)v.findViewById(R.id.PhoneNumberFamily)).setText(model.getMemberName());
+                ((EditText)v.findViewById(R.id.EmailIdFamily)).setText(model.getEmail());
+                ((EditText)v.findViewById(R.id.PhoneNumberFamily)).setText(model.getPhoneNumber());
                 ((Spinner)v.findViewById(R.id.familyMemberRelation)).setAdapter(relationsSpinnerAdapter);
                 ((Spinner)v.findViewById(R.id.familyMemberRelation)).setSelection(Integer.valueOf(model.getMemberRelation()));
                         Glide.with(getActivity())
@@ -83,28 +83,6 @@ public class FamilyFragment extends Fragment {
                         .into((ImageView)v.findViewById(R.id.photoFamily));
             }
         };
-//        adapter = new FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder>
-//                (FamilyMember.class,
-//                        R.layout.family_member,
-//                        FamilyMemberHolder.class,
-//                        ref) {
-//            @Override
-//            protected void populateViewHolder(FamilyMemberHolder viewHolder, FamilyMember model, int position) {
-//                viewHolder.memberName.setText(model.getMemberName());
-//                viewHolder.memRelation.setAdapter(relationsSpinnerAdapter);
-//                viewHolder.memRelation.setSelection(Integer.valueOf(model.getMemberRelation()));
-//                viewHolder.emailId.setText(model.getEmail());
-//                viewHolder.phoneNumber.setText(model.getPhoneNumber());
-//                Glide.with(getActivity().getApplicationContext())
-//                        .load(model.getMemberPhotoUrl())
-//                        .into(viewHolder.memPhoto);
-//
-//            }
-//            @Override
-//            public int getItemViewType(int position) {
-//                return super.getItemViewType(position);
-//            }
-//        };
         familyMembers.setAdapter(listAdapter);
 
         emptyView.setOnClickListener(new View.OnClickListener() {

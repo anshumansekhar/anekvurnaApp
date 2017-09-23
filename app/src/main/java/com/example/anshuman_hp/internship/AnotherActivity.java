@@ -77,19 +77,19 @@ public class AnotherActivity extends Fragment {
                                 className=className+"(Arts)";
                             }
                             else if(className.equals("12")){
-                                className=className+"(Commerce)";
+                                className="11"+"(Commerce)";
                             }
                             else if(className.equals("13")){
-                                className=className+"(Science)";
+                                className="11"+"(Science)";
                             }
                             else if(className.equals("14")){
-                                className=className+"(Arts)";
+                                className="12"+"(Arts)";
                             }
                             else if(className.equals("15")){
-                                className=className+"(Commerce)";
+                                className="12"+"(Commerce)";
                             }
                             else if(className.equals("16")){
-                                className=className+"(Science)";
+                                className="12"+"(Science)";
                             }
                             ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
                             ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);

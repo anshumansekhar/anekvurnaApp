@@ -201,9 +201,11 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         birthDate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -335,11 +337,12 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                 dialog.cancel();
                             }
                         });
-                database.getReference("Cities")
-                        .child(user_profile.getState())
-                        .child(user_profile.getCityAddress())
-                        .push()
-                        .setValue(user_profile.getCityAddress());
+                if(!user_profile.getCityAddress().equals("")) {
+                    database.getReference("Cities")
+                            .child(user_profile.getState())
+                            .child(user_profile.getCityAddress())
+                            .setValue(user_profile.getCityAddress());
+                }
                 isChanged=false;
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {

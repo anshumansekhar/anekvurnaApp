@@ -29,6 +29,7 @@ public class AddNewSubject extends AppCompatActivity {
 
     DatabaseReference ref;
     String reference;
+    DatabaseReference Class;
 
     Intent a;
     int post;
@@ -45,6 +46,8 @@ public class AddNewSubject extends AppCompatActivity {
         a=getIntent();
         post=a.getIntExtra("Position",0);
         reference=a.getStringExtra("Ref");
+
+        Class=FirebaseDatabase.getInstance().getReferenceFromUrl(a.getStringExtra("Class"));
         ref= FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
 
 
@@ -55,9 +58,8 @@ public class AddNewSubject extends AppCompatActivity {
         submit=(Button)findViewById(R.id.submitAddSubject);
         subjectChoose=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView);
 
-        //subjectChoose.setDropDownBackgroundResource(R.color.cardview_dark_background);
 
-        adapter=new subjectAdapter(list,post,ref);
+        adapter=new subjectAdapter(list,post,ref,Class,AddNewSubject.this);
         addSubjectRecycler.setAdapter(adapter);
         arrayAdapter=ArrayAdapter.createFromResource(AddNewSubject.this,R.array.Subjects,android.R.layout.simple_dropdown_item_1line);
         subjectChoose.setAdapter(arrayAdapter);

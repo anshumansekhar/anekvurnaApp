@@ -73,6 +73,9 @@ public class marksFragments extends Fragment {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.exists())
                                     percentage.setText("Percentage:"+ dataSnapshot.getValue().toString());
+                                else{
+                                    percentage.setText("Percentage:");
+                                }
                             }
 
                             @Override
@@ -98,6 +101,7 @@ public class marksFragments extends Fragment {
             public void onClick(View v) {
                 Intent i=new Intent(getActivity(),AddNewSubject.class);
                 i.putExtra("Position",Subjects.size());
+                i.putExtra("Class",EducationFragment.classRef.toString());
                 i.putExtra("Ref",testRef.child("subjects").toString());
                 startActivity(i);
             }

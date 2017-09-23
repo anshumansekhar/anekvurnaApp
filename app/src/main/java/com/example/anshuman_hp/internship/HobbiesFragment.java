@@ -255,6 +255,7 @@ public class HobbiesFragment extends Fragment {
 
             }
         });
+
         return v;
     }
     View.OnClickListener listener=new View.OnClickListener() {
