@@ -108,7 +108,26 @@ public class AddVideoActivity extends AppCompatActivity {
                         if(dataSnapshot.exists()){
                             subjectsList.clear();
                             subjectAdapter.clear();
-                            className="Class-"+dataSnapshot.getValue().toString();
+                            className=dataSnapshot.getValue().toString();
+                            if(className.equals("11")){
+                                className=className+"(Arts)";
+                            }
+                            else if(className.equals("12")){
+                                className="11"+"(Commerce)";
+                            }
+                            else if(className.equals("13")){
+                                className="11"+"(Science)";
+                            }
+                            else if(className.equals("14")){
+                                className="12"+"(Arts)";
+                            }
+                            else if(className.equals("15")){
+                                className="12"+"(Commerce)";
+                            }
+                            else if(className.equals("16")){
+                                className="12"+"(Science)";
+                            }
+                            className="Class-"+className;
                             database.getReference("Subjects")
                                     .child(className)
                                     .child("Subjects")

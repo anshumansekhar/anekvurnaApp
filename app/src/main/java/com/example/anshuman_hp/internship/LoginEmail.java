@@ -134,6 +134,8 @@ public class LoginEmail extends AppCompatActivity {
                         if (passwordLogin.getText().toString().isEmpty()) {
                             passwordLogin.setError("Password Cannot be Empty");
                         } else{
+                            emailText=emailLogin.getText().toString();
+                            passwordText=passwordLogin.getText().toString();
                             firebaseAuth.signInWithEmailAndPassword(emailText, passwordText)
                                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                         @Override

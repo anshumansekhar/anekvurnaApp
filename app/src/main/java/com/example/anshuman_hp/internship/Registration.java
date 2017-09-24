@@ -63,7 +63,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
     RadioButton male,female;
     ImageView ProfileImage;
     Button register;
-    String ismale;
+    String ismale="true";
     String email,password;
     RadioGroup gender;
 
@@ -73,7 +73,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
 
     public static final int IMAGE_REQUEST=234;
 
-    String myFormat = "dd/mm/yyyy"; //In which you need put here
+    String myFormat = "dd-MM-yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
     Calendar myCalendar = Calendar.getInstance();
@@ -267,7 +267,7 @@ public class Registration extends AppCompatActivity implements DatePickerDialog.
         }else
             currentClass=currentYear-year +5;
         if(currentClass>17){
-            currentClass=currentClass+2;
+            currentClass=15;
         }
         presentClass=""+currentClass;
         birthDate.setText(sdf.format(myCalendar.getTime()));

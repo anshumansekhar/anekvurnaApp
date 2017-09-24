@@ -194,7 +194,7 @@ public class AddHobbyActivityt extends AppCompatActivity {
                             if(hobbyAdapter!=null)
                                 hobbyAdapter.saveChanges();
                             hobbyGroupRecycler.setAdapter(indoorGamesAdapter);
-                        indoorGamesAdapter.notifyDataSetChanged();
+                             indoorGamesAdapter.notifyDataSetChanged();
                         break;
                     case 1:
                         hobbyAdapter=(com.example.anshuman_hp.internship.hobbyAdapter)hobbyGroupRecycler.getAdapter();
