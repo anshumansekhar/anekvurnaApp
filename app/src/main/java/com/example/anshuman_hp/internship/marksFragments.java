@@ -46,7 +46,7 @@ public class marksFragments extends Fragment {
 
     DatabaseReference testRef;
 
-    String[] tests;
+    public static String[] tests;
 
 
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
@@ -135,7 +135,7 @@ public class marksFragments extends Fragment {
                 ,subjectHolder.class
                 ,ref) {
             @Override
-            protected void populateViewHolder(final subjectHolder viewHolder, final subject model, final int position) {
+            protected void populateViewHolder(final subjectHolder viewHolder, final subject model,  int position) {
                 viewHolder.subjectMarks.setText(""+model.getSubMarks());
                 viewHolder.totalMArks.setText(""+model.getTotalMarks());
                 viewHolder.subjectName.setText(model.getSubjectName());
@@ -152,7 +152,7 @@ public class marksFragments extends Fragment {
                         viewHolder.totalMArks.setText("");
                     }
                 });
-
+                final int pos=position;
                 viewHolder.deleteSubject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -162,7 +162,7 @@ public class marksFragments extends Fragment {
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ref.child(""+position)
+                                ref.child(""+pos)
                                         .removeValue();
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -188,9 +188,9 @@ public class marksFragments extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.e("post",""+position);
+                        Log.e("post",""+pos);
                         if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
-                           Subjects.get(""+position).setTotalMarks(Float.parseFloat(s.toString()));
+                           Subjects.get(""+pos).setTotalMarks(Float.parseFloat(s.toString()));
                         }
 
                     }
@@ -208,13 +208,14 @@ public class marksFragments extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.e("pos",""+position);
+                        Log.e("pos",""+pos);
                         if(!s.toString().equals("")&&model.getSubMarks()!=Float.parseFloat(s.toString())){
-                            Subjects.get(""+position).setSubMarks(Float.parseFloat(s.toString()));
+                            Subjects.get(""+pos).setSubMarks(Float.parseFloat(s.toString()));
                         }
                     }
                 });
             }
+
         };
         subjectsList.setAdapter(Adapter);
     }

@@ -50,10 +50,7 @@ public class EducationFragment extends Fragment {
 
     HashMap<String, subject> map = new HashMap<>();
 
-    String SchoolName;
     static String className = "Class-1";
-
-    boolean isChanged = false;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -95,7 +92,6 @@ public class EducationFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
-                                //TODO get the data
                                 pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"),getActivity());
                             }
                             else {
@@ -117,7 +113,7 @@ public class EducationFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
                                 //TODO get the data
-                                pagerAdapter.update(EducationFragment.classRef.child("Tests").child("UnitTest").child("Subjects"),getActivity());
+                                pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("Subjects"),getActivity());
 
                             }
                             else{
@@ -145,7 +141,7 @@ public class EducationFragment extends Fragment {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if(dataSnapshot.exists()){
                                             //TODO get the data
-                                            pagerAdapter.update(EducationFragment.classRef.child("Tests").child("UnitTest").child("Subjects"),getActivity());
+                                            pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("Subjects"),getActivity());
 
                                         }
                                         else {

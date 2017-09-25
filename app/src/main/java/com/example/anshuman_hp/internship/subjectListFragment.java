@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +26,7 @@ public class subjectListFragment extends Fragment {
 
     RecyclerView subjectsGrid;
     String className;
+    String where="ClassDetails";
     FirebaseRecyclerAdapter<subjectItem,subjectTopicHolde> recyclerAdapter;
     Bundle subjectNameBundle=new Bundle();
 
@@ -37,18 +39,20 @@ public class subjectListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.subjects_list,container,false);
         className=getArguments().getString("ClassNumber");
+        where=getArguments().getString("where");
         Log.e("Cla",className);
         subjectsGrid=(RecyclerView)v.findViewById(R.id.subjectGrid);
         subjectsGrid.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        setAdapter("Class-"+className);
+        setAdapter(className);
         return v;
     }
 
     public void setAdapter(String name){
         DatabaseReference ref= FirebaseDatabase.getInstance()
-                .getReference("Subjects")
+                .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(where)
                 .child(name)
-                .child("Subjects");
+                .child("subjects");
         recyclerAdapter=new FirebaseRecyclerAdapter<subjectItem , subjectTopicHolde>
                 (subjectItem.class
                 ,R.layout.subject_topic_card
@@ -59,14 +63,11 @@ public class subjectListFragment extends Fragment {
 
                 TextDrawable drawable=TextDrawable.builder()
                                         .beginConfig()
-                                            .width(80)
+                                            .width(160)
                                             .fontSize(25)
                                             .height(100)
                                         .endConfig()
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
-
-                viewHolder.textView.setText(model.getSubjectName());
-                //TODO add textDrawable
                 viewHolder.imageView.setImageDrawable(drawable);
 
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
@@ -74,11 +75,14 @@ public class subjectListFragment extends Fragment {
                     public void onClick(View v) {
                         //TODO load topic list
                         subjectNameBundle.putString("ClassName",className);
+                        subjectNameBundle.putString("where",where);
                         subjectNameBundle.putString("SubjectName",model.getSubjectName());
                         Log.e("gd",getParentFragment().toString());
-                        ((AnotherActivity)getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
-
-
+                        if(where.equals("ClassDetails")) {
+                            ((AnotherActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                        }else if(where.equals("Favorites")){
+                            ((FavoriteVideosActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                        }
                     }
                 });
 

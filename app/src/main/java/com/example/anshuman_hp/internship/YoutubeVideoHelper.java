@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,8 @@ public class YoutubeVideoHelper extends AsyncTask<String ,JSONObject,JSONObject>
     FirebaseAuth auth=FirebaseAuth.getInstance();
     String url;
     String caption;
+    String duration;
+    String publishedBy;
 
 
     public YoutubeVideoHelper(Context ctx,String url) {
@@ -42,13 +45,13 @@ public class YoutubeVideoHelper extends AsyncTask<String ,JSONObject,JSONObject>
         JSONObject object;
         try{
             if(params[0]!=null){
-                URL embededURL = new URL("http://www.youtube.com/oembed?url=" +
-                        params[0]+ "&format=json"
+                Scanner s=new Scanner(url).useDelimiter("\\s*https://youtu.be/");
+                String videoID=s.next();
+                Log.e("sh",videoID);
+                URL embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id="+videoID+"&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key=AIzaSyAma3AtMpB74zCdhUhiAg5QIeGstqwoFAA"
                 );
-                object=new JSONObject(IOUtils.toString(embededURL));
-                Log.e("dgda",object.toString());
-                Log.e("dg",object.getString("title"));
-                return object;
+                object=new JSONObject(IOUtils.toString(embededURL)).getJSONArray("items").getJSONObject(0);
+               return object;
             }
         }
         catch (Exception e) {
@@ -62,15 +65,18 @@ public class YoutubeVideoHelper extends AsyncTask<String ,JSONObject,JSONObject>
     protected void onPostExecute(JSONObject jsonObject) {
         super.onPostExecute(jsonObject);
         try {
-            caption = jsonObject.getString("title");
+            caption = jsonObject.getJSONObject("snippet").getString("title");
+            duration=jsonObject.getJSONObject("contentDetails").getString("duration");
+            publishedBy=jsonObject.getJSONObject("snippet").getString("channelTitle");
+            Log.e("caption","ad"+caption+duration+publishedBy);
+            Scanner s=new Scanner(url).useDelimiter("\\s*https://youtu.be/");
+            String videoID=s.next();
+            video video = new video("https://img.youtube.com/vi/"+videoID+"/default.jpg",caption,duration,url,videoID,"",publishedBy);
+            AddVideoActivity.videoItem=video;
+            AddVideoActivity.setUpVideoItem();
+            AddVideoActivity.dialog.hide();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Scanner s=new Scanner(url).useDelimiter("\\s*https://youtu.be/");
-        String videoID=s.next();
-        video video=new video("https://img.youtube.com/vi/"+videoID+"/default.jpg",caption,"",url,videoID,"");
-        AddVideoActivity.videoItem=video;
-        AddVideoActivity.setUpVideoItem();
-        AddVideoActivity.dialog.hide();
     }
 }

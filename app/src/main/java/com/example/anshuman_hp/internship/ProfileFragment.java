@@ -152,7 +152,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             male.setChecked(false);
                             female.setChecked(true);
                         }
-                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass())-1);
+                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass())-6);
                         int indexState=Arrays.asList(states).indexOf(user_profile.getState());
                         stateSpinner.setSelection(indexState);
                         presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -161,7 +161,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                 if(user_profile!=null) {
                                     if (Integer.valueOf(user_profile.getPresentClass()) != position) {
                                         isChanged = true;
-                                        user_profile.setPresentClass("" + (position + 1));
+                                        user_profile.setPresentClass("" + (position ));
                                     }
                                 }
                             }

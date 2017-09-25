@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,69 +36,120 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Scanner;
 
-public class FavoriteVideosActivity extends Fragment{
-    ActionBar ab;
-    RecyclerView favorites;
-    FirebaseDatabase database=FirebaseDatabase.getInstance();
-    FirebaseAuth auth=FirebaseAuth.getInstance();
-    DatabaseReference reference;
-    Intent j;
-    String caption;
+public class FavoriteVideosActivity extends Fragment {
+    Spinner selectClassVideo;
 
-
-    FirebaseRecyclerAdapter<video,videoHolder> adapter;
+    TopicListFragment topicListFragment = new TopicListFragment();
+    VideosFragment videosFragment = new VideosFragment();
+    Bundle classNameBundle = new Bundle();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    DatabaseReference ref;
+    FirebaseRecyclerAdapter<video, videoHolder> adapter;
+    String className = "";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.activity_favorite_videos,container,false);
+        View v = inflater.inflate(R.layout.activity_another, container, false);
 
-
-        favorites=(RecyclerView)v.findViewById(R.id.favoriteVideos);
-        favorites.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        reference=database.getReference(auth.getCurrentUser().getUid())
-                .child("Favorites");
-
-        adapter=new FirebaseRecyclerAdapter<video, videoHolder>(
-                video.class
-                ,R.layout.video_item
-                ,videoHolder.class
-                ,reference) {
-            @Override
-            protected void populateViewHolder(videoHolder viewHolder,final video model, int position) {
-                viewHolder.videoCaption.setText(model.getVideoCaption());
-                viewHolder.videoDuration.setText(model.getVideoDuration());
-                Glide.with(getActivity())
-                        .load(model.getVideoThumbnailUrl())
-                        .into(viewHolder.videoThumbnail);
-                viewHolder.favorites.setVisibility(View.GONE);
-                viewHolder.rateTheVideo.setVisibility(View.GONE);
-                viewHolder.shareVideo.setOnClickListener(new View.OnClickListener() {
+        ((NavigationDrawer)getActivity()).actionBar.setTitle("My Favourites");
+        selectClassVideo = (Spinner) v.findViewById(R.id.selectClassVideo);
+        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.ClassWithStream, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectClassVideo.setAdapter(arrayAdapter);
+        database.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("UserProfile")
+                .child("presentClass")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent share = new Intent(Intent.ACTION_SEND);
-                        share.setType("text/plain");
-                        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(model.getVideoUrl()));
-                        startActivity(Intent.createChooser(share, "Share Video"));
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            className = dataSnapshot.getValue().toString();
+                            selectClassVideo.setSelection(Integer.valueOf(className));
+                            if (className.equals("11")) {
+                                className = "Class-" + className + "(Arts)";
+                            } else if (className.equals("0")) {
+                                className = "Age(0-1)yrs";
+                            } else if (className.equals("1")) {
+                                className = "Age(1-2)yrs";
+                            } else if (className.equals("2")) {
+                                className = "Age(2-3)yrs";
+                            } else if (className.equals("3")) {
+                                className = "Age(3-4)yrs";
+                            } else if (className.equals("4")) {
+                                className = "Age(4-5)yrs";
+                            } else if (className.equals("5")) {
+                                className = "Age(5-6)yrs";
+                            } else if (className.equals("12")) {
+                                className = "Class-" + "11" + "(Commerce)";
+                            } else if (className.equals("13")) {
+                                className = "Class-" + "11" + "(Science)";
+                            } else if (className.equals("14")) {
+                                className = "Class-" + "12" + "(Arts)";
+                            } else if (className.equals("15")) {
+                                className = "Class-" + "12" + "(Commerce)";
+                            } else if (className.equals("16")) {
+                                className = "Class-" + "12" + "(Science)";
+                            } else {
+                                className = "Class-" + (Integer.valueOf(className) - 6);
+                            }
+//                            ((NavigationDrawer) getActivity()).actionBar.setTitle(className);
+//                            ((NavigationDrawer) getActivity()).actionBar.setTitle(className);
+                            classNameBundle.putString("ClassNumber", className);
+                            classNameBundle.putString("where","Favorites");
+                            subjectListFragment subjectListFragment = new subjectListFragment();
+                            subjectListFragment.setArguments(classNameBundle);
+                            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
+                            fragmentTransaction.commit();
+                            fragmentTransaction.addToBackStack(null);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
-                viewHolder.view
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(getActivity(), YoutubeActivity.class);
-                                i.putExtra("VideoID", model.getVideoID());
-                                i.putExtra("VideoURL", model.getVideoUrl());
-                                startActivity(i);
-                            }
-                        });
+        selectClassVideo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                className = getActivity().getResources().getStringArray(R.array.ClassWithStream)[position];
+//                ((NavigationDrawer) getActivity()).actionBar.setTitle(className);
+//                ((NavigationDrawer) getActivity()).actionBar.setTitle(className);
+                classNameBundle.putString("ClassNumber", className);
+                classNameBundle.putString("where","Favorites");
+                subjectListFragment subjectListFragment = new subjectListFragment();
+                subjectListFragment.setArguments(classNameBundle);
+                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
+                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        };
-        favorites.setAdapter(adapter);
+        });
         return v;
     }
-}
 
+    public void changeFragmentWithTopic(Bundle b) {
+        topicListFragment.setArguments(b);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, topicListFragment);
+        fragmentTransaction.commit();
+        fragmentTransaction.addToBackStack(null);
+
+    }
+
+    public void changeFragmentWithVideo(Bundle b) {
+        videosFragment.setArguments(b);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, videosFragment);
+        fragmentTransaction.commit();
+        fragmentTransaction.addToBackStack(null);
+    }
+}

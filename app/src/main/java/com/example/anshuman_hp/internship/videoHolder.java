@@ -16,6 +16,7 @@ public class videoHolder extends RecyclerView.ViewHolder{
     ImageView videoThumbnail;
     TextView videoCaption;
     TextView videoDuration;
+    TextView publishedBy;
     ImageButton shareVideo;
     ImageButton favorites;
     ImageButton rateTheVideo;
@@ -28,5 +29,6 @@ public class videoHolder extends RecyclerView.ViewHolder{
         shareVideo=(ImageButton)itemView.findViewById(R.id.shareVideo);
         favorites=(ImageButton)itemView.findViewById(R.id.favorites);
         rateTheVideo=(ImageButton)itemView.findViewById(R.id.rate);
+        publishedBy=(TextView)itemView.findViewById(R.id.videoPublishedBy);
     }
 }

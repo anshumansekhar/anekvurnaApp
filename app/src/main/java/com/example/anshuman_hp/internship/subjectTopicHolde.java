@@ -12,13 +12,10 @@ import android.widget.TextView;
 
 public class subjectTopicHolde extends RecyclerView.ViewHolder {
     ImageView imageView;
-    TextView textView;
     CardView view;
     public subjectTopicHolde(View itemView) {
         super(itemView);
-
         imageView=(ImageView)itemView.findViewById(R.id.subject_topicImage);
-        textView=(TextView)itemView.findViewById(R.id.subject_topicName);
         view=(CardView)itemView.findViewById(R.id.CardView);
 
     }

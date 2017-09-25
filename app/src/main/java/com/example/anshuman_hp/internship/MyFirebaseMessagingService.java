@@ -55,20 +55,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String imageUri = remoteMessage.getData().get("image");
         //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
         //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
-        String TrueOrFlase = remoteMessage.getData().get("AnotherActivity");
+        String options=remoteMessage.getData().get("options");
+        String isRadio=remoteMessage.getData().get("radio");
 
         map=remoteMessage.getData();
 
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
-        sendNotification(message, bitmap, TrueOrFlase,imageUri);
+        sendNotification(message, bitmap,imageUri,options,isRadio);
     }
 
-    private void sendNotification(String messageBody, Bitmap image, String TrueOrFalse,String imgURL) {
+    private void sendNotification(String messageBody, Bitmap image,String imgURL,String optionNames,String isRadio) {
         Intent intent = new Intent(this, Main2Activity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("AnotherActivity", TrueOrFalse);
+        intent.putExtra("Subject",messageBody);
         intent.putExtra("IMG",imgURL);
+        intent.putExtra("Options",optionNames);
+        intent.putExtra("radio",isRadio);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 

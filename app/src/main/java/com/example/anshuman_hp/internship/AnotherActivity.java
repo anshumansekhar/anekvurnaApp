@@ -41,30 +41,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AnotherActivity extends Fragment {
+    Spinner selectClassVideo;
 
-    subjectListFragment subjectListFragment = new subjectListFragment();
     TopicListFragment topicListFragment = new TopicListFragment();
     VideosFragment videosFragment = new VideosFragment();
-
-
     Bundle classNameBundle = new Bundle();
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     DatabaseReference ref;
     FirebaseRecyclerAdapter<video, videoHolder> adapter;
-
-
     String className = "";
-
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_another, container, false);
-
-
+        selectClassVideo=(Spinner)v.findViewById(R.id.selectClassVideo);
+        ArrayAdapter arrayAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.ClassWithStream,android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectClassVideo.setAdapter(arrayAdapter);
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .child("presentClass")
@@ -73,37 +68,57 @@ public class AnotherActivity extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             className = dataSnapshot.getValue().toString();
+                            selectClassVideo.setSelection(Integer.valueOf(className));
                             if(className.equals("11")){
-                                className=className+"(Arts)";
+                                className="Class-"+className+"(Arts)";
+                            }
+                            else if(className.equals("0")){
+                                className="Age(0-1)yrs";
+                            }
+                            else if(className.equals("1")){
+                                className="Age(1-2)yrs";
+                            }
+                            else if(className.equals("2")){
+                                className="Age(2-3)yrs";
+                            }
+                            else if(className.equals("3")){
+                                className="Age(3-4)yrs";
+                            }
+                            else if(className.equals("4")){
+                                className="Age(4-5)yrs";
+                            }
+                            else if(className.equals("5")){
+                                className="Age(5-6)yrs";
                             }
                             else if(className.equals("12")){
-                                className="11"+"(Commerce)";
+                                className="Class-"+"11"+"(Commerce)";
                             }
                             else if(className.equals("13")){
-                                className="11"+"(Science)";
+                                className="Class-"+"11"+"(Science)";
                             }
                             else if(className.equals("14")){
-                                className="12"+"(Arts)";
+                                className="Class-"+"12"+"(Arts)";
                             }
                             else if(className.equals("15")){
-                                className="12"+"(Commerce)";
+                                className="Class-"+"12"+"(Commerce)";
                             }
                             else if(className.equals("16")){
-                                className="12"+"(Science)";
+                                className="Class-"+"12"+"(Science)";
                             }
-                            ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
-                            ((NavigationDrawer)getActivity()).actionBar.setTitle("Class-"+className);
+                            else{
+                                className="Class-"+(Integer.valueOf(className)-6);
+                            }
+                            ((NavigationDrawer)getActivity()).actionBar.setTitle(className);
+                            ((NavigationDrawer)getActivity()).actionBar.setTitle(className);
                             classNameBundle.putString("ClassNumber", className);
+                            classNameBundle.putString("where","ClassDetails");
+                            subjectListFragment subjectListFragment = new subjectListFragment();
                             subjectListFragment.setArguments(classNameBundle);
-
                             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
                             fragmentTransaction.commit();
                             fragmentTransaction.addToBackStack(null);
                         }
-                        //TODO class name set
-                            //className = "1";
-
                     }
 
                     @Override
@@ -111,6 +126,26 @@ public class AnotherActivity extends Fragment {
 
                     }
                 });
+        selectClassVideo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                className=getActivity().getResources().getStringArray(R.array.ClassWithStream)[position];
+                ((NavigationDrawer)getActivity()).actionBar.setTitle(className);
+                ((NavigationDrawer)getActivity()).actionBar.setTitle(className);
+                classNameBundle.putString("ClassNumber", className);
+                classNameBundle.putString("where","ClassDetails");
+                subjectListFragment subjectListFragment = new subjectListFragment();
+                subjectListFragment.setArguments(classNameBundle);
+                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
+                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return v;
     }
 

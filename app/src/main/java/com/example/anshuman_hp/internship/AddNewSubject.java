@@ -77,7 +77,7 @@ public class AddNewSubject extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 adapter.uploadData();
-
+                startActivity(new Intent(AddNewSubject.this,NavigationDrawer.class));
             }
         });
     }

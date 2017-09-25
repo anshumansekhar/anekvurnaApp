@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,21 +31,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class AddVideoActivity extends AppCompatActivity {
     static ProgressDialog dialog;
-    Spinner subject,topic;
+    Spinner subject,topic,Class;
     CardView videoItemLayout;
     static ImageView videoThumbnail;
-    static TextView videoCaption,videoDuration;
+    static TextView videoCaption,videoDuration,publishedBy;
     Button addVideo;
     LinearLayout buttonsVideoItem;
 
     ArrayList subjectsList=new ArrayList();
     ArrayList topicsList=new ArrayList();
-    ArrayAdapter subjectAdapter,topicAdapter;
+    ArrayList classList=new ArrayList();
+    ArrayAdapter subjectAdapter,topicAdapter,classAdapter;
 
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
@@ -63,14 +68,19 @@ public class AddVideoActivity extends AppCompatActivity {
         ctx=AddVideoActivity.this;
         subject=(Spinner)findViewById(R.id.subjectAddApinner);
         topic=(Spinner)findViewById(R.id.topicAddSpinner);
+        Class=(Spinner)findViewById(R.id.classSpinner);
         videoItemLayout=(CardView)findViewById(R.id.videoItemLayout);
         videoThumbnail=(ImageView)videoItemLayout.findViewById(R.id.videoThumbnail);
         videoCaption=(TextView)videoItemLayout.findViewById(R.id.videoCaption);
         videoDuration=(TextView)videoItemLayout.findViewById(R.id.videoDuration);
+        publishedBy=(TextView)videoItemLayout.findViewById(R.id.videoPublishedBy);
         addVideo=(Button)findViewById(R.id.AddVideo);
         buttonsVideoItem=(LinearLayout)videoItemLayout.findViewById(R.id.buttonsVideoItem);
         buttonsVideoItem.setVisibility(View.INVISIBLE);
-
+        classList=new ArrayList(Arrays.asList(getResources().getStringArray(R.array.ClassWithStream)));
+        classAdapter=new ArrayAdapter(AddVideoActivity.this,android.R.layout.simple_spinner_item,classList);
+        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Class.setAdapter(classAdapter);
         subjectAdapter=new ArrayAdapter(AddVideoActivity.this,android.R.layout.simple_spinner_item,subjectsList);
         subjectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subject.setAdapter(subjectAdapter);
@@ -110,65 +120,71 @@ public class AddVideoActivity extends AppCompatActivity {
                             subjectAdapter.clear();
                             className=dataSnapshot.getValue().toString();
                             if(className.equals("11")){
-                                className=className+"(Arts)";
+                                className="Class-"+className+"(Arts)";
+                            }
+                            else if(className.equals("0")){
+                                className="Age(0-1)yrs";
+                            }
+                            else if(className.equals("1")){
+                                className="Age(1-2)yrs";
+                            }
+                            else if(className.equals("2")){
+                                className="Age(2-3)yrs";
+                            }
+                            else if(className.equals("3")){
+                                className="Age(3-4)yrs";
+                            }
+                            else if(className.equals("4")){
+                                className="Age(4-5)yrs";
+                            }
+                            else if(className.equals("5")){
+                                className="Age(5-6)yrs";
                             }
                             else if(className.equals("12")){
-                                className="11"+"(Commerce)";
+                                className="Class-"+"11"+"(Commerce)";
                             }
                             else if(className.equals("13")){
-                                className="11"+"(Science)";
+                                className="Class-"+"11"+"(Science)";
                             }
                             else if(className.equals("14")){
-                                className="12"+"(Arts)";
+                                className="Class-"+"12"+"(Arts)";
                             }
                             else if(className.equals("15")){
-                                className="12"+"(Commerce)";
+                                className="Class-"+"12"+"(Commerce)";
                             }
                             else if(className.equals("16")){
-                                className="12"+"(Science)";
+                                className="Class-"+"12"+"(Science)";
                             }
-                            className="Class-"+className;
-                            database.getReference("Subjects")
-                                    .child(className)
-                                    .child("Subjects")
-                                    .addChildEventListener(new ChildEventListener() {
-                                        @Override
-                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                                            dialog.hide();
-                                            subjectAdapter.notifyDataSetChanged();
-                                        }
-
-                                        @Override
-                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                                            dialog.hide();
-                                            subjectAdapter.notifyDataSetChanged();
-                                        }
-
-                                        @Override
-                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                        }
-
-                                        @Override
-                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                        }
+                            else{
+                                className="Class-"+(Integer.valueOf(className)-6);
+                            }
+                            Log.e("aj",className);
+                            Log.e("sfbk",""+classList.indexOf(className));
+                            Class.setSelection(classList.indexOf(className));
+                            getSubjects(className);
+                    }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
+        Class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                subjectsList.clear();
+                subjectAdapter.clear();
+                topicsList.clear();
+                topicAdapter.clear();
+                className=classList.get(position).toString();
+                getSubjects(className);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         subject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -228,6 +244,23 @@ public class AddVideoActivity extends AppCompatActivity {
                 .setValue(videoItem);
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
+                .child(className)
+                .child("subjects")
+                .child(subjectName)
+                .setValue(new subjectItem(subjectName));
+        database.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("Favorites")
+                .child(className)
+                .child("topics")
+                .child(subjectName)
+                .push()
+                .setValue(new subjectItem(topicName));
+        database.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child("Favorites")
+                .child(className)
+                .child("videos")
+                .child(subjectName)
+                .child(topicName)
                 .child(videoItem.getVideoID())
                 .setValue(videoItem)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -236,8 +269,48 @@ public class AddVideoActivity extends AppCompatActivity {
                         //TODO goto navigation drawer activity
                         startActivity(new Intent(AddVideoActivity.this,NavigationDrawer.class));
                     }
-                });
+                });;
+
     }
+    public void getSubjects(final String Class){
+                            database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child("ClassDetails")
+                                    .child(Class)
+                                    .child("subjects")
+                                    .addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                                            dialog.hide();
+                                            subjectAdapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                                            dialog.hide();
+                                            subjectAdapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                            if(subjectsList.isEmpty()){
+                                Toast.makeText(AddVideoActivity.this,"No Subjects Present for the selected Class ",Toast.LENGTH_SHORT).show();
+                            }
+                        }
     public void getTopics(String subName){
         database.getReference("Subjects")
                 .child(className)
@@ -275,6 +348,7 @@ public class AddVideoActivity extends AppCompatActivity {
     public static void setUpVideoItem(){
         videoCaption.setText(videoItem.getVideoCaption());
         videoDuration.setText(videoItem.getVideoDuration());
+        publishedBy.setText("By:-"+videoItem.getPublishedBy());
         Glide.with(ctx)
                 .load(videoItem.getVideoThumbnailUrl())
                 .into(videoThumbnail);

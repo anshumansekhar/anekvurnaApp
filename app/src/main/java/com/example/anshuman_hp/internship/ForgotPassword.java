@@ -33,7 +33,7 @@ public class ForgotPassword extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(getApplicationContext(),"Password Reset Email Sent",Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(ForgotPassword.this,MainActivity.class));
+                                    startActivity(new Intent(ForgotPassword.this,LoginEmail.class));
                                 }
                             });
                 }

@@ -32,6 +32,8 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     FirebaseAuth auth=FirebaseAuth.getInstance();
 
 
+
+
     public subjectAdapter(ArrayList list,int position,DatabaseReference ref,DatabaseReference Class,Context context) {
         this.list = list;
         post=position;
@@ -61,9 +63,22 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     public void uploadData()
     {
         Log.e("Uploading","DAta");
+        for(int i=post;i<(post+map.size());i++){
+            ClassName.child("subjects")
+                    .child(""+i)
+                    .setValue(map.get(""+i).getSubjectName());
+        }
         for (int i=post;i<(post+map.size());i++) {
-            reference.child(""+i)
-                    .setValue(map.get(""+i));
+            for(int j=0;j<marksFragments.tests.length;j++){
+                ClassName.child("tests")
+                        .child(marksFragments.tests[j])
+                        .child("subjects")
+                        .child(""+i)
+                        .setValue(map.get(""+i));
+            }
+            ClassName.child("subjects")
+                    .child(""+i)
+                    .setValue(new subjectItem(map.get(""+i).getSubjectName()));
             Log.e("Pushing",map.get(""+i).toString());
         }
     }

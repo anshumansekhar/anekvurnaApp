@@ -36,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * Created by Anshuman-HP on 11-08-2017.
@@ -151,7 +152,7 @@ public class AccountFragment extends Fragment {
         registerPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.checkPhonePattern(mobileNumber.getText().toString())){
+                if(checkPhonePattern(mobileNumber.getText().toString())){
                     signInWithPhone(mobileNumber.getText().toString());
                 }
             }
@@ -208,5 +209,17 @@ public class AccountFragment extends Fragment {
                 TimeUnit.SECONDS,   // Unit of timeout
                 getActivity(),               // Activity (for callback binding)
                 mCallbacks);        // OnVerificationStateChangedCallbacks
+    }
+    public static boolean checkEmailPattern(String email) {
+        String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        boolean value = Pattern.matches(emailRegex, email);
+        return value;
+    }
+
+    public static boolean checkPhonePattern(String Phone) {
+        String phoneRegex = "[789]{1}[1234567890]{9}";
+        boolean value1 = Pattern.matches(phoneRegex, Phone);
+        return value1;
     }
 }

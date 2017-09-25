@@ -72,9 +72,8 @@ public class RateUs {
         b1.setBackgroundColor(mContext.getResources().getColor(R.color.cardview_light_background));
         b1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
-//                        .parse("market://details?id=" + PACKAGE_NAME)));
-                NavigationDrawer.loadRateFragment();
+                mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+                        .parse("market://details?id=" + PACKAGE_NAME)));
                 dialog.dismiss();
             }
         });

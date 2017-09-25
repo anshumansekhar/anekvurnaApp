@@ -18,8 +18,15 @@ import android.widget.RatingBar;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Anshuman-HP on 12-09-2017.
@@ -28,8 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class VideosFragment extends Fragment {
     RecyclerView videosList;
     FirebaseRecyclerAdapter<video,videoHolder> firebaseRecyclerAdapter;
-
-    String className,subjectName,topicName;
+    public static HashMap<String,video> videos=new HashMap();
+    String className,subjectName,topicName,where;
 
     @Nullable
     @Override
@@ -39,6 +46,7 @@ public class VideosFragment extends Fragment {
         className=getArguments().getString("ClassName");
         subjectName=getArguments().getString("SubjectName");
         topicName=getArguments().getString("TopicName");
+        where=getArguments().getString("where");
         videosList=(RecyclerView)v.findViewById(R.id.videosList);
         videosList.setLayoutManager(new LinearLayoutManager(getActivity()));
         SetAdapter(className,subjectName,topicName);
@@ -48,12 +56,51 @@ public class VideosFragment extends Fragment {
     public void SetAdapter(final String className, final String subjectName, final String topicName){
 
         Log.e("dag",className+subjectName+topicName);
+        DatabaseReference ref;
+        if(where.equals("Favorites")){
+            ref=FirebaseDatabase.getInstance()
+                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(where)
+                    .child(className)
+                    .child("videos")
+                    .child(subjectName)
+                    .child(topicName);
+            Log.e("GDHZ",ref.toString());
+        }
+        else{
+            ref=FirebaseDatabase.getInstance()
+                    .getReference("Videos")
+                    .child(className)
+                    .child(subjectName)
+                    .child(topicName);
+            Log.e("GDHzdhZ",ref.toString());
 
-        DatabaseReference ref= FirebaseDatabase.getInstance()
-                .getReference("Videos")
-                .child(className)
-                .child(subjectName)
-                .child(topicName);
+        }
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                videos.put(dataSnapshot.getKey(),dataSnapshot.getValue(video.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                videos.put(dataSnapshot.getKey(),dataSnapshot.getValue(video.class));
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<video, videoHolder>
                 (video.class
                 ,R.layout.video_item
@@ -66,6 +113,9 @@ public class VideosFragment extends Fragment {
                 else
                     viewHolder.videoDuration.setText("");
                 viewHolder.videoCaption.setText(model.getVideoCaption());
+                viewHolder.videoDuration.setText(model.getVideoDuration());
+                viewHolder.favorites.setVisibility(View.GONE);
+                viewHolder.publishedBy.setText("By:-"+model.getPublishedBy());
                 Glide.with(getActivity())
                         .load(model.getVideoThumbnailUrl())
                         .into(viewHolder.videoThumbnail);
@@ -153,6 +203,5 @@ public class VideosFragment extends Fragment {
             }
         };
         videosList.setAdapter(firebaseRecyclerAdapter);
-
     }
 }

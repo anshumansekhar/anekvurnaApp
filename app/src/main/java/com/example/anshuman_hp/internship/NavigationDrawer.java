@@ -47,6 +47,7 @@ public class NavigationDrawer extends AppCompatActivity
     FloatingActionButton floatingActionButton;
 
     static FragmentManager fm;
+    MenuItem itemWER;
 
     int selected;
     Toolbar toolbar;
@@ -75,9 +76,9 @@ public class NavigationDrawer extends AppCompatActivity
 
 
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_layout, new AnotherActivity());
-            transaction.commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, new AnotherActivity());
+        transaction.commit();
 
         floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
         floatingActionButton.hide();
@@ -117,6 +118,8 @@ public class NavigationDrawer extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation_drawer, menu);
+        itemWER= menu.findItem(R.id.save);
+        itemWER.setVisible(false);
         return true;
     }
 
@@ -135,7 +138,6 @@ public class NavigationDrawer extends AppCompatActivity
         }
         else if(id==R.id.save)
         {
-            Log.e("Clciked","agd");
             Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
             if(f instanceof EducationFragment)
             {
@@ -170,7 +172,7 @@ public class NavigationDrawer extends AppCompatActivity
         int id = item.getItemId();
         switch (id){
             case R.id.nav_share:
-                shareApplication();
+                sharePlayStoreLink();
                 floatingActionButton.hide();
                 break;
             case R.id.nav_send:
@@ -178,12 +180,14 @@ public class NavigationDrawer extends AppCompatActivity
                 floatingActionButton.hide();
                 break;
             case R.id.nav_profile:
+                itemWER.setVisible(true);
                 ProfileFragment profileFragment=ProfileFragment.newInstance();
                 selectedFragment=profileFragment;
                 floatingActionButton.hide();
                 actionBar.setTitle("Profile");
                 break;
             case R.id.nav_hobby:
+                itemWER.setVisible(true);
                 HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
                 floatingActionButton.show();
                 floatingActionButton.setOnClickListener(hobbiesFragment.listener);
@@ -192,29 +196,36 @@ public class NavigationDrawer extends AppCompatActivity
                 actionBar.setTitle("Hobbies");
                 break;
             case R.id.presentClassVideos:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
                 AnotherActivity anotherActivityFrag=new AnotherActivity();
                 selectedFragment=anotherActivityFrag;
                 floatingActionButton.hide();
                 break;
             case R.id.favoritesVideos:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
                 FavoriteVideosActivity favoriteVideosFrag=new FavoriteVideosActivity();
                 selectedFragment =favoriteVideosFrag;
-                actionBar.setTitle("Favourites");
+                actionBar.setTitle("My Favourites");
                 floatingActionButton.hide();
                 break;
             case R.id.EducationDetails:
+                itemWER.setVisible(true);
                 EducationFragment educationFragment=EducationFragment.newInstance();
                 floatingActionButton.hide();
                 selectedFragment = educationFragment;
                 actionBar.setTitle("Education");
                 break;
             case R.id.rateUs:
-                SharedPreferences prefs = getSharedPreferences("rateus", 0);
+                closeOptionsMenu();
+                itemWER.setVisible(false);
                 selectedFragment=loadRateFragment();
-                actionBar.setTitle("Rate US");
+                actionBar.setTitle("Contact us");
                 floatingActionButton.hide();
                 break;
             case R.id.nav_family:
+                itemWER.setVisible(true);
                 FamilyFragment fragment = FamilyFragment.newInstance();
                 floatingActionButton.show();
                 floatingActionButton.setOnClickListener(fragment.listener());
@@ -223,6 +234,8 @@ public class NavigationDrawer extends AppCompatActivity
                 actionBar.setTitle("Family");
                 break;
             case R.id.nav_account:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
                 AccountFragment accountFragment=AccountFragment.newInstance();
                 selectedFragment = accountFragment;
                 floatingActionButton.hide();
@@ -231,62 +244,12 @@ public class NavigationDrawer extends AppCompatActivity
 
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-
         transaction.replace(R.id.frame_layout, selectedFragment);
         transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    private void shareApplication() {
-        ApplicationInfo app = getApplicationContext().getApplicationInfo();
-        String filePath = app.sourceDir;
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-
-        // MIME of .apk is "application/vnd.android.package-archive".
-        // but Bluetooth does not accept this. Let's use "*/*" instead.
-        intent.setType("*/*");
-
-        // Append file and send Intent
-        File originalApk = new File(filePath);
-
-        try {
-            //Make new directory in new location
-            File tempFile = new File(getExternalCacheDir() + "/ExtractedApk");
-            //If directory doesn't exists create new
-            if (!tempFile.isDirectory())
-                if (!tempFile.mkdirs())
-                    return;
-            //Get application's name and convert to lowercase
-            tempFile = new File(tempFile.getPath() + "/" + getString(app.labelRes).replace(" ","").toLowerCase() + ".apk");
-            //If file doesn't exists create new
-            if (!tempFile.exists()) {
-                if (!tempFile.createNewFile()) {
-                    return;
-                }
-            }
-            //Copy file to new location
-            InputStream in = new FileInputStream(originalApk);
-            OutputStream out = new FileOutputStream(tempFile);
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            in.close();
-            out.close();
-            System.out.println("File copied.");
-            //Open share dialog
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
-            startActivity(Intent.createChooser(intent, "Share app via"));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     private void onInviteClicked() {
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite Your Friends")
@@ -295,7 +258,14 @@ public class NavigationDrawer extends AppCompatActivity
         startActivityForResult(intent, REQUEST_INVITE);
     }
     public static Fragment loadRateFragment(){
-        return new AppRatingActivity();
+        return new feedbackActivity();
 
+    }
+    public void sharePlayStoreLink(){
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship");
+        share.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this Video");
+        startActivity(Intent.createChooser(share, "Share The App Link"));
     }
 }

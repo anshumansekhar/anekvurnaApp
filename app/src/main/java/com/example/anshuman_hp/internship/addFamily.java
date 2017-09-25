@@ -44,6 +44,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.regex.Pattern;
 
 public class addFamily extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -117,8 +118,8 @@ public class addFamily extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.checkEmailPattern(email.getText().toString())) {
-                    if(MainActivity.checkPhonePattern(phoneNumber.getText().toString())) {
+                if(checkEmailPattern(email.getText().toString())) {
+                    if(checkPhonePattern(phoneNumber.getText().toString())) {
                         uploadImage(relation);
                         member = new FamilyMember(name.getText().toString()
                                 , "https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
@@ -173,7 +174,7 @@ public class addFamily extends AppCompatActivity {
                     String url=taskSnapshot.getDownloadUrl().toString();
                     database.getReference(auth.getCurrentUser().getUid())
                             .child("Family")
-                            .child(relation)
+                            .child(member.getMemberName())
                             .child("memberPhotoUrl")
                             .setValue(url);
                 }
@@ -277,5 +278,18 @@ public class addFamily extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public static boolean checkEmailPattern(String email) {
+        String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        boolean value = Pattern.matches(emailRegex, email);
+        return value;
+    }
+
+    public static boolean checkPhonePattern(String Phone) {
+        String phoneRegex = "[789]{1}[1234567890]{9}";
+        boolean value1 = Pattern.matches(phoneRegex, Phone);
+        return value1;
     }
 }
