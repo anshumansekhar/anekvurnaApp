@@ -53,15 +53,24 @@ public class NavigationDrawer extends AppCompatActivity
         toggle.syncState();
 
         fg=getIntent();
-        isFirstLaunch=fg.getBooleanExtra("IsFirstTime",true);
+        isFirstLaunch=fg.getBooleanExtra("IsFirstTime",false);
         if(isFirstLaunch){
             fm=getSupportFragmentManager();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_layout, new ProfileFragment());
+            actionBar.setTitle("Student Profile Details");
             transaction.commit();
         }else {
             previousFragment = fg.getStringExtra("PreviousFrag");
-            getPreviousFragment(previousFragment);
+            if(previousFragment!=null) {
+                getPreviousFragment(previousFragment);
+            }
+            else{
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_layout, new AnotherActivity());
+                actionBar.setTitle("Student Profile Details");
+                transaction.commit();
+            }
         }
         floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
         floatingActionButton.hide();

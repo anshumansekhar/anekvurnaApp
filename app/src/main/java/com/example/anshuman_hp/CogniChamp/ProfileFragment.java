@@ -45,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
@@ -72,6 +73,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     EditText city;
     EditText pinCode;
     Spinner stateSpinner;
+    Spinner districtSpinner;
 
     String imageUri;
     String myFormat = "dd-MM-yyyy"; //In which you need put here
@@ -80,6 +82,9 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     Calendar myCalendar = Calendar.getInstance();
     NotificationManager notificationManager;
     NotificationCompat.Builder builder;
+
+    ArrayList cities=new ArrayList();
+    ArrayAdapter citiesAdapter;
 
     DatePickerDialog datePickerDialog;
     boolean isChanged=false;
@@ -116,6 +121,10 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         pinCode=(EditText)v.findViewById(R.id.PinCode);
         presentClass=(Spinner)v.findViewById(R.id.presentClassSpinnerProfile);
         stateSpinner=(Spinner)v.findViewById(R.id.stateSpinner);
+        districtSpinner=(Spinner)v.findViewById(R.id.districtSpinner);
+        citiesAdapter=new ArrayAdapter(getActivity(),android.R.layout.simple_spinner_item,cities);
+        citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        districtSpinner.setAdapter(citiesAdapter);
         ArrayAdapter stateAdapter=ArrayAdapter.createFromResource(getActivity(),R.array.states,android.R.layout.simple_spinner_item);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(stateAdapter);
@@ -131,7 +140,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.e("dagd",dataSnapshot.getValue(com.example.anshuman_hp.CogniChamp.user_profile.class).toString());
+//                        Log.e("dagd",dataSnapshot.getValue(com.example.anshuman_hp.CogniChamp.user_profile.class).toString());
                         user_profile=dataSnapshot.getValue(user_profile.class);
                         Log.e("USER_PROFILE",user_profile.toString());
                         if(getActivity()==null) {
@@ -154,6 +163,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             male.setChecked(false);
                             female.setChecked(true);
                         }
+
                         presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
                         int indexState=Arrays.asList(states).indexOf(user_profile.getState());
                         stateSpinner.setSelection(indexState);
@@ -182,7 +192,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 datePickerDialog.show();
             }
         });
-
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -309,6 +318,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 if(user_profile!=null) {
                     if (states[position] != user_profile.getState()) {
                         isChanged = true;
+                        getCities(position);
                         user_profile.setState(states[position]);
                     }
                 }
@@ -319,6 +329,17 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
             }
         });
 
+        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                user_profile.setDistrict(cities.get(position).toString());
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -373,10 +394,15 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        if(year<myCalendar.get(Calendar.YEAR)) {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             birthDate.setText(sdf.format(myCalendar.getTime()));
+        }
+        else{
+            birthDate.setError("Enter a Valid Date of Birth");
+        }
     }
     public void UploadImage(){
         if(imageUri!=null) {
@@ -419,5 +445,128 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp);
 
 
+    }
+    public void getCities(int state){
+        citiesAdapter.clear();
+        cities.clear();
+        Log.e("gd",""+state);
+        switch (state){
+            case 0:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State1)));
+                break;
+            case 1:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State2)));
+                break;
+            case 2:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State3)));
+                break;
+            case 3:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State4)));
+                break;
+            case 4:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State5)));
+                break;
+            case 5:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State6)));
+                break;
+            case 6:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State7)));
+                break;
+            case 7:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State8)));
+                break;
+            case 8:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State9)));
+                break;
+            case 9:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State10)));
+                break;
+            case 10:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State11)));
+                break;
+            case 11:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State12)));
+                break;
+            case 12:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State13)));
+                break;
+            case 13:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State14)));
+                break;
+            case 14:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State15)));
+                break;
+            case 15:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State16)));
+                break;
+            case 16:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State17)));
+                break;
+            case 17:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State18)));
+                break;
+            case 18:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State19)));
+                break;
+            case 19:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State20)));
+                break;
+            case 20:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State21)));
+                break;
+            case 21:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State22)));
+                break;
+            case 22:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State23)));
+                break;
+            case 23:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State24)));
+                break;
+            case 24:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State25)));
+                break;
+            case 25:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State26)));
+                break;
+            case 26:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State27)));
+                break;
+            case 27:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State28)));
+                break;
+            case 28:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State29)));
+                break;
+            case 29:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State30)));
+                break;
+            case 30:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State31)));
+                break;
+            case 31:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State32)));
+                break;
+            case 32:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State33)));
+                break;
+            case 33:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State34)));
+                break;
+            case 34:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State35)));
+                break;
+            case 35:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State36)));
+                break;
+        }
+        citiesAdapter.notifyDataSetChanged();
+        Log.e("sgd",""+citiesAdapter.getCount());
+        if(cities.indexOf(user_profile.getDistrict())!=-1) {
+            districtSpinner.setSelection(cities.indexOf(user_profile.getDistrict()));
+        }
+        else{
+            districtSpinner.setSelection(1);
+        }
     }
 }

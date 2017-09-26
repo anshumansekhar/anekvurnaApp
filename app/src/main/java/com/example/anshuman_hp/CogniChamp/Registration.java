@@ -53,6 +53,8 @@ public class Registration extends AppCompatActivity  {
     String ismale="true";
     String email,password;
 
+    boolean phone;
+
     final String TAG="Registartion";
 
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
@@ -70,6 +72,7 @@ public class Registration extends AppCompatActivity  {
         Intent j=getIntent();
         email=j.getStringExtra("Email");
         password=j.getStringExtra("Password");
+        phone=j.getBooleanExtra("PhoneAuth",true);
 
         Log.e(TAG,email +""+ password);
 
@@ -84,13 +87,12 @@ public class Registration extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 Log.e(TAG,"Register CLicked");
-                if(!passwordText.getText().toString().isEmpty()) {
+                    if (!passwordText.getText().toString().isEmpty()) {
                         Log.e(TAG, "Creating user");
                         createUser();
-                }
-                else{
-                    passwordText.setError("Enter a Minimum 8 characters Long Password");
-                }
+                    } else {
+                        passwordText.setError("Enter a Minimum 8 characters Long Password");
+                    }
             }
         });
     }
@@ -113,7 +115,8 @@ public class Registration extends AppCompatActivity  {
         ,""
         ,""
         ,""
-        ,"");
+        ,""
+        ,"1");
         firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .setValue(profile)
@@ -129,19 +132,40 @@ public class Registration extends AppCompatActivity  {
     public void createUser()
     {
         if(checkEmailPattern(emailText.getText().toString())) {
-            firebaseAuth.createUserWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            Log.e(TAG,"User Created");
-                            pushUserProfileDetails();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, e.toString());
-                }
-            });
+            if(!phone) {
+                firebaseAuth.createUserWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                Log.e(TAG, "User Created");
+                                firebaseAuth.getCurrentUser()
+                                        .sendEmailVerification();
+                                pushUserProfileDetails();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
+            }
+            else{
+                AuthCredential credential=EmailAuthProvider.getCredential(emailText.getText().toString(),passwordText.getText().toString());
+                firebaseAuth.getCurrentUser().linkWithCredential(credential)
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                firebaseAuth.getCurrentUser()
+                                        .sendEmailVerification();
+                                pushUserProfileDetails();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("ASg",e.toString());
+                    }
+                });
+            }
         }
         else
             Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT);

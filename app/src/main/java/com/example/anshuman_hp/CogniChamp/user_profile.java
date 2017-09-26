@@ -14,11 +14,12 @@ public class user_profile {
     String cityAddress;
     String state;
     String pinCode;
+    String district;
 
     public user_profile() {
     }
 
-    public user_profile(String name, String birthdate, String isMale, String presentClass, String photourl, String atAddress, String cityAddress, String state, String pinCode) {
+    public user_profile(String name, String birthdate, String isMale, String presentClass, String photourl, String atAddress, String cityAddress, String state, String pinCode, String district) {
         this.name = name;
         this.birthdate = birthdate;
         this.isMale = isMale;
@@ -28,7 +29,9 @@ public class user_profile {
         this.cityAddress = cityAddress;
         this.state = state;
         this.pinCode = pinCode;
+        this.district = district;
     }
+
 
     public String getName() {
         return name;
@@ -101,5 +104,13 @@ public class user_profile {
 
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 }

@@ -218,7 +218,8 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                         ,""
                                                         ,""
                                                         ,""
-                                                        ,"");
+                                                        ,""
+                                                ,"1");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
@@ -273,7 +274,8 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                         , ""
                                                         ,""
                                                         ,""
-                                                        ,"");
+                                                        ,""
+                                                ,"1");
                                                 firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                                                         .child("UserProfile")
                                                         .setValue(userProfile);

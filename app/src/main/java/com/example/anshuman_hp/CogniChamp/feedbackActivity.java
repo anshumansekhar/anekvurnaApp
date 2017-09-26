@@ -33,9 +33,10 @@ public class feedbackActivity extends Fragment {
     EditText phoneNumber;
     EditText emailId;
     EditText message;
+    EditText mailsubject;
     Button submitFeedback;
 
-    String messageTypetext,nameText,phone,email,messageText;
+    String messageTypetext,nameText,phone,email,messageText,subjectText;
 
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth auth=FirebaseAuth.getInstance();
@@ -52,6 +53,7 @@ public class feedbackActivity extends Fragment {
         emailId=(EditText)v.findViewById(R.id.EmailFeedback);
         message=(EditText)v.findViewById(R.id.messageFeedback);
         submitFeedback=(Button)v.findViewById(R.id.submitFeedback);
+        mailsubject=(EditText)v.findViewById(R.id.emailSubject);
 
         database.getReference(auth.getCurrentUser().getUid())
                 .child("UserProfile")
@@ -98,10 +100,11 @@ public class feedbackActivity extends Fragment {
                             phone=phoneNumber.getText().toString();
                             nameText=name.getText().toString();
                             messageText=message.getText().toString();
+                            subjectText=mailsubject.getText().toString();
                             //TODO change the email from and to
                             sendEmailTask task=new sendEmailTask();
                             task.execute(messageTypetext+" by "+nameText
-                                    ,messageText+"\n"+nameText+"\n"+email+"\n"+phone
+                                    ,subjectText
                                     ,email
                                     ,"contact@cognichamp.com,"+email,messageTypetext);
                         }
@@ -137,7 +140,7 @@ public class feedbackActivity extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
             try {
-                MailSender sender = new MailSender("anshumansekhardash@gmail.com", "Anshuman@GOOGLE");
+                MailSender sender = new MailSender("cognichamp@gmail.com", "12345678!");
                 sender.sendMail(params[0],params[1],params[2],params[3]);
                 messageType=params[4];
             } catch (Exception e) {
