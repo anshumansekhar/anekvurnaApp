@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:text="Present Class"
+                android:text="Present Age/Class"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/genderRadioGroup" />
@@ -167,7 +167,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:hint="Flat no/Colony Name/Area"
+                    android:hint="Address Line 1"
                     android:inputType="textPostalAddress" />
 
                 <EditText
@@ -180,7 +180,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:hint="City"
+                    android:hint="Address Line 2"
                     android:inputType="textPostalAddress" />
                 <EditText
                     android:id="@+id/PinCode"
