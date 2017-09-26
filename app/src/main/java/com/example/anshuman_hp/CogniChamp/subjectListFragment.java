@@ -3,6 +3,7 @@ package com.example.anshuman_hp.CogniChamp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,8 +15,11 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Anshuman-HP on 12-09-2017.
@@ -40,6 +44,45 @@ public class subjectListFragment extends Fragment {
         className=getArguments().getString("ClassNumber");
         where=getArguments().getString("where");
         Log.e("Cla",className);
+
+       FirebaseDatabase.getInstance()
+                .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(where)
+                .child(className)
+                .child("subjects")
+       .addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               if(where.equals("ClassDetails") ){
+                   if(!dataSnapshot.exists()) {
+                       FirebaseDatabase.getInstance()
+                               .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                               .child(where)
+                               .child(className)
+                               .child("subjects")
+                               .child("0")
+                               .setValue(new subjectItem("English"));
+                       FirebaseDatabase.getInstance()
+                               .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                               .child(where)
+                               .child(className)
+                               .child("subjects")
+                               .child("1")
+                               .setValue(new subjectItem("Maths"));
+                   }
+               }
+               else{
+                   subjectsGrid.setVisibility(View.GONE);
+                   ((FavoriteVideosActivity) getParentFragment()).setEmptyFragment();
+               }
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
+
         subjectsGrid=(RecyclerView)v.findViewById(R.id.subjectGrid);
         subjectsGrid.setLayoutManager(new GridLayoutManager(getActivity(),2));
         setAdapter(className);

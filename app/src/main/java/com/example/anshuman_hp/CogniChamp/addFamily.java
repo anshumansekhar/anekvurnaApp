@@ -267,6 +267,9 @@ public class addFamily extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent fr=new Intent(addFamily.this,NavigationDrawer.class);
+        fr.putExtra("PreviousFrag","addFamily");
+        startActivity(fr);
     }
 
     public static boolean checkEmailPattern(String email) {
@@ -281,4 +284,5 @@ public class addFamily extends AppCompatActivity {
         boolean value1 = Pattern.matches(phoneRegex, Phone);
         return value1;
     }
+
 }

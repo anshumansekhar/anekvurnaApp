@@ -81,4 +81,11 @@ public class AddNewSubject extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent fr=new Intent(AddNewSubject.this,NavigationDrawer.class);
+        fr.putExtra("PreviousFrag","addSubject");
+        startActivity(fr);
+    }
 }

@@ -278,6 +278,7 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
                                                 startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
+                                                //TODO change the link
                                                 Intent shareIntent = new PlusShare.Builder(getApplicationContext())
                                                         .setType("text/plain")
                                                         .setText("I am using this awesome App. You must also join this to take advantage of cognitive learning for your child.")

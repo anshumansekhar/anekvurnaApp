@@ -1,6 +1,7 @@
 package com.example.anshuman_hp.CogniChamp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,6 +50,7 @@ public class AccountFragment extends Fragment {
     String phoneText;
 
 
+    TextView changePassword;
     EditText email;
     EditText mobileNumber;
     Button registerPhone;
@@ -67,7 +70,7 @@ public class AccountFragment extends Fragment {
         email=(EditText)v.findViewById(R.id.emailaccount);
         mobileNumber=(EditText)v.findViewById(R.id.mobilenumberaccount);
         registerPhone=(Button)v.findViewById(R.id.registerPhone);
-
+        changePassword=(TextView)v.findViewById(R.id.changePassword);
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
@@ -112,13 +115,33 @@ public class AccountFragment extends Fragment {
             }
         };
 
-        if(!firebaseAuth.getCurrentUser().getEmail().isEmpty()) {
+        if(!FirebaseAuth.getInstance().getCurrentUser().getEmail().isEmpty()) {
             email.setText(firebaseAuth.getCurrentUser().getEmail());
         }
-        if(!firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty())
+        if(!FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().isEmpty())
         {
             mobileNumber.setText(firebaseAuth.getCurrentUser().getPhoneNumber());
+            registerPhone.setVisibility(View.INVISIBLE);
         }
+        mobileNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().equals("") || s.toString().length()<10){
+                    registerPhone.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -141,6 +164,12 @@ public class AccountFragment extends Fragment {
                 if(checkPhonePattern(mobileNumber.getText().toString())){
                     signInWithPhone(mobileNumber.getText().toString());
                 }
+            }
+        });
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), com.example.anshuman_hp.CogniChamp.changePassword.class));
             }
         });
         return v;

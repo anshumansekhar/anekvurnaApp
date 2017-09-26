@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,11 +26,12 @@ public class NavigationDrawer extends AppCompatActivity
     private static final int REQUEST_INVITE =1 ;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FloatingActionButton floatingActionButton;
-
     static FragmentManager fm;
     MenuItem itemWER;
-
+    Intent fg;
+    boolean isFirstLaunch;
     int selected;
+    String previousFragment;
     Toolbar toolbar;
     ActionBar actionBar;
     Fragment selectedFragment = new AnotherActivity();
@@ -38,9 +40,7 @@ public class NavigationDrawer extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
-
         RateUs.app_launched(this);
-
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
@@ -52,24 +52,25 @@ public class NavigationDrawer extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        fm=getSupportFragmentManager();
-
-
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, new AnotherActivity());
-        transaction.commit();
-
+        fg=getIntent();
+        isFirstLaunch=fg.getBooleanExtra("IsFirstTime",true);
+        if(isFirstLaunch){
+            fm=getSupportFragmentManager();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, new ProfileFragment());
+            transaction.commit();
+        }else {
+            previousFragment = fg.getStringExtra("PreviousFrag");
+            getPreviousFragment(previousFragment);
+        }
         floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
         floatingActionButton.hide();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == RESULT_OK) {
                 // Get the invitation IDs of all sent messages
@@ -80,6 +81,7 @@ public class NavigationDrawer extends AppCompatActivity
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
+                Toast.makeText(NavigationDrawer.this,"Invite Failed",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -96,21 +98,17 @@ public class NavigationDrawer extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation_drawer, menu);
         itemWER= menu.findItem(R.id.save);
         itemWER.setVisible(false);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.sign_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
@@ -121,16 +119,12 @@ public class NavigationDrawer extends AppCompatActivity
             Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
             if(f instanceof EducationFragment)
             {
-
-                    Log.e("Tag","Show Dialog");
-
+                Log.e("Tag","Show Dialog");
             }
             else if(f instanceof ProfileFragment)
             {
-
-                    ((ProfileFragment) f).saveChanges();
-                    Log.e("Tag","Show Dialog");
-
+                ((ProfileFragment) f).saveChanges();
+                Log.e("Tag","Show Dialog");
             }
             else if(f instanceof AccountFragment)
             {
@@ -167,7 +161,7 @@ public class NavigationDrawer extends AppCompatActivity
                 actionBar.setTitle("Student Profile");
                 break;
             case R.id.nav_hobby:
-                itemWER.setVisible(true);
+                itemWER.setVisible(false);
                 HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
                 floatingActionButton.show();
                 floatingActionButton.setOnClickListener(hobbiesFragment.listener);
@@ -192,7 +186,7 @@ public class NavigationDrawer extends AppCompatActivity
                 floatingActionButton.hide();
                 break;
             case R.id.EducationDetails:
-                itemWER.setVisible(true);
+                itemWER.setVisible(false);
                 EducationFragment educationFragment=EducationFragment.newInstance();
                 floatingActionButton.hide();
                 selectedFragment = educationFragment;
@@ -227,7 +221,6 @@ public class NavigationDrawer extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, selectedFragment);
         transaction.commit();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -240,7 +233,6 @@ public class NavigationDrawer extends AppCompatActivity
     }
     public static Fragment loadRateFragment(){
         return new feedbackActivity();
-
     }
     public void sharePlayStoreLink(){
         //TODO change the link
@@ -249,5 +241,22 @@ public class NavigationDrawer extends AppCompatActivity
         share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship");
         share.putExtra(android.content.Intent.EXTRA_SUBJECT, "I am using this awesome App. You must also join this to take advantage of cognitive learning for your child");
         startActivity(Intent.createChooser(share, "Share The App Link"));
+    }
+    public void getPreviousFragment(String previousFrag){
+        fm=getSupportFragmentManager();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(previousFrag.equals("Hobby")){
+            transaction.replace(R.id.frame_layout, new HobbiesFragment());
+        }
+        else if(previousFrag.equals("addFamily")){
+            transaction.replace(R.id.frame_layout, new FamilyFragment());
+        }
+        else if(previousFrag.equals("addSubject")){
+            transaction.replace(R.id.frame_layout, new EducationFragment());
+        }
+        else if(previousFrag.equals("addSchool")){
+            transaction.replace(R.id.frame_layout, new EducationFragment());
+        }
+        transaction.commit();
     }
 }

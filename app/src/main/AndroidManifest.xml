@@ -6,15 +6,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-
-
     <application
-        android:name="com.example.anshuman_hp.CogniChamp.Anekvurna"
+        android:name=".Anekvurna"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
@@ -62,58 +61,59 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.anshuman_hp.CogniChamp.NavigationDrawer"
+            android:name=".NavigationDrawer"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name="com.example.anshuman_hp.CogniChamp.Main2Activity"
-            android:parentActivityName="com.example.anshuman_hp.CogniChamp.NavigationDrawer"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.example.anshuman_hp.CogniChamp.addFamily"
+            android:name=".Main2Activity"
+            android:parentActivityName=".NavigationDrawer" />
+        <activity
+            android:name=".addFamily"
             android:label="AddFamily"
-            android:parentActivityName="com.example.anshuman_hp.CogniChamp.NavigationDrawer"
-            android:theme="@style/AppTheme" >
+            android:parentActivityName=".NavigationDrawer"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
         </activity>
 
-        <service android:name="com.example.anshuman_hp.CogniChamp.MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.example.anshuman_hp.CogniChamp.MyFirebaseInstanceIDService">
+        <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name="com.example.anshuman_hp.CogniChamp.YoutubeActivity" />
-        <activity android:name="com.example.anshuman_hp.CogniChamp.Registration" />
+        <activity android:name=".YoutubeActivity" />
+        <activity android:name=".Registration" />
         <activity
-            android:name="com.example.anshuman_hp.CogniChamp.AddHobbyActivityt"
-            android:parentActivityName="com.example.anshuman_hp.CogniChamp.NavigationDrawer" >
+            android:name=".AddHobbyActivityt"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
-            </activity>
+        </activity>
         <activity
-            android:name="com.example.anshuman_hp.CogniChamp.AddNewSubject"
-            android:parentActivityName="com.example.anshuman_hp.CogniChamp.NavigationDrawer" >
+            android:name=".AddNewSubject"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
-            </activity>
-        <activity android:name="com.example.anshuman_hp.CogniChamp.ForgotPassword" />
+        </activity>
+        <activity android:name=".ForgotPassword" />
         <activity
-            android:name="com.example.anshuman_hp.CogniChamp.EditSchoolDetails"
-            android:parentActivityName="com.example.anshuman_hp.CogniChamp.NavigationDrawer" >
+            android:name=".EditSchoolDetails"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
-            </activity>
-        <activity android:name="com.example.anshuman_hp.CogniChamp.AddVideoActivity">
+        </activity>
+        <activity android:name=".AddVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -122,14 +122,16 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.anshuman_hp.CogniChamp.LoginEmail"/>
-        <activity android:name="com.example.anshuman_hp.CogniChamp.SignUpChooseActivity">
+        <activity android:name=".LoginEmail" />
+        <activity android:name=".SignUpChooseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".changePassword"
+            android:parentActivityName=".NavigationDrawer"></activity>
     </application>
 
 </manifest>

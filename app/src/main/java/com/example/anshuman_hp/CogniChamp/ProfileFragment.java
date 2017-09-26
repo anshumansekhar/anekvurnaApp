@@ -1,13 +1,18 @@
 package com.example.anshuman_hp.CogniChamp;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,21 +27,29 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Anshuman-HP on 12-08-2017.
@@ -44,8 +57,10 @@ import java.util.Locale;
 
 public class ProfileFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
     private static final java.lang.String DATE_FORMAT ="dd-MM-yyyy" ;
+    private static final int RESULT_LOAD_IMG =3524 ;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    StorageReference ref= FirebaseStorage.getInstance().getReference();
     ImageView profileImage;
     EditText name;
     EditText birthDate;
@@ -58,20 +73,16 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     EditText pinCode;
     Spinner stateSpinner;
 
-
+    String imageUri;
     String myFormat = "dd-MM-yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.getDefault());
 
     Calendar myCalendar = Calendar.getInstance();
+    NotificationManager notificationManager;
+    NotificationCompat.Builder builder;
 
     DatePickerDialog datePickerDialog;
-
     boolean isChanged=false;
-
-
-
-
-
     user_profile user_profile;
 
     public static ProfileFragment newInstance() {
@@ -307,6 +318,14 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
             }
         });
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+            }
+        });
         return v;
     }
     public void saveChanges() {
@@ -328,6 +347,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                 dialog.cancel();
                             }
                         });
+                UploadImage();
                 isChanged=false;
             }
         }).setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
@@ -341,10 +361,63 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     }
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RESULT_LOAD_IMG){
+            if(resultCode==RESULT_OK){
+                Uri selectedImage = data.getData();
+                imageUri = selectedImage.toString();
+                profileImage.setImageURI(selectedImage);
+            }
+        }
+    }
+    @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             birthDate.setText(sdf.format(myCalendar.getTime()));
+    }
+    public void UploadImage(){
+        if(imageUri!=null) {
+            StorageReference photoRef=ref.child(firebaseAuth.getCurrentUser().getUid());
+            showProgressNotification();
+            UploadTask task = photoRef.putFile(Uri.parse(imageUri));
+            task.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    int progress=(int)(taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount())*100;
+                    builder.setProgress(100,progress,false);
+                    notificationManager.notify(1,builder.build());
+
+                }
+            });
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    builder.setContentText("Upload complete")
+                            .setProgress(0,0,false);
+                    notificationManager.notify(1, builder.build());
+                    String url=taskSnapshot.getDownloadUrl().toString();
+                    database.getReference(firebaseAuth.getCurrentUser().getUid())
+                            .child("UserProfile")
+                            .child("photourl")
+                            .setValue(url);
+                }
+            });
+        }
+        else {
+            Toast.makeText(getActivity(),"No image",Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void showProgressNotification(){
+        notificationManager=(NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        builder=new NotificationCompat.Builder(getActivity());
+        builder = new NotificationCompat.Builder(getActivity());
+        builder.setContentTitle("Picture Upload")
+                .setContentText("Upload in progress")
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp);
+
+
     }
 }

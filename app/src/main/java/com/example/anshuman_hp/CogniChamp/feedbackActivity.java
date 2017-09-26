@@ -103,7 +103,7 @@ public class feedbackActivity extends Fragment {
                             task.execute(messageTypetext+" by "+nameText
                                     ,messageText+"\n"+nameText+"\n"+email+"\n"+phone
                                     ,email
-                                    ,"contact@cognichamp.com,"+email);
+                                    ,"contact@cognichamp.com,"+email,messageTypetext);
                         }
                         else{
                             message.setError("Message cant be Empty");
@@ -121,6 +121,7 @@ public class feedbackActivity extends Fragment {
         return v;
     }
     public class sendEmailTask extends AsyncTask<String,Void,Void>{
+        String messageType;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -130,7 +131,7 @@ public class feedbackActivity extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(getActivity(),"We Received Your Valuable Response",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Thank you.Your "+messageType+"has been submitted. Our team will reach out to you shortly.",Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -138,6 +139,7 @@ public class feedbackActivity extends Fragment {
             try {
                 MailSender sender = new MailSender("anshumansekhardash@gmail.com", "Anshuman@GOOGLE");
                 sender.sendMail(params[0],params[1],params[2],params[3]);
+                messageType=params[4];
             } catch (Exception e) {
                 Log.e("SendMail", e.toString());
             }

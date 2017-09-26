@@ -28,7 +28,6 @@ public class AnotherActivity extends Fragment {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     DatabaseReference ref;
-    FirebaseRecyclerAdapter<video, videoHolder> adapter;
     String className = "";
 
     @Nullable
@@ -87,7 +86,6 @@ public class AnotherActivity extends Fragment {
                             else{
                                 className="Class-"+(Integer.valueOf(className)-6);
                             }
-
                             classNameBundle.putString("ClassNumber", className);
                             classNameBundle.putString("where","ClassDetails");
                             subjectListFragment subjectListFragment = new subjectListFragment();

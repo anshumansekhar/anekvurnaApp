@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.CogniChamp;
 
+import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EditSchoolDetails extends AppCompatActivity {
 
@@ -68,7 +70,7 @@ public class EditSchoolDetails extends AppCompatActivity {
         schoolNameEnter=(EditText)findViewById(R.id.schoolnamedit);
         schoolPinCodeEnter=(EditText)findViewById(R.id.schoolPinCodeEdit);
         schoolAddressEnter=(EditText)findViewById(R.id.schoolAddressEdit);
-        stateAdapter=ArrayAdapter.createFromResource(getApplicationContext(),R.array.states,android.R.layout.simple_spinner_item);
+        stateAdapter=ArrayAdapter.createFromResource(EditSchoolDetails.this,R.array.states,android.R.layout.simple_spinner_item);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseState.setAdapter(stateAdapter);
         final String[] states=getResources().getStringArray(R.array.states);
@@ -76,9 +78,8 @@ public class EditSchoolDetails extends AppCompatActivity {
         chooseState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getCities(states[position]);
+                getCities(position);
                 currentState=states[position];
-                addSubjectCard.setVisibility(View.GONE);
             }
 
             @Override
@@ -86,7 +87,7 @@ public class EditSchoolDetails extends AppCompatActivity {
                 citiesAdapter.clear();
             }
         });
-        citiesAdapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,cities);
+        citiesAdapter=new ArrayAdapter<String>(EditSchoolDetails.this,android.R.layout.simple_spinner_item,cities);
         citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseCity.setAdapter(citiesAdapter);
 
@@ -101,7 +102,7 @@ public class EditSchoolDetails extends AppCompatActivity {
                     schoolAdapter.clear();
                 }
             });
-        schoolAdapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,schoolNames);
+        schoolAdapter=new ArrayAdapter<String>(EditSchoolDetails.this,android.R.layout.simple_spinner_item,schoolNames);
         schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseSchool.setAdapter(schoolAdapter);
 
@@ -109,6 +110,7 @@ public class EditSchoolDetails extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TextView tv=(TextView)view;
+                addSubjectCard.setVisibility(View.VISIBLE);
                 if(tv.getText().toString().equals("Add a New School")){
                     addSubjectCard.setVisibility(View.VISIBLE);
                 }
@@ -199,45 +201,122 @@ public class EditSchoolDetails extends AppCompatActivity {
             }
         });
     }
-    public void getCities(String state){
+    public void getCities(int state){
         citiesAdapter.clear();
         cities.clear();
-
-        database.getReference("Cities")
-                .child(state)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if(!cities.contains(dataSnapshot.getValue().toString())){
-                            cities.add(dataSnapshot.getValue().toString());
-                            citiesAdapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        if(!cities.contains(dataSnapshot.getValue().toString())){
-                            cities.add(dataSnapshot.getValue().toString());
-                            citiesAdapter.notifyDataSetChanged();
-                        }
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+        Log.e("gd",""+state);
+        switch (state){
+            case 0:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State1)));
+                break;
+            case 1:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State2)));
+                break;
+            case 2:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State3)));
+                break;
+            case 3:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State4)));
+                break;
+            case 4:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State5)));
+                break;
+            case 5:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State6)));
+                break;
+            case 6:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State7)));
+                break;
+            case 7:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State8)));
+                break;
+            case 8:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State9)));
+                break;
+            case 9:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State10)));
+                break;
+            case 10:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State11)));
+                break;
+            case 11:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State12)));
+                break;
+            case 12:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State13)));
+                break;
+            case 13:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State14)));
+                break;
+            case 14:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State15)));
+                break;
+            case 15:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State16)));
+                break;
+            case 16:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State17)));
+                break;
+            case 17:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State18)));
+                break;
+            case 18:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State19)));
+                break;
+            case 19:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State20)));
+                break;
+            case 20:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State21)));
+                break;
+            case 21:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State22)));
+                break;
+            case 22:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State23)));
+                break;
+            case 23:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State24)));
+                break;
+            case 24:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State25)));
+                break;
+            case 25:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State26)));
+                break;
+            case 26:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State27)));
+                break;
+            case 27:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State28)));
+                break;
+            case 28:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State29)));
+                break;
+            case 29:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State30)));
+                break;
+            case 30:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State31)));
+                break;
+            case 31:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State32)));
+                break;
+            case 32:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State33)));
+                break;
+            case 33:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State34)));
+                break;
+            case 34:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State35)));
+                break;
+            case 35:
+                cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State36)));
+                break;
+        }
+        citiesAdapter.notifyDataSetChanged();
+       Log.e("sgd",""+citiesAdapter.getCount());
     }
     public void getSchools(String city){
         schoolAdapter.clear();
@@ -286,6 +365,9 @@ public class EditSchoolDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent fr=new Intent(EditSchoolDetails.this,NavigationDrawer.class);
+        fr.putExtra("PreviousFrag","addSchool");
+        startActivity(fr);
     }
 
     @Override

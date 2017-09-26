@@ -1,5 +1,6 @@
 package com.example.anshuman_hp.CogniChamp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,10 +77,10 @@ public class AddHobbyActivityt extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     indoorGamesValues = dataSnapshot.getValue(t);
-                    indoorGamesAdapter=new hobbyAdapter(indoorGamesValues,getApplicationContext(),0,indoorGamesRef);;
+                    indoorGamesAdapter=new hobbyAdapter(indoorGamesValues,AddHobbyActivityt.this,0,indoorGamesRef);;
                 }
                 else
-                    indoorGamesAdapter= new hobbyAdapter(getApplicationContext(),0,indoorGamesRef);
+                    indoorGamesAdapter= new hobbyAdapter(AddHobbyActivityt.this,0,indoorGamesRef);
                 indoorGamesAdapter.notifyDataSetChanged();
 
             }
@@ -94,10 +95,10 @@ public class AddHobbyActivityt extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     outdoorGamesValues = dataSnapshot.getValue(t);
-                    OutdoorGamesAdpater=new hobbyAdapter(outdoorGamesValues,getApplicationContext(),1,outdoorGamesRef);
+                    OutdoorGamesAdpater=new hobbyAdapter(outdoorGamesValues,AddHobbyActivityt.this,1,outdoorGamesRef);
                 }
                 else
-                    OutdoorGamesAdpater=new hobbyAdapter(getApplicationContext(),1,outdoorGamesRef);
+                    OutdoorGamesAdpater=new hobbyAdapter(AddHobbyActivityt.this,1,outdoorGamesRef);
                 OutdoorGamesAdpater.notifyDataSetChanged();
             }
             @Override
@@ -111,11 +112,11 @@ public class AddHobbyActivityt extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     danceValues = dataSnapshot.getValue(t);
-                    DanceAdapter=new hobbyAdapter(danceValues,getApplicationContext(),3,DanceRef);
+                    DanceAdapter=new hobbyAdapter(danceValues,AddHobbyActivityt.this,3,DanceRef);
 
                 }
                 else
-                    DanceAdapter=new hobbyAdapter(getApplicationContext(),3,DanceRef);
+                    DanceAdapter=new hobbyAdapter(AddHobbyActivityt.this,3,DanceRef);
                 DanceAdapter.notifyDataSetChanged();
             }
             @Override
@@ -129,10 +130,10 @@ public class AddHobbyActivityt extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     musicValue = dataSnapshot.getValue(t);
-                    MusicAdapter=new hobbyAdapter(musicValue,getApplicationContext(),4,MusicRef);
+                    MusicAdapter=new hobbyAdapter(musicValue,AddHobbyActivityt.this,4,MusicRef);
                 }
                 else
-                    MusicAdapter=new hobbyAdapter(getApplicationContext(),4,MusicRef);
+                    MusicAdapter=new hobbyAdapter(AddHobbyActivityt.this,4,MusicRef);
                 MusicAdapter.notifyDataSetChanged();
             }
             @Override
@@ -147,11 +148,11 @@ public class AddHobbyActivityt extends AppCompatActivity {
                 if(dataSnapshot.exists())
                 {
                     instrumentsValues=dataSnapshot.getValue(t);
-                    instrumentsAdapter=new hobbyAdapter(instrumentsValues,getApplicationContext(),2,instrumentsRef);
+                    instrumentsAdapter=new hobbyAdapter(instrumentsValues,AddHobbyActivityt.this,2,instrumentsRef);
 
                 }
                 else
-                    instrumentsAdapter=new hobbyAdapter(getApplicationContext(),2,instrumentsRef);
+                    instrumentsAdapter=new hobbyAdapter(AddHobbyActivityt.this,2,instrumentsRef);
                 instrumentsAdapter.notifyDataSetChanged();
 
             }
@@ -166,11 +167,11 @@ public class AddHobbyActivityt extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     singingValues = dataSnapshot.getValue(t);
-                    singingAdapter=new hobbyAdapter(singingValues,getApplicationContext(),5,singingRef);
+                    singingAdapter=new hobbyAdapter(singingValues,AddHobbyActivityt.this,5,singingRef);
 
                 }
                 else
-                    singingAdapter=new hobbyAdapter(getApplicationContext(),5,singingRef);
+                    singingAdapter=new hobbyAdapter(AddHobbyActivityt.this,5,singingRef);
                 singingAdapter.notifyDataSetChanged();
             }
             @Override
@@ -179,14 +180,14 @@ public class AddHobbyActivityt extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter adapter=ArrayAdapter.createFromResource(getApplicationContext()
+        ArrayAdapter adapter=ArrayAdapter.createFromResource(AddHobbyActivityt.this
                 ,R.array.hobbyGroup,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseHobbyGroup=(Spinner)findViewById(R.id.chooseHobbyGroup);
         save=(Button)findViewById(R.id.saveHooby);
         chooseHobbyGroup.setAdapter(adapter);
         hobbyGroupRecycler=(RecyclerView)findViewById(R.id.hobbyRecyclerChoose);
-        hobbyGroupRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        hobbyGroupRecycler.setLayoutManager(new LinearLayoutManager(AddHobbyActivityt.this));
         chooseHobbyGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -248,5 +249,11 @@ public class AddHobbyActivityt extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent fr=new Intent(AddHobbyActivityt.this,NavigationDrawer.class);
+        fr.putExtra("PreviousFrag","Hobby");
+        startActivity(fr);
+    }
 }

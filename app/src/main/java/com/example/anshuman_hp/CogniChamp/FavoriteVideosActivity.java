@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FavoriteVideosActivity extends Fragment {
     Spinner selectClassVideo;
-
+    emptyFragment emptyFragment=new emptyFragment();
     TopicListFragment topicListFragment = new TopicListFragment();
     VideosFragment videosFragment = new VideosFragment();
     Bundle classNameBundle = new Bundle();
@@ -117,6 +117,12 @@ public class FavoriteVideosActivity extends Fragment {
             }
         });
         return v;
+    }
+    public void setEmptyFragment(){
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, emptyFragment);
+        fragmentTransaction.commit();
+        fragmentTransaction.addToBackStack(null);
     }
 
     public void changeFragmentWithTopic(Bundle b) {

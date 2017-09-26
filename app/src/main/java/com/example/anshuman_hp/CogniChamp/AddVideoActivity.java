@@ -103,67 +103,61 @@ public class AddVideoActivity extends AppCompatActivity {
                 helper.execute(sharedText);
             }
         }
+        if(firebaseAuth.getCurrentUser()!=null) {
 
-        database.getReference(firebaseAuth.getCurrentUser().getUid())
-                .child("UserProfile")
-                .child("presentClass")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            subjectsList.clear();
-                            subjectAdapter.clear();
-                            className=dataSnapshot.getValue().toString();
-                            if(className.equals("11")){
-                                className="Class-"+className+"(Arts)";
+            database.getReference(firebaseAuth.getCurrentUser().getUid())
+                    .child("UserProfile")
+                    .child("presentClass")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                subjectsList.clear();
+                                subjectAdapter.clear();
+                                className = dataSnapshot.getValue().toString();
+                                if (className.equals("11")) {
+                                    className = "Class-" + className + "(Arts)";
+                                } else if (className.equals("0")) {
+                                    className = "Age(0-1)yrs";
+                                } else if (className.equals("1")) {
+                                    className = "Age(1-2)yrs";
+                                } else if (className.equals("2")) {
+                                    className = "Age(2-3)yrs";
+                                } else if (className.equals("3")) {
+                                    className = "Age(3-4)yrs";
+                                } else if (className.equals("4")) {
+                                    className = "Age(4-5)yrs";
+                                } else if (className.equals("5")) {
+                                    className = "Age(5-6)yrs";
+                                } else if (className.equals("12")) {
+                                    className = "Class-" + "11" + "(Commerce)";
+                                } else if (className.equals("13")) {
+                                    className = "Class-" + "11" + "(Science)";
+                                } else if (className.equals("14")) {
+                                    className = "Class-" + "12" + "(Arts)";
+                                } else if (className.equals("15")) {
+                                    className = "Class-" + "12" + "(Commerce)";
+                                } else if (className.equals("16")) {
+                                    className = "Class-" + "12" + "(Science)";
+                                } else {
+                                    className = "Class-" + (Integer.valueOf(className) - 6);
+                                }
+                                Log.e("aj", className);
+                                Log.e("sfbk", "" + classList.indexOf(className));
+                                Class.setSelection(classList.indexOf(className));
+                                getSubjects(className);
                             }
-                            else if(className.equals("0")){
-                                className="Age(0-1)yrs";
-                            }
-                            else if(className.equals("1")){
-                                className="Age(1-2)yrs";
-                            }
-                            else if(className.equals("2")){
-                                className="Age(2-3)yrs";
-                            }
-                            else if(className.equals("3")){
-                                className="Age(3-4)yrs";
-                            }
-                            else if(className.equals("4")){
-                                className="Age(4-5)yrs";
-                            }
-                            else if(className.equals("5")){
-                                className="Age(5-6)yrs";
-                            }
-                            else if(className.equals("12")){
-                                className="Class-"+"11"+"(Commerce)";
-                            }
-                            else if(className.equals("13")){
-                                className="Class-"+"11"+"(Science)";
-                            }
-                            else if(className.equals("14")){
-                                className="Class-"+"12"+"(Arts)";
-                            }
-                            else if(className.equals("15")){
-                                className="Class-"+"12"+"(Commerce)";
-                            }
-                            else if(className.equals("16")){
-                                className="Class-"+"12"+"(Science)";
-                            }
-                            else{
-                                className="Class-"+(Integer.valueOf(className)-6);
-                            }
-                            Log.e("aj",className);
-                            Log.e("sfbk",""+classList.indexOf(className));
-                            Class.setSelection(classList.indexOf(className));
-                            getSubjects(className);
-                    }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+        }
+        else{
+            Toast.makeText(AddVideoActivity.this,"Please Sign in First",Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(AddVideoActivity.this,SignUpChooseActivity.class));
+        }
         Class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

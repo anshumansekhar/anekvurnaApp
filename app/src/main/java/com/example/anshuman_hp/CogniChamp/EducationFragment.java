@@ -71,12 +71,13 @@ public class EducationFragment extends Fragment {
                 if(!className.equals("Class-11")&&!className.equals("Class-12") && !className.equals("Class-10")) {
                     classRef = database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
-                            .child(className);
+                            .child(className)
+                    .child("tests");
                     classRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
-                                pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"),getActivity());
+                                pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"),getActivity());
                             }
                             else {
                                 classRef.setValue(new ClassDetails());

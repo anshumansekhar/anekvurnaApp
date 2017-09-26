@@ -207,12 +207,12 @@
         <item>Suggestion</item>
         <item>Query</item>
     </string-array>
-    <string-array name="AndamanandNicobarIslands">
+    <string-array name="State1">
         <item>Nicobar</item>
         <item>North and Middle Andaman</item>
         <item>South Andaman</item>
     </string-array>
-    <string-array name="AndhraPradesh">
+    <string-array name="State2">
         <item>Ananthapur</item>
         <item>Chittoor</item>
         <item>Cuddapah</item>
@@ -227,7 +227,7 @@
         <item>Vizianagram</item>
         <item>West Godavari</item>
     </string-array>
-    <string-array name="ArunachalPradesh">
+    <string-array name="State3">
         <item>Changlang</item>
         <item>Dibang Valley</item>
         <item>East Kameng</item>
@@ -244,7 +244,7 @@
         <item>West Kameng</item>
         <item>West Siang</item>
     </string-array>
-    <string-array name="Assam">
+    <string-array name="State4">
         <item>BARPETA </item>
         <item>BONGAIGAON</item>
         <item>CACHAR</item>
@@ -269,14 +269,14 @@
         <item>SONITPUR  </item>
         <item> TINSUKIA</item>
     </string-array>
-    <string-array name="Chandigarh">
-    <item>Chandigarh</item>
+    <string-array name="State6">
+        <item>Chandigarh</item>
     </string-array>
-    <string-array name="Goa">
-    <item>North Goa</item>
-    <item>South Goa</item>
-</string-array>
-    <string-array name="Delhi">
+    <string-array name="State11">
+        <item>North Goa</item>
+        <item>South Goa</item>
+    </string-array>
+    <string-array name="State10">
         <item>Cetral Delhi</item>
         <item>East Delhi</item>
         <item>New Delhi</item>
@@ -286,8 +286,8 @@
         <item>South Delhi</item>
         <item>South West Delhi</item>
         <item>West Delhi</item>
-</string-array>
-    <string-array name="Chattishgarh">
+    </string-array>
+    <string-array name="State7">
         <item> BASTAR </item>
         <item>BIJAPURCGH</item>
         <item>BILASPURCGH</item>
@@ -309,23 +309,23 @@
         <item>SURGUJA</item>
     </string-array>
 
-    <string-array name="Lakshadweep">
+    <string-array name="State19">
         <item>Lakshadweep</item>
     </string-array>
-    <string-array name="Tripura">
+    <string-array name="State33">
         <item>North Tripura</item>
         <item>South Tripura</item>
         <item>West Tripura</item>
         <item>Dhalai</item>
     </string-array>
-    <string-array name="DamanandDiu">
+    <string-array name="State9">
         <item>Daman</item>
         <item>Diu</item>
     </string-array>
-    <string-array name="DadraandNagarHaveli">
+    <string-array name="State8">
         <item>Dadra and Nagar Haveli</item>
     </string-array>
-    <string-array name="Jharkhand">
+    <string-array name="State16">
         <item>Bokara</item>
         <item>Chatra</item>
         <item>Deogarh</item>
@@ -346,8 +346,8 @@
         <item>Palamau</item>
         <item>Ramgarh</item>
     </string-array>
-    <string-array name="Bihar">
-       <item>ARARIA</item>
+    <string-array name="State5">
+        <item>ARARIA</item>
         <item>ARWAL</item>
         <item> AURANGABADBH</item>
         <item>BANKA</item>
@@ -390,7 +390,7 @@
         <item>VAISHALI</item>
         <item>WEST CHAMPARAN</item>
     </string-array>
-    <string-array name="Gujarat">
+    <string-array name="State12">
         <item>AHMEDABAD</item>
         <item>AMRELI</item>
         <item> ANAND </item>
@@ -418,7 +418,7 @@
         <item>VADODARA  </item>
         <item> VALSAD  </item>
     </string-array>
-    <string-array name="Haryana">
+    <string-array name="State13">
         <item> AMBALA </item>
         <item>BHIWANI</item>
         <item>FARIDABAD </item>
@@ -439,7 +439,7 @@
         <item>SONIPAT </item>
         <item>YAMUNA NAGAR </item>
     </string-array>
-    <string-array name="HimachalPradesh">
+    <string-array name="State14">
         <item>BILASPUR HP</item>
         <item>CHAMBA</item>
         <item>HAMIRPURHP</item>
@@ -453,7 +453,7 @@
         <item>SOLAN </item>
         <item>UNA</item>
     </string-array>
-    <string-array name="JammuandKashmir">
+    <string-array name="State15">
         <item> ANANTHNAG </item>
         <item>BANDIPUR </item>
         <item>BARAMULLA</item>
@@ -473,7 +473,7 @@
         <item>SRINAGAR </item>
         <item>UDHAMPUR</item>
     </string-array>
-    <string-array name="Karnataka">
+    <string-array name="State17">
         <item>BAGALKOT</item>
         <item>BANGALORE</item>
         <item>BANGALORE RURAL</item>
@@ -505,7 +505,7 @@
         <item>UTTARA KANNADA</item>
         <item>YADGIR</item>
     </string-array>
-    <string-array name="Kerela">
+    <string-array name="State18">
         <item>ALAPPUZHA</item>
         <item>ERNAKULAM</item>
         <item>IDUKKI</item>
@@ -520,61 +520,62 @@
         <item>THIRUVANANTHAPURAM </item>
         <item>THRISSUR</item>
         <item>WAYANAD</item>
-    </string-array><string-array name="MadhyaPradesh">
-    <item>ALIRAJPUR</item>
-    <item>ANUPPUR</item>
-    <item>ASHOK NAGAR</item>
-    <item>BALAGHAT</item>
-    <item>BARWANI</item>
-    <item>BETUL</item>
-    <item>BHIND</item>
-    <item>BHOPAL</item>
-    <item> BURHANPUR</item>
-    <item>CHHATARPUR </item>
-    <item> CHHINDWARA</item>
-    <item>DAMOH</item>
-    <item>DATIA</item>
-    <item>DEWAS </item>
-    <item>DHAR</item>
-    <item>DINDORI</item>
-    <item>EAST NIMAR </item>
-    <item>GUNA</item>
-    <item>GWALIOR </item>
-    <item> HARDA </item>
-    <item>HOSHANGABAD</item>
-    <item>INDORE</item>
-    <item>JABALPUR</item>
-    <item>JHABUA</item>
-    <item> KATNI </item>
-    <item>KHANDWA </item>
-    <item>KHARGONE </item>
-    <item>MANDLA</item>
-    <item>MANDSAUR </item>
-    <item>MORENA </item>
-    <item>NARSINGHPUR </item>
-    <item>NEEMUCH </item>
-    <item>PANNA</item>
-    <item> RAISEN </item>
-    <item>RAJGARH  </item>
-    <item>RATLAM  </item>
-    <item>REWA</item>
-    <item>SAGAR</item>
-    <item>SATNA</item>
-    <item>SEHORE </item>
-    <item>SEONI </item>
-    <item>SHAHDOL </item>
-    <item>SHAJAPUR </item>
-    <item>SHEOPUR </item>
-    <item>SHIVPURI</item>
-    <item> SIDHI </item>
-    <item>SINGRAULI  </item>
-    <item>TIKAMGARH </item>
-    <item>UJJAIN </item>
-    <item>UMARIA </item>
-    <item>VIDISHA</item>
-    <item>WEST NIMAR </item>
-</string-array>
-    <string-array name="Maharastra">
+    </string-array>
+    <string-array name="State20">
+        <item>ALIRAJPUR</item>
+        <item>ANUPPUR</item>
+        <item>ASHOK NAGAR</item>
+        <item>BALAGHAT</item>
+        <item>BARWANI</item>
+        <item>BETUL</item>
+        <item>BHIND</item>
+        <item>BHOPAL</item>
+        <item> BURHANPUR</item>
+        <item>CHHATARPUR </item>
+        <item> CHHINDWARA</item>
+        <item>DAMOH</item>
+        <item>DATIA</item>
+        <item>DEWAS </item>
+        <item>DHAR</item>
+        <item>DINDORI</item>
+        <item>EAST NIMAR </item>
+        <item>GUNA</item>
+        <item>GWALIOR </item>
+        <item> HARDA </item>
+        <item>HOSHANGABAD</item>
+        <item>INDORE</item>
+        <item>JABALPUR</item>
+        <item>JHABUA</item>
+        <item> KATNI </item>
+        <item>KHANDWA </item>
+        <item>KHARGONE </item>
+        <item>MANDLA</item>
+        <item>MANDSAUR </item>
+        <item>MORENA </item>
+        <item>NARSINGHPUR </item>
+        <item>NEEMUCH </item>
+        <item>PANNA</item>
+        <item> RAISEN </item>
+        <item>RAJGARH  </item>
+        <item>RATLAM  </item>
+        <item>REWA</item>
+        <item>SAGAR</item>
+        <item>SATNA</item>
+        <item>SEHORE </item>
+        <item>SEONI </item>
+        <item>SHAHDOL </item>
+        <item>SHAJAPUR </item>
+        <item>SHEOPUR </item>
+        <item>SHIVPURI</item>
+        <item> SIDHI </item>
+        <item>SINGRAULI  </item>
+        <item>TIKAMGARH </item>
+        <item>UJJAIN </item>
+        <item>UMARIA </item>
+        <item>VIDISHA</item>
+        <item>WEST NIMAR </item>
+    </string-array>
+    <string-array name="State21">
         <item>AHMED NAGAR</item>
         <item>AKOLA </item>
         <item>AMRAVATI</item>
@@ -609,7 +610,7 @@
         <item>WASHIM </item>
         <item> YAVATMAL</item>
     </string-array>
-    <string-array name="Manipur">
+    <string-array name="State22">
         <item>BISHNUPUR</item>
         <item>CHANDEL </item>
         <item>CHURACHANDPUR</item>
@@ -620,7 +621,7 @@
         <item>THOUBAL</item>
         <item>UKHRUL</item>
     </string-array>
-    <string-array name="Meghalaya">
+    <string-array name="State23">
         <item>EAST GARO HILLS</item>
         <item>EAST KHASI HILLS</item>
         <item>JAINTIA HILLS </item>
@@ -629,7 +630,7 @@
         <item>WEST GARO HILLS</item>
         <item>WEST KHASI HILLS</item>
     </string-array>
-    <string-array name="Mizoram">
+    <string-array name="State24">
         <item>AIZAWL</item>
         <item>CHAMPHAI</item>
         <item>KOLASIB</item>
@@ -639,7 +640,7 @@
         <item>SAIHA </item>
         <item>SERCHHIP </item>
     </string-array>
-    <string-array name="Nagaland">
+    <string-array name="State25">
         <item>DIMAPUR</item>
         <item>KIPHIRE</item>
         <item>KOHIMA</item>
@@ -652,7 +653,7 @@
         <item>WOKHA</item>
         <item> ZUNHEBOTTO </item>
     </string-array>
-    <string-array name="Odisha">
+    <string-array name="State26">
         <item>ANGUL</item>
         <item>BALANGIR</item>
         <item>BALESWAR</item>
@@ -685,12 +686,12 @@
         <item>SUNDERGARH</item>
     </string-array>
 
-    <string-array name="Puducherry">
+    <string-array name="State27">
         <item>KARAIKAL</item>
         <item>MAHE</item>
         <item>PONDICHERRY</item>
     </string-array>
-    <string-array name="Punjab">
+    <string-array name="State28">
         <item>AMRITSAR L</item>
         <item>BARNALA</item>
         <item>BATHINDA</item>
@@ -713,7 +714,7 @@
         <item>SANGRUR</item>
         <item>TARN TARAN</item>
     </string-array>
-    <string-array name="Rajasthan">
+    <string-array name="State29">
         <item>AJMER</item>
         <item>ALWAR</item>
         <item>BANSWARA</item>
@@ -748,13 +749,13 @@
         <item>TONK </item>
         <item>UDAIPUR</item>
     </string-array>
-    <string-array name="Sikkim">
+    <string-array name="State30">
         <item>EAST SIKKIM</item>
         <item>WEST SIKKIM</item>
         <item>NORTH SIKKIM</item>
         <item>SOUTH SIKKIM</item>
     </string-array>
-    <string-array name="TamilNadu">
+    <string-array name="State31">
         <item>ARIYALUR</item>
         <item>CHENNAI</item>
         <item>COIMBATORE</item>
@@ -788,19 +789,19 @@
         <item>VILLUPURAM </item>
         <item>VIRUDHUNAGAR </item>
     </string-array>
-    <string-array name="Telengana">
-    <item>ADILABAD </item>
-    <item>HYDERABAD</item>
-    <item>K.V.RANGAREDDY</item>
-    <item>KARIM NAGAR </item>
-    <item>KHAMMAM </item>
-    <item> MAHABUB NAGAR</item>
-    <item> MEDAK  </item>
-    <item> NALGONDA </item>
-    <item> NIZAMABAD</item>
-    <item>WARANGAL </item>
+    <string-array name="State32">
+        <item>ADILABAD </item>
+        <item>HYDERABAD</item>
+        <item>K.V.RANGAREDDY</item>
+        <item>KARIM NAGAR </item>
+        <item>KHAMMAM </item>
+        <item> MAHABUB NAGAR</item>
+        <item> MEDAK  </item>
+        <item> NALGONDA </item>
+        <item> NIZAMABAD</item>
+        <item>WARANGAL </item>
     </string-array>
-    <string-array name="UttarPradesh">
+    <string-array name="State34">
         <item>AGRA</item>
         <item>ALIGARH</item>
         <item>ALLAHABAD </item>
@@ -818,7 +819,6 @@
         <item>BIJNOR</item>
         <item>BUDAUN</item>
         <item> BULANDSHAHR</item>
-
         <item>CHANDAULI</item>
         <item>CHITRAKOOT</item>
         <item>DEORIA </item>
@@ -874,21 +874,21 @@
         <item>UNNAO </item>
         <item>VARANASI </item>
     </string-array>
-    <string-array name="Uttarakhand">
-    <item>ALMORA </item>
-    <item>BAGESHWAR </item>
-    <item>CHAMOLI </item>
-    <item>CHAMPAWAT</item>
-    <item>DEHRADUN </item>
-    <item>HARIDWAR  </item>
-    <item> NAINITAL </item>
-    <item>PAURI GARHWAL</item>
-    <item> PITHORAGARH</item>
-    <item>RUDRAPRAYAG </item>
-    <item>TEHRI GARHWAL</item>
-    <item>UTTARKASHI</item>
-</string-array>
-    <string-array name="WestBengal">
+    <string-array name="State35">
+        <item>ALMORA </item>
+        <item>BAGESHWAR </item>
+        <item>CHAMOLI </item>
+        <item>CHAMPAWAT</item>
+        <item>DEHRADUN </item>
+        <item>HARIDWAR  </item>
+        <item> NAINITAL </item>
+        <item>PAURI GARHWAL</item>
+        <item> PITHORAGARH</item>
+        <item>RUDRAPRAYAG </item>
+        <item>TEHRI GARHWAL</item>
+        <item>UTTARKASHI</item>
+    </string-array>
+    <string-array name="State36">
         <item>BANKURA</item>
         <item>BARDHAMAN </item>
         <item>BIRBHUM </item>
@@ -911,4 +911,6 @@
         <item>WEST MIDNAPORE</item>
     </string-array>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

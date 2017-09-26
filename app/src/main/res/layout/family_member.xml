@@ -87,16 +87,17 @@
                     android:id="@+id/familyMemberName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:hint="Name" />
-
-                <Spinner
-                    android:id="@+id/familyMemberRelation"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_weight="1" />
+                    android:hint="Name"
+                    android:inputType="textPersonName" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/familyMemberRelation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:textAlignment="textEnd" />
 
         </LinearLayout>
 

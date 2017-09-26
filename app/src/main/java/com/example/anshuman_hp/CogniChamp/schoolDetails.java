@@ -81,15 +81,12 @@ public class schoolDetails extends Fragment {
                             .into(schoolLogo);
 
                 } else {
-                    schoolName.setText("No School Details Available Click on the edit to add");
+                    schoolLogo.setVisibility(View.GONE);
+                    schoolName.setText("School Details Not Available. Click on pen to add");
                     schoolCity.setText("");
                     schoolPinCode.setText("");
                     schoolAddress.setText("");
                     schoolState.setText("");
-
-                    Glide.with(getActivity())
-                            .load("")
-                            .into(schoolLogo);
                 }
             }
 
