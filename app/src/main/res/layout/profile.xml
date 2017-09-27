@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -40,7 +39,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:textAlignment="textEnd"></Spinner>
+            android:textAlignment="textEnd"/>
     </LinearLayout>
 
 
@@ -90,11 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="PinCode"/>
-
-
-
             <EditText
                 android:id="@+id/PinCode"
+                android:labelFor="@+id/PinCode"
                 android:inputType="number"
                 android:maxLength="6"
                 android:layout_width="match_parent"

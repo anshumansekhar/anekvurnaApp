@@ -25,12 +25,11 @@
         <item>Class-12</item>
     </string-array>
     <string-array name="ClassWithStream">
-        <item>Age (0-1)yrs</item>
-        <item>Age (1-2)yrs</item>
-        <item>Age (2-3)yrs</item>
-        <item>Age (3-4)yrs</item>
-        <item>Age (4-5)yrs</item>
-        <item>Age (5-6)yrs</item>
+        <item>Age (0-1) yrs</item>
+        <item>Age (1-2) yrs</item>
+        <item>Age (2-3) yrs</item>
+        <item>Age (3-4) yrs</item>
+        <item>Age (4-5) yrs</item>
         <item>Class-1</item>
         <item>Class-2</item>
         <item>Class-3</item>
@@ -97,7 +96,7 @@
         <item>Karate</item>
     </string-array>
     <string-array name="Dance">
-        <item>Contempory</item>
+        <item>Contemporary</item>
         <item>Classical</item>
         <item>Salsa</item>
     </string-array>
@@ -123,6 +122,45 @@
     </string>
     <string name="addFamily">You have Not Added any family Members\n
         <u>Click Here to Add</u>
+    </string>
+    <string name="addSchool">
+        School Details Not Available\n
+        <u>Click Here to Add</u>
+    </string>
+
+    <string name="termsHeader">
+        Privacy and Terms &amp; Conditions:
+By registering for using the services of CogniChamp, you agree to CogniChamp’s Terms &amp; Conditions. You also agree to our Privacy Policy, which describes how we process your information, including these key points:
+\n
+        </string>
+    <string name="terms1">
+ When you set up a CogniChamp Account, we store information you give us like your name, email address, telephone number, education details, etc.\n
+        </string>
+    <string name="terms2">
+When you use CogniChamp services to do things like share a video, rate or watch a video, we store the information you create.\n
+</string>
+    <string name="terms3">
+
+        When you search for any video on CogniChamp, watch a video on YouTube, for example, we process information about that activity – including information like the video you watched, device IDs, IP addresses, cookie data, and location.\n
+</string>
+    <string name="terms4">
+         We also process the kinds of information you provide on CogniChamp like your hobbies, Subjects, School Class, Age, Subject Marks, Family details, Residence Address, etc.\n
+       </string>
+    <string name="termsSubHeader">
+        Why we process it\n\n
+We process this data for the purposes of:\n
+        </string>
+    <string name="terms5">
+ Help our services deliver more useful, customized content such as more relevant video tutorials, tests, etc;\n
+</string>
+    <string name="terms6">
+        Improve the quality of our services and develop new ones;\n
+        </string>
+    <string name="terms7">
+ Deliver personalized content, both on CogniChamp services and on sites and apps that partner with CogniChamp;\n
+</string>
+    <string name="terms8">
+         Conduct analytics and measurement to understand how our services are used.\n
     </string>
 
     <string-array name="Stream">

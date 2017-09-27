@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.anshuman_hp.CogniChamp.AddNewSubject">
+    tools:context="com.main.cognichamp.CogniChamp.AddNewSubject">
 
     <AutoCompleteTextView
+        android:labelFor="@+id/autoCompleteTextView"
         android:id="@+id/autoCompleteTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

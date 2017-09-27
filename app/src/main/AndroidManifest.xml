@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.anshuman_hp.CogniChamp">
+    package="com.main.cognichamp.CogniChamp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
@@ -13,9 +13,9 @@
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <application
-        android:name=".Anekvurna"
+        android:name="com.main.cognichamp.CogniChamp.Anekvurna"
         android:allowBackup="true"
-        android:icon="@mipmap/logo"
+        android:icon="@mipmap/cognichamplogo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -61,59 +61,59 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NavigationDrawer"
+            android:name="com.main.cognichamp.CogniChamp.NavigationDrawer"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Main2Activity"
-            android:parentActivityName=".NavigationDrawer" />
+            android:name="com.main.cognichamp.CogniChamp.Main2Activity"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer" />
         <activity
-            android:name=".addFamily"
+            android:name="com.main.cognichamp.CogniChamp.addFamily"
             android:label="AddFamily"
-            android:parentActivityName=".NavigationDrawer"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
+                android:value="com.main.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
 
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name="com.main.cognichamp.CogniChamp.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".MyFirebaseInstanceIDService">
+        <service android:name="com.main.cognichamp.CogniChamp.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".YoutubeActivity" />
-        <activity android:name=".Registration" />
+        <activity android:name="com.main.cognichamp.CogniChamp.YoutubeActivity" />
+        <activity android:name="com.main.cognichamp.CogniChamp.Registration" />
         <activity
-            android:name=".AddHobbyActivityt"
-            android:parentActivityName=".NavigationDrawer">
+            android:name="com.main.cognichamp.CogniChamp.AddHobbyActivityt"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
+                android:value="com.main.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
         <activity
-            android:name=".AddNewSubject"
-            android:parentActivityName=".NavigationDrawer">
+            android:name="com.main.cognichamp.CogniChamp.AddNewSubject"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
+                android:value="com.main.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
-        <activity android:name=".ForgotPassword" />
+        <activity android:name="com.main.cognichamp.CogniChamp.ForgotPassword" />
         <activity
-            android:name=".EditSchoolDetails"
-            android:parentActivityName=".NavigationDrawer">
+            android:name="com.main.cognichamp.CogniChamp.EditSchoolDetails"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.anshuman_hp.CogniChamp.NavigationDrawer" />
+                android:value="com.main.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
-        <activity android:name=".AddVideoActivity">
+        <activity android:name="com.main.cognichamp.CogniChamp.AddVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -122,16 +122,16 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginEmail" />
-        <activity android:name=".SignUpChooseActivity">
+        <activity android:name="com.main.cognichamp.CogniChamp.LoginEmail" />
+        <activity android:name="com.main.cognichamp.CogniChamp.SignUpChooseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".changePassword"
-            android:parentActivityName=".NavigationDrawer"></activity>
+        <activity android:name="com.main.cognichamp.CogniChamp.changePassword"
+            android:parentActivityName="com.main.cognichamp.CogniChamp.NavigationDrawer"/>
     </application>
 
 </manifest>

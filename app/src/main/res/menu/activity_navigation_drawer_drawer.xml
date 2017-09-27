@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Videos">
         <menu>
-            <item android:title="Tutorials"
+            <item android:title="Video Tutorials"
                 android:icon="@drawable/ic_video_library_black_24dp"
                 android:id="@+id/presentClassVideos"/>
-            <item android:title="My Favourites"
+            <item android:title="My Favourite Videos"
                 android:icon="@drawable/ic_bookmark_black_24dp"
                 android:id="@+id/favoritesVideos"/>
         </menu>
@@ -20,7 +20,7 @@
                 android:title="Profile"/>
             <item android:title="Education Details"
                 android:id="@+id/EducationDetails"
-                android:icon="@drawable/ic_school_black_24dp"></item>
+                android:icon="@drawable/ic_school_black_24dp"/>
             <item android:id="@+id/nav_hobby"
                 android:title="Hobbies"
                 android:icon="@drawable/ic_assessment_black_24dp"/>
