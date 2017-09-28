@@ -31,6 +31,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+
 public class AddVideoActivity extends AppCompatActivity {
     static ProgressDialog dialog;
     Spinner subject,topic,Class;
@@ -242,13 +246,24 @@ public class AddVideoActivity extends AppCompatActivity {
                 .child("subjects")
                 .child(subjectName)
                 .setValue(new subjectItem(subjectName));
-        database.getReference(firebaseAuth.getCurrentUser().getUid())
-                .child("Favorites")
-                .child(className)
-                .child("topics")
-                .child(subjectName)
-                .push()
-                .setValue(new subjectItem(topicName));
+        if(className.contains("Age")){
+            database.getReference(firebaseAuth.getCurrentUser().getUid())
+                    .child("Favorites")
+                    .child(className)
+                    .child("topics")
+                    .child(subjectName)
+                    .child("videos")
+                    .setValue(new subjectItem(topicName));
+
+        }else {
+            database.getReference(firebaseAuth.getCurrentUser().getUid())
+                    .child("Favorites")
+                    .child(className)
+                    .child("topics")
+                    .child(subjectName)
+                    .push()
+                    .setValue(new subjectItem(topicName));
+        }
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
                 .child(className)
@@ -377,17 +392,14 @@ public class AddVideoActivity extends AppCompatActivity {
     }
     public static void setUpVideoItem(){
         videoCaption.setText(videoItem.getVideoCaption());
-        if(videoItem.getVideoDuration().length()==5){
-            videoDuration.setText("0:"+videoItem.getVideoDuration().substring(2,4));
+        Duration duration=null;
+        try {
+             duration= DatatypeFactory.newInstance().newDuration(videoItem.getVideoDuration());
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
         }
-        else if(videoItem.getVideoDuration().length()==7){
-            videoDuration.setText(videoItem.getVideoDuration().substring(2,2)+":"+videoItem.getVideoDuration().substring(4,5));
-        }
-        else if(videoItem.getVideoDuration().length()==8){
-            videoDuration.setText(videoItem.getVideoDuration().substring(2,3)+":"+videoItem.getVideoDuration().substring(5,6));
-        }
-        else if(videoItem.getVideoDuration().length()==9){
-            videoDuration.setText(videoItem.getVideoDuration().substring(2,2)+":"+videoItem.getVideoDuration().substring(6,8)+":"+videoItem.getVideoDuration().substring(10,12));
+        if(duration!=null) {
+            videoDuration.setText(duration.getHours() + ":" + duration.getMinutes() + ":" + duration.getSeconds());
         }
         publishedBy.setText("By: "+videoItem.getPublishedBy());
         Glide.with(ctx)

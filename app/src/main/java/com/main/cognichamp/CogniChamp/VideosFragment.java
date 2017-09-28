@@ -2,8 +2,10 @@ package com.main.cognichamp.CogniChamp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.DateTimePatternGenerator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +28,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 import java.util.HashMap;
+import java.util.Locale;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 
 /**
  * Created by Anshuman-HP on 12-09-2017.
@@ -112,17 +119,8 @@ public class VideosFragment extends Fragment {
                 ,ref) {
             @Override
             protected void populateViewHolder(final videoHolder viewHolder, final video model, final int position) {
-//                if(model.getVideoDuration().length()<=5){
-//                    viewHolder.videoDuration.setText("0:"+model.getVideoDuration().substring(2,4));
-//                }
-//                else if(model.getVideoDuration().length()<=7){
-//                    viewHolder.videoDuration.setText(model.getVideoDuration().substring(2,4)+":"+model.getVideoDuration().substring(6,8));
-//                }
-//                else if(model.getVideoDuration().length()<=9){
-//                    viewHolder.videoDuration.setText(model.getVideoDuration().substring(2,4)+":"+model.getVideoDuration().substring(6,8)+":"+model.getVideoDuration().substring(10,12));
-//                }
-                viewHolder.videoDuration.setText("");
                 viewHolder.videoCaption.setText(model.getVideoCaption());
+                viewHolder.videoDuration.setText(model.getVideoDuration().substring(2,model.getVideoDuration().length()-1).replaceAll("[^0-9]", ":"));
                 if(where.equals("Favorites")){
                     viewHolder.favorites.setVisibility(View.GONE);
                 }

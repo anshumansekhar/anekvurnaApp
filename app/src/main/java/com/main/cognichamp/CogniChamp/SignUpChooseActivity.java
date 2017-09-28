@@ -90,7 +90,7 @@ public class SignUpChooseActivity extends AppCompatActivity {
         callbackManagerLogin=CallbackManager.Factory.create();
         //TODO get correct link and appname
         shareLinkContent = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship"))
+                .setContentUrl(Uri.parse("http://play.google.com/store/apps/details?id=com.main.cognichamp.CogniChamp"))
                 .setQuote("I am using this awesome App. You must also join this to take advantage of cognitive learning for your child")
                 .setShareHashtag(new ShareHashtag.Builder()
                         .setHashtag(getResources().getString(R.string.app_name))
@@ -285,7 +285,7 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                 Intent shareIntent = new PlusShare.Builder(getApplicationContext())
                                                         .setType("text/plain")
                                                         .setText("I am using this awesome App. You must also join this to take advantage of cognitive learning for your child.")
-                                                        .setContentUrl(Uri.parse("http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship"))
+                                                        .setContentUrl(Uri.parse("http://play.google.com/store/apps/details?id=com.main.cognichamp.CogniChamp"))
                                                         .getIntent();
                                                 startActivityForResult(shareIntent, 0);
                                             }

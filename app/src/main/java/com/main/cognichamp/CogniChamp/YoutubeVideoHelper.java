@@ -19,6 +19,7 @@ import java.util.Scanner;
  */
 
 public class YoutubeVideoHelper extends AsyncTask<String ,JSONObject,JSONObject> {
+    private static String youtubeAPIKey="AIzaSyCHE0gIbODh4UZ-KmQcSS7pOD4rVdQEYtM";
     Context ctx;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth auth=FirebaseAuth.getInstance();
@@ -42,7 +43,7 @@ public class YoutubeVideoHelper extends AsyncTask<String ,JSONObject,JSONObject>
                 Scanner s=new Scanner(url).useDelimiter("\\s*https://youtu.be/");
                 String videoID=s.next();
                 Log.e("sh",videoID);
-                URL embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id="+videoID+"&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key=AIzaSyAma3AtMpB74zCdhUhiAg5QIeGstqwoFAA"
+                URL embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id="+videoID+"&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key="+youtubeAPIKey
                 );
                 object=new JSONObject(IOUtils.toString(embededURL)).getJSONArray("items").getJSONObject(0);
                return object;

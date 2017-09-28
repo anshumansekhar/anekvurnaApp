@@ -44,7 +44,6 @@ public class AccountFragment extends Fragment {
 
 
     TextView changePassword;
-    TextView terms;
     EditText email;
     EditText mobileNumber;
     Button registerPhone;
@@ -62,7 +61,6 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.account_details,container,false);
         email=(EditText)v.findViewById(R.id.emailaccount);
-        terms=(TextView)v.findViewById(R.id.terms);
         mobileNumber=(EditText)v.findViewById(R.id.mobilenumberaccount);
         registerPhone=(Button)v.findViewById(R.id.registerPhone);
         changePassword=(TextView)v.findViewById(R.id.changePassword);
@@ -120,26 +118,7 @@ public class AccountFragment extends Fragment {
                 }
             }
         }
-        terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                builder.setTitle("Privacy and Terms");
-                builder.setView(R.layout.terms);
-                builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).setPositiveButton("I Agree", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.create().show();
-            }
-        });
+
         mobileNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

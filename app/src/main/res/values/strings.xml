@@ -948,7 +948,5 @@ We process this data for the purposes of:\n
         <item>SOUTH DINAJPUR</item>
         <item>WEST MIDNAPORE</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

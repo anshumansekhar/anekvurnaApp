@@ -2,6 +2,7 @@ package com.main.cognichamp.CogniChamp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +19,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class NavigationDrawer extends AppCompatActivity
@@ -35,6 +43,7 @@ public class NavigationDrawer extends AppCompatActivity
     Toolbar toolbar;
     ActionBar actionBar;
     Fragment selectedFragment = new AnotherActivity();
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,20 @@ public class NavigationDrawer extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         //drawer.setDrawerListener(toggle);
         toggle.syncState();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.e("Zd","Connection Failed");
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         fg=getIntent();
         isFirstLaunch=fg.getBooleanExtra("IsFirstTime",false);
@@ -58,7 +81,7 @@ public class NavigationDrawer extends AppCompatActivity
             fm=getSupportFragmentManager();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_layout, new ProfileFragment());
-//            itemWER.setVisible(true);
+            selectedFragment=new ProfileFragment();
             actionBar.setTitle("Student Profile Details");
             transaction.commit();
         }else {
@@ -111,6 +134,9 @@ public class NavigationDrawer extends AppCompatActivity
         getMenuInflater().inflate(R.menu.navigation_drawer, menu);
         itemWER= menu.findItem(R.id.save);
         itemWER.setVisible(false);
+        if(selectedFragment instanceof ProfileFragment){
+            itemWER.setVisible(true);
+        }
         return true;
     }
     @Override
@@ -120,8 +146,7 @@ public class NavigationDrawer extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.sign_out) {
-            firebaseAuth.signOut();
-            startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
+            signOut();
             return true;
         }
         else if(id==R.id.save)
@@ -236,7 +261,7 @@ public class NavigationDrawer extends AppCompatActivity
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite Your Friends")
                 .setEmailSubject("Invitation to Join "+getResources().getString(R.string.app_name))
                 .setMessage("I am using this awesome App.Join this to take advantage of cognitive learning for your child.")
-                .setEmailHtmlContent("http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship")
+                .setEmailHtmlContent("http://play.google.com/store/apps/details?id=com.main.cognichamp.CogniChamp")
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
     }
@@ -247,7 +272,7 @@ public class NavigationDrawer extends AppCompatActivity
         //TODO change the link
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.example.anshuman_hp.internship");
+        share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.main.cognichamp.CogniChamp");
         share.putExtra(android.content.Intent.EXTRA_SUBJECT, "I am using this awesome App. You must also join this to take advantage of cognitive learning for your child");
         startActivity(Intent.createChooser(share, "Share The App Link"));
     }
@@ -256,10 +281,16 @@ public class NavigationDrawer extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if(previousFrag.equals("Hobby")){
             transaction.replace(R.id.frame_layout, new HobbiesFragment());
+            floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
+            floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+            floatingActionButton.show();
             actionBar.setTitle("Hobbies");
         }
         else if(previousFrag.equals("addFamily")){
             transaction.replace(R.id.frame_layout, new FamilyFragment());
+            floatingActionButton=(FloatingActionButton)findViewById(R.id.FloatingActionButton);
+            floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+            floatingActionButton.show();
             actionBar.setTitle("Family");
         }
         else if(previousFrag.equals("addSubject")){
@@ -274,5 +305,30 @@ public class NavigationDrawer extends AppCompatActivity
             transaction.replace(R.id.frame_layout,new AccountFragment());
         }
         transaction.commit();
+    }
+    public void signOut(){
+        Log.e("ssfx",firebaseAuth.getCurrentUser().getProviders().get(0));
+        if(firebaseAuth.getCurrentUser().getProviders().get(0).contains("google")){
+            Log.e("dd","Signing out of google");
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            firebaseAuth.signOut();
+                            startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
+                        }
+                    });
+        }
+        else if(firebaseAuth.getCurrentUser().getProviders().get(0).contains("facebook")){
+            Log.e("DHf","Siging out of facebook");
+            LoginManager.getInstance().logOut();
+            firebaseAuth.signOut();
+            startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
+        }
+        else {
+            Log.e("dd","Signing out ");
+            firebaseAuth.signOut();
+            startActivity(new Intent(NavigationDrawer.this, SignUpChooseActivity.class));
+        }
     }
 }

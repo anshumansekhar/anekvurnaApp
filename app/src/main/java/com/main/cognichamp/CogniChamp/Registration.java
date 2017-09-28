@@ -1,14 +1,17 @@
 package com.main.cognichamp.CogniChamp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,6 +37,7 @@ public class Registration extends AppCompatActivity  {
     Button register;
     String ismale="true";
     String email,password;
+    TextView terms;
 
     boolean phone;
 
@@ -55,6 +59,30 @@ public class Registration extends AppCompatActivity  {
         email=j.getStringExtra("Email");
         password=j.getStringExtra("Password");
         phone=j.getBooleanExtra("PhoneAuth",false);
+        terms=(TextView)findViewById(R.id.terms);
+
+
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder=new AlertDialog.Builder(Registration.this);
+                builder.setTitle("Privacy and Terms");
+                builder.setView(R.layout.terms);
+                builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setPositiveButton("I Agree", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.create().show();
+            }
+        });
+
 
         Log.e(TAG,email +""+ password);
 

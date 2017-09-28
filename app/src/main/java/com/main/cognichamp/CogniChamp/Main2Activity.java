@@ -10,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 
 public class Main2Activity extends AppCompatActivity {
     ImageView notificationImage;
@@ -27,6 +31,7 @@ public class Main2Activity extends AppCompatActivity {
     RadioGroup group;
     Button submitButton;
     boolean radio=true;
+    TextView question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class Main2Activity extends AppCompatActivity {
 
             }
         }
+        question.setText(subject);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

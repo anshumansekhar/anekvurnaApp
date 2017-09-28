@@ -434,7 +434,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
             });
         }
         else {
-            Toast.makeText(getActivity(),"No image",Toast.LENGTH_SHORT).show();
+            //no image uploaded
         }
     }
     public void showProgressNotification(){

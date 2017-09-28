@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -127,7 +129,6 @@ public class subjectListFragment extends Fragment {
                 viewHolder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO load topic list
                         subjectNameBundle.putString("ClassName",className);
                         subjectNameBundle.putString("where",where);
                         subjectNameBundle.putString("SubjectName",model.getSubjectName());
@@ -188,7 +189,9 @@ public class subjectListFragment extends Fragment {
                             if(className.contains("Age")){
                                 ((AnotherActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
                             }
-                            ((AnotherActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                            else {
+                                ((AnotherActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                            }
                         }else if(where.equals("Favorites")){
                             ((FavoriteVideosActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
                         }

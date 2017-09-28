@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -88,9 +92,7 @@
         android:textAlignment="textEnd"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView6"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/textView6"
@@ -101,9 +103,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Test type"
+        android:paddingLeft="20dp"
         android:textSize="@dimen/spinnerHeader"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.v7.widget.CardView>
+    </ScrollView>

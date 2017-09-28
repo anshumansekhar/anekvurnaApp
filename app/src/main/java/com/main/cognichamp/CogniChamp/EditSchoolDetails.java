@@ -163,7 +163,6 @@ public class EditSchoolDetails extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(getApplicationContext(), "School Details Updated", Toast.LENGTH_SHORT).show();
-                                        //TODO go Back
                                     }
                                 });
                     }
@@ -187,7 +186,6 @@ public class EditSchoolDetails extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(),"School Details Updated",Toast.LENGTH_SHORT).show();
-                                //TODO go Back
                             }
                         });
                     }
