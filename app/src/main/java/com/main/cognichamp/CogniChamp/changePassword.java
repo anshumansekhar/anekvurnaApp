@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,10 +58,8 @@ public class changePassword extends AppCompatActivity {
                                         for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
                                             if (user.getProviderId().equals("facebook.com")) {
                                                 Toast.makeText(changePassword.this,"Facebook Password cannot be changed here",Toast.LENGTH_SHORT).show();
-                                                Log.e("xx_xx_provider_info", "User is signed in with Facebook");
                                             } else if (user.getProviderId().equals("google.com")) {
                                                 Toast.makeText(changePassword.this,"Google Password cannot be changed here",Toast.LENGTH_SHORT).show();
-                                                Log.e("xx_xx_provider_info", "User is signed in with Google");
                                             }
                                             else{
                                                 firebaseUser.updatePassword(confirmPassword.getText().toString())

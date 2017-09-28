@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class marksFragments extends Fragment {
 
     static FirebaseRecyclerAdapter<subject,subjectHolder> Adapter;
 
-    DatabaseReference testRef;
+    public static DatabaseReference testRef;
 
     public static String[] tests;
 
@@ -188,7 +187,6 @@ public class marksFragments extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.e("post",""+pos);
                         if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
                            Subjects.get(""+pos).setTotalMarks(Float.parseFloat(s.toString()));
                         }
@@ -208,7 +206,6 @@ public class marksFragments extends Fragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        Log.e("pos",""+pos);
                         if(!s.toString().equals("")&&model.getSubMarks()!=Float.parseFloat(s.toString())){
                             Subjects.get(""+pos).setSubMarks(Float.parseFloat(s.toString()));
                         }

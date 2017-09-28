@@ -67,7 +67,7 @@ public class EducationFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 className=classes[position];
-                if(!className.equals("Class-11")&&!className.equals("Class-12") && !className.equals("Class-10")) {
+                if(!className.contains("Class-12") && !className.contains("Class-10")) {
                     classRef = database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
                             .child(className)
@@ -76,10 +76,25 @@ public class EducationFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
-                                pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"),getActivity());
+                                classRef.child("tests")
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if(dataSnapshot.exists()) {
+                                                    pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                }else {
+                                                    addSubjects();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
                             }
                             else {
-                                classRef.setValue(new ClassDetails());
+                                addSubjects();
                             }
                         }
                         @Override
@@ -88,19 +103,34 @@ public class EducationFragment extends Fragment {
                         }
                     });
                 }
-                else if(className.equals("Class-10")){
+                else if(className.equals("Class-10") ){
                     classRef=database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
-                            .child(className);
+                            .child(className)
+                    .child("tests");
                     classRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()){
-                                pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("Subjects"),getActivity());
+                                classRef.child("tests")
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if(dataSnapshot.exists()) {
+                                                    pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                }else {
+                                                    addSubjectswith(10);
+                                                }
+                                            }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
+                                            }
+                                        });
                             }
                             else{
-                                classRef.setValue(new ClassDetails(10));
+                                addSubjectswith(10);
+
                             }
                         }
 
@@ -110,29 +140,32 @@ public class EducationFragment extends Fragment {
                         }
                     });
                 }
-                else{
-                    AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                        builder.setSingleChoiceItems(R.array.Stream, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                classRef=database.getReference(auth.getCurrentUser().getUid())
-                                        .child("ClassDetails")
-                                        .child(className)
-                                        .child(""+getActivity().getResources().getStringArray(R.array.Stream)[which]);
+                else if(className.contains("Class-12")){
+                    classRef=database.getReference(auth.getCurrentUser().getUid())
+                            .child("ClassDetails")
+                            .child(className)
+                            .child("tests");
                                 classRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.exists()){
-                                            //TODO get the data
-                                            pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("Subjects"),getActivity());
-
+                                        if(dataSnapshot.exists()) {
+                                            classRef.child("tests")
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.exists()) {
+                                                                pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                            } else {
+                                                                addSubjectswith(12);
+                                                            }
+                                                        }
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                        }
+                                                    });
                                         }
                                         else {
-                                            if(className.equals("Class-12")){
-                                                classRef.setValue(new ClassDetails(12));
-                                            }else {
-                                                classRef.setValue(new ClassDetails());
-                                            }
+                                            addSubjectswith(12);
                                         }
                                     }
                                     @Override
@@ -140,14 +173,9 @@ public class EducationFragment extends Fragment {
 
                                     }
                                 });
-                                dialog.dismiss();
+
                             }
-                        });
-                    AlertDialog dialog=builder.create();
-                    dialog.setCancelable(false);
-                    dialog.show();
                 }
-            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -155,5 +183,29 @@ public class EducationFragment extends Fragment {
             }
         });
         return view;
+    }
+    public void addSubjects(){
+        classRef.setValue(new ClassDetails());
+        classRef
+                .child("subjects")
+                .child("0")
+                .setValue(new subjectItem("English"));
+        classRef
+                .child("subjects")
+                .child("1")
+                .setValue(new subjectItem("Maths"));
+
+    }
+    public void addSubjectswith(int num){
+        classRef.setValue(new ClassDetails(num));
+        classRef
+                .child("subjects")
+                .child("0")
+                .setValue(new subjectItem("English"));
+        classRef
+                .child("subjects")
+                .child("1")
+                .setValue(new subjectItem("Maths"));
+
     }
 }

@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,8 +47,8 @@ public class AddNewSubject extends AppCompatActivity {
         post=a.getIntExtra("Position",0);
         reference=a.getStringExtra("Ref");
 
-        Class=FirebaseDatabase.getInstance().getReferenceFromUrl(a.getStringExtra("Class"));
-        ref= FirebaseDatabase.getInstance().getReferenceFromUrl(reference);
+        Class=EducationFragment.classRef;
+        ref= marksFragments.testRef.child("subjects");
 
 
 
@@ -67,7 +66,6 @@ public class AddNewSubject extends AppCompatActivity {
         subjectChoose.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("a","OnitemClicked");
                 TextView tv=(TextView)view;
                 subject subject=new subject(0,0,tv.getText().toString());
                 list.add(subject);

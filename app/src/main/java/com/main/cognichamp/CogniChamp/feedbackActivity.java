@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,7 @@ public class feedbackActivity extends Fragment {
     FirebaseAuth auth=FirebaseAuth.getInstance();
 
     user_profile profile=new user_profile();
+    String username,pass;
 
     @Nullable
     @Override
@@ -55,6 +55,33 @@ public class feedbackActivity extends Fragment {
         submitFeedback=(Button)v.findViewById(R.id.submitFeedback);
         mailsubject=(EditText)v.findViewById(R.id.emailSubject);
 
+        database.getReference("mail")
+                .child("username")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        username=dataSnapshot.getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        database.getReference("mail")
+                .child("password")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        pass=dataSnapshot.getValue().toString();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
         database.getReference(auth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -62,10 +89,13 @@ public class feedbackActivity extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         profile=dataSnapshot.getValue(user_profile.class);
                         name.setText(profile.getName());
-                        if(!auth.getCurrentUser().getPhoneNumber().isEmpty()) {
-                            phoneNumber.setText(auth.getCurrentUser().getPhoneNumber().substring(3));
+                        if(auth.getCurrentUser().getPhoneNumber()!=null) {
+                            if(!auth.getCurrentUser().getPhoneNumber().isEmpty()){
+                                phoneNumber.setText(auth.getCurrentUser().getPhoneNumber().substring(3));
+                            }
+                        }if(auth.getCurrentUser()!=null) {
+                            emailId.setText(auth.getCurrentUser().getEmail());
                         }
-                        emailId.setText(auth.getCurrentUser().getEmail());
                     }
 
                     @Override
@@ -103,8 +133,8 @@ public class feedbackActivity extends Fragment {
                             subjectText=mailsubject.getText().toString();
                             //TODO change the email from and to
                             sendEmailTask task=new sendEmailTask();
-                            task.execute(messageTypetext+" by "+nameText
-                                    ,subjectText
+                            task.execute(subjectText
+                                    ,messageText
                                     ,email
                                     ,"contact@cognichamp.com,"+email,messageTypetext);
                         }
@@ -140,11 +170,10 @@ public class feedbackActivity extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
             try {
-                MailSender sender = new MailSender("cognichamp@gmail.com", "12345678!");
+                MailSender sender = new MailSender(username,pass);
                 sender.sendMail(params[0],params[1],params[2],params[3]);
                 messageType=params[4];
             } catch (Exception e) {
-                Log.e("SendMail", e.toString());
             }
 
             return null;

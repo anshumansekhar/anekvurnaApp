@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -122,7 +121,6 @@ public class SignUpChooseActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.e(TAG, "connection failed with google client");
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -139,26 +137,21 @@ public class SignUpChooseActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 LoginManager.getInstance().logInWithPublishPermissions(SignUpChooseActivity.this, Arrays.asList("publish_actions"));
-                Log.e("dv",loginResult.getAccessToken().toString());
-                Log.d("facebook:onSuccess:", loginResult.toString());
                 Profile currentFbProfile = Profile.getCurrentProfile();
                 handleFacebookAccessToken(loginResult.getAccessToken(), currentFbProfile);
             }
 
             @Override
             public void onCancel() {
-                Log.e(TAG, "Cancelled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.e(TAG, error.toString());
             }
         });
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "Signing with Google");
                 signInWithGoogle();
             }
         });
@@ -187,15 +180,12 @@ public class SignUpChooseActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                Log.e(TAG, "Siging with google successful");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }
         }
     }
     public void handleFacebookAccessToken(final AccessToken token, final Profile currentProfile) {
-        Log.d("handle", token.toString());
-        Log.e(TAG, "Loginning with firrbase from facebook");
         final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -224,11 +214,9 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                                         .child("UserProfile")
                                                         .setValue(userProfile);
                                                 if(ShareDialog.canShow(ShareLinkContent.class)) {
-                                                    Log.e("adg","Opening share dialog");
                                                     shareDialog.show(shareLinkContent, ShareDialog.Mode.AUTOMATIC);
                                                 }
                                                 else {
-                                                    Log.e("ad", "not showing share dialog");
                                                     startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
                                                 }
                                             }
@@ -238,14 +226,11 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                         }
                                     });
                         } else {
-                            Log.e("sagd","Task FAiled");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Failure not looged in");
-                Log.e(TAG, e.toString());
 
             }
         });
@@ -263,10 +248,8 @@ public class SignUpChooseActivity extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.exists()) {
-                                                Log.e("s",""+dataSnapshot.exists());
                                                startActivity(new Intent(SignUpChooseActivity.this, NavigationDrawer.class));
                                             } else {
-                                                Log.e("s","not"+dataSnapshot.exists());
                                                 user_profile userProfile = new user_profile(acct.getDisplayName()
                                                         , ""
                                                         , "true"

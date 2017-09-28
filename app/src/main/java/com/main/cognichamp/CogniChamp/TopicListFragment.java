@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,6 @@ public class TopicListFragment extends Fragment {
         className=getArguments().getString("ClassName");
         subjectName=getArguments().getString("SubjectName");
         where=getArguments().getString("where");
-        Log.e("csl",className + subjectName);
         setAdapter(className,subjectName);
         return v;
     }
@@ -64,10 +62,10 @@ public class TopicListFragment extends Fragment {
                     .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child(where)
                     .child(className)
+                    .child("tests")
                     .child("topics")
                     .child(subName);
         }
-        Log.e("ad",ref.toString());
         firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
                 (subjectItem.class
                 ,R.layout.subject_topic_card

@@ -15,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     user_profile user_profile;
 
     public static ProfileFragment newInstance() {
-        Log.e("TAG","Creating profile fragment");
         return new ProfileFragment();
     }
     public ProfileFragment() {
@@ -133,15 +131,12 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         final String[] states=getActivity().getResources().getStringArray(R.array.states);
 
         datePickerDialog=new DatePickerDialog(getActivity(),this,2000,1,1);
-        Log.e("getting","User Profile");
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Log.e("dagd",dataSnapshot.getValue(com.example.anshuman_hp.CogniChamp.user_profile.class).toString());
                         user_profile=dataSnapshot.getValue(user_profile.class);
-                        Log.e("USER_PROFILE",user_profile.toString());
                         if(getActivity()==null) {
                             return;
                         }
@@ -349,7 +344,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         return v;
     }
     public void saveChanges() {
-        Log.e("Showing","Dialog");
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle("Confirm Changes");
         builder.setMessage("Save Changes");
@@ -363,7 +357,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 isChanged=false;
-                                Log.e("User","Changed");
                                 dialog.cancel();
                             }
                         });
@@ -450,7 +443,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     public void getCities(int state){
         citiesAdapter.clear();
         cities.clear();
-        Log.e("gd",""+state);
         switch (state){
             case 0:
                 cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State1)));
@@ -562,7 +554,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 break;
         }
         citiesAdapter.notifyDataSetChanged();
-        Log.e("sgd",""+citiesAdapter.getCount());
         if(cities.indexOf(user_profile.getDistrict())!=-1) {
             districtSpinner.setSelection(cities.indexOf(user_profile.getDistrict()));
         }

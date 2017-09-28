@@ -19,6 +19,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +33,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -43,6 +54,9 @@ public class AddVideoActivity extends AppCompatActivity {
     static TextView videoCaption,videoDuration,publishedBy;
     Button addVideo;
     LinearLayout buttonsVideoItem;
+
+    private static String youtubeAPIKey="AIzaSyCHE0gIbODh4UZ-KmQcSS7pOD4rVdQEYtM";
+
 
     ArrayList subjectsList=new ArrayList();
     ArrayList topicsList=new ArrayList();
@@ -102,9 +116,76 @@ public class AddVideoActivity extends AppCompatActivity {
             final String sharedText = j.getStringExtra(Intent.EXTRA_TEXT);
             if(sharedText!=null)
             {
-                YoutubeVideoHelper helper=new YoutubeVideoHelper(AddVideoActivity.this,sharedText);
+                Scanner s=new Scanner(sharedText).useDelimiter("\\s*https://youtu.be/");
+                String videoID=s.next();
+                URL embededURL = null;
+                try {
+                    embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id="+videoID+"&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key="+youtubeAPIKey);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 dialog.show();
-                helper.execute(sharedText);
+                RequestQueue queue = Volley.newRequestQueue(ctx);
+                try {
+                    JsonObjectRequest request = new JsonObjectRequest
+                            (embededURL.toString(), null, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        response=response.getJSONArray("items").getJSONObject(0);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.e("db", response.toString());
+                                    dialog.hide();
+                                    String caption = null;
+                                    try {
+                                        caption = response.getJSONObject("snippet").getString("title");
+                                        videoCaption.setText(caption);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String duration = null;
+                                    try {
+                                        duration = response.getJSONObject("contentDetails").getString("duration");
+                                        if(duration.substring(2,duration.length()-1).replaceAll("[^0-9]", ":").length()<=2){
+                                            duration="0:"+duration.substring(2,duration.length()-1).replaceAll("[^0-9]", ":");
+                                        }else {
+                                            duration=duration.substring(2,duration.length()-1).replaceAll("[^0-9]", ":");
+                                        }
+                                        videoDuration.setText(duration);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String publishedby = null;
+                                    try {
+                                        publishedby = response.getJSONObject("snippet").getString("channelTitle");
+                                        publishedBy.setText(publishedby);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Scanner s = new Scanner(sharedText).useDelimiter("\\s*https://youtu.be/");
+                                    String videoID = s.next();
+                                    Glide.with(ctx)
+                                            .load("https://img.youtube.com/vi/" + videoID + "/default.jpg")
+                                            .into(videoThumbnail);
+//                                    videoItem = new video(, caption, duration,sharedText, videoID, "", publishedBy);
+//                                   setUpVideoItem(videoItem);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // TODO Auto-generated method stub
+
+                                    Log.e("err", error.toString());
+                                }
+                            });
+                    queue.add(request);
+                    queue.start();
+                }catch (Exception e){
+                    Log.e("db",e.toString());
+                }
+
             }
         }
         if(firebaseAuth.getCurrentUser()!=null) {
@@ -146,8 +227,6 @@ public class AddVideoActivity extends AppCompatActivity {
                                 } else {
                                     className = "Class-" + (Integer.valueOf(className) - 6);
                                 }
-                                Log.e("aj", className);
-                                Log.e("sfbk", "" + classList.indexOf(className));
                                 Class.setSelection(classList.indexOf(className));
                                 getSubjects(className);
                             }
@@ -243,6 +322,7 @@ public class AddVideoActivity extends AppCompatActivity {
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
                 .child(className)
+                .child("tests")
                 .child("subjects")
                 .child(subjectName)
                 .setValue(new subjectItem(subjectName));
@@ -250,6 +330,7 @@ public class AddVideoActivity extends AppCompatActivity {
             database.getReference(firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
                     .child(className)
+                    .child("tests")
                     .child("topics")
                     .child(subjectName)
                     .child("videos")
@@ -259,6 +340,7 @@ public class AddVideoActivity extends AppCompatActivity {
             database.getReference(firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
                     .child(className)
+                    .child("tests")
                     .child("topics")
                     .child(subjectName)
                     .push()
@@ -267,6 +349,7 @@ public class AddVideoActivity extends AppCompatActivity {
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
                 .child(className)
+                .child("tests")
                 .child("videos")
                 .child(subjectName)
                 .child(topicName)
@@ -285,6 +368,7 @@ public class AddVideoActivity extends AppCompatActivity {
             database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child("ClassDetails")
                     .child(Class)
+                    .child("tests")
                     .child("subjects")
                     .addChildEventListener(new ChildEventListener() {
                         @Override
@@ -390,20 +474,18 @@ public class AddVideoActivity extends AppCompatActivity {
                 });
 
     }
-    public static void setUpVideoItem(){
-        videoCaption.setText(videoItem.getVideoCaption());
-        Duration duration=null;
-        try {
-             duration= DatatypeFactory.newInstance().newDuration(videoItem.getVideoDuration());
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
+    public  void setUpVideoItem(video v){
+        videoCaption.setText(v.getVideoCaption());
+        String duration;
+        if(v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":").length()<=2){
+            duration="0:"+v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
+        }else {
+            duration=v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
         }
-        if(duration!=null) {
-            videoDuration.setText(duration.getHours() + ":" + duration.getMinutes() + ":" + duration.getSeconds());
-        }
-        publishedBy.setText("By: "+videoItem.getPublishedBy());
+        videoDuration.setText(duration);
+        publishedBy.setText("By: "+v.getPublishedBy());
         Glide.with(ctx)
-                .load(videoItem.getVideoThumbnailUrl())
+                .load(v.getVideoThumbnailUrl())
                 .into(videoThumbnail);
     }
     public void getAgeTopics(){

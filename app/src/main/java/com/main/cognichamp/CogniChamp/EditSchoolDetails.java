@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,7 +114,6 @@ public class EditSchoolDetails extends AppCompatActivity {
                 }
                 else{
                     addSubjectCard.setVisibility(View.GONE);
-                    Log.e("fqeah",""+position);
                     database.getReference("Schools")
                             .child(currentCity)
                             .child(schoolNames.get(position))
@@ -200,7 +198,6 @@ public class EditSchoolDetails extends AppCompatActivity {
     public void getCities(int state){
         citiesAdapter.clear();
         cities.clear();
-        Log.e("gd",""+state);
         switch (state){
             case 0:
                 cities.addAll(Arrays.asList(getResources().getStringArray(R.array.State1)));
@@ -312,7 +309,6 @@ public class EditSchoolDetails extends AppCompatActivity {
                 break;
         }
         citiesAdapter.notifyDataSetChanged();
-       Log.e("sgd",""+citiesAdapter.getCount());
     }
     public void getSchools(String city){
         schoolAdapter.clear();

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -69,7 +68,6 @@ public class NavigationDrawer extends AppCompatActivity
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Log.e("Zd","Connection Failed");
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -109,7 +107,6 @@ public class NavigationDrawer extends AppCompatActivity
                 // Get the invitation IDs of all sent messages
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
                 for (String id : ids) {
-                    //Log.d(TAG, "onActivityResult: sent invitation " + id);
                 }
             } else {
                 // Sending failed or it was canceled, show failure message to the user
@@ -154,19 +151,16 @@ public class NavigationDrawer extends AppCompatActivity
             Fragment f=getSupportFragmentManager().findFragmentById(R.id.frame_layout);
             if(f instanceof EducationFragment)
             {
-                Log.e("Tag","Show Dialog");
             }
             else if(f instanceof ProfileFragment)
             {
                 ((ProfileFragment) f).saveChanges();
-                Log.e("Tag","Show Dialog");
             }
             else if(f instanceof AccountFragment)
             {
 
 
                     ((AccountFragment) f).saveChanges();
-                    Log.e("Tag","Show Dialog");
 
             }
 
@@ -266,7 +260,7 @@ public class NavigationDrawer extends AppCompatActivity
         startActivityForResult(intent, REQUEST_INVITE);
     }
     public static Fragment loadRateFragment(){
-        return new feedbackActivity();
+        return new FeedbackFragment();
     }
     public void sharePlayStoreLink(){
         //TODO change the link
@@ -307,9 +301,7 @@ public class NavigationDrawer extends AppCompatActivity
         transaction.commit();
     }
     public void signOut(){
-        Log.e("ssfx",firebaseAuth.getCurrentUser().getProviders().get(0));
         if(firebaseAuth.getCurrentUser().getProviders().get(0).contains("google")){
-            Log.e("dd","Signing out of google");
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                     new ResultCallback<Status>() {
                         @Override
@@ -320,13 +312,11 @@ public class NavigationDrawer extends AppCompatActivity
                     });
         }
         else if(firebaseAuth.getCurrentUser().getProviders().get(0).contains("facebook")){
-            Log.e("DHf","Siging out of facebook");
             LoginManager.getInstance().logOut();
             firebaseAuth.signOut();
             startActivity(new Intent(NavigationDrawer.this,SignUpChooseActivity.class));
         }
         else {
-            Log.e("dd","Signing out ");
             firebaseAuth.signOut();
             startActivity(new Intent(NavigationDrawer.this, SignUpChooseActivity.class));
         }

@@ -61,7 +61,6 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
 
     public void uploadData()
     {
-        Log.e("Uploading","DAta");
         for(int i=post;i<(post+map.size());i++){
             ClassName.child("subjects")
                     .child(""+i)
@@ -75,10 +74,10 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
                         .child(""+i)
                         .setValue(map.get(""+i));
             }
+            Log.e("d","adding to subjects");
             ClassName.child("subjects")
                     .child(""+i)
                     .setValue(new subjectItem(map.get(""+i).getSubjectName()));
-            Log.e("Pushing",map.get(""+i).toString());
         }
     }
 

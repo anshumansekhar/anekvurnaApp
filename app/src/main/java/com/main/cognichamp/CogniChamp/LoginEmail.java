@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,14 +64,12 @@ public class LoginEmail extends AppCompatActivity {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                Log.e(TAG, "onVerificationCompleted:" + phoneAuthCredential);
                 if (phoneAuthCredential != null)
                     signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Log.e(TAG, "onVerificationFailed", e);
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                 } else if (e instanceof FirebaseTooManyRequestsException) {
@@ -83,7 +80,6 @@ public class LoginEmail extends AppCompatActivity {
             @Override
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                Log.e(TAG, "onCodeSent:" + s);
                 final String id = s;
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginEmail.this);
                 builder.setTitle("Verification");
@@ -140,13 +136,11 @@ public class LoginEmail extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                         @Override
                                         public void onSuccess(AuthResult authResult) {
-                                            Log.e(TAG, "Sign in Successful starting next activity");
                                             startActivity(new Intent(LoginEmail.this, NavigationDrawer.class));
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, e.toString());
                                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginEmail.this);
                                     builder.setTitle("Confirmation");
                                     builder.setMessage("The entered Emaild has not Yet been Registered.Do you want to Register now?");
@@ -157,7 +151,6 @@ public class LoginEmail extends AppCompatActivity {
                                             f.putExtra("PhoneAuth", false);
                                             f.putExtra("Email", emailText);
                                             f.putExtra("Password", passwordText);
-                                            Log.e(TAG, "Staring Registration");
                                             startActivity(f);
                                         }
                                     }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -213,13 +206,14 @@ public class LoginEmail extends AppCompatActivity {
                             else {
                                 startActivity(new Intent(LoginEmail.this,NavigationDrawer.class));
                             }
-                        } else
-                            Log.e(TAG, "TaskFailed");
+                        } else{
+
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, e.toString());
+
             }
         });
     }

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,17 +65,16 @@ public class VideosFragment extends Fragment {
     }
     public void SetAdapter(final String className, final String subjectName, final String topicName){
 
-        Log.e("dag",className+subjectName+topicName);
         DatabaseReference ref;
         if(where.equals("Favorites")){
             ref=FirebaseDatabase.getInstance()
                     .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child(where)
                     .child(className)
+                    .child("tests")
                     .child("videos")
                     .child(subjectName)
                     .child(topicName);
-            Log.e("GDHZ",ref.toString());
         }
         else{
             ref=FirebaseDatabase.getInstance()
@@ -84,7 +82,6 @@ public class VideosFragment extends Fragment {
                     .child(className)
                     .child(subjectName)
                     .child(topicName);
-            Log.e("GDHzdhZ",ref.toString());
 
         }
         ref.addChildEventListener(new ChildEventListener() {
@@ -120,7 +117,13 @@ public class VideosFragment extends Fragment {
             @Override
             protected void populateViewHolder(final videoHolder viewHolder, final video model, final int position) {
                 viewHolder.videoCaption.setText(model.getVideoCaption());
-                viewHolder.videoDuration.setText(model.getVideoDuration().substring(2,model.getVideoDuration().length()-1).replaceAll("[^0-9]", ":"));
+                String duration;
+                if(model.getVideoDuration().substring(2,model.getVideoDuration().length()-1).replaceAll("[^0-9]", ":").length()<=2){
+                    duration="0:"+model.getVideoDuration().substring(2,model.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
+                }else {
+                    duration=model.getVideoDuration().substring(2,model.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
+                }
+                viewHolder.videoDuration.setText(duration);
                 if(where.equals("Favorites")){
                     viewHolder.favorites.setVisibility(View.GONE);
                 }
@@ -155,6 +158,7 @@ public class VideosFragment extends Fragment {
                 database.getReference(firebaseAuth.getCurrentUser().getUid())
                         .child("Favorites")
                         .child(className)
+                        .child("tests")
                         .child("videos")
                         .child(subjectName)
                         .child(topicName)
@@ -184,12 +188,14 @@ public class VideosFragment extends Fragment {
                                     database.getReference(firebaseAuth.getCurrentUser().getUid())
                                             .child("Favorites")
                                             .child(className)
+                                            .child("tests")
                                             .child("subjects")
                                             .child(subjectName)
                                             .setValue(new subjectItem(subjectName));
                                     database.getReference(firebaseAuth.getCurrentUser().getUid())
                                             .child("Favorites")
                                             .child(className)
+                                            .child("tests")
                                             .child("topics")
                                             .child(subjectName)
                                             .child(topicName)
@@ -197,6 +203,7 @@ public class VideosFragment extends Fragment {
                                     database.getReference(firebaseAuth.getCurrentUser().getUid())
                                             .child("Favorites")
                                             .child(className)
+                                            .child("tests")
                                             .child("videos")
                                             .child(subjectName)
                                             .child(topicName)
@@ -213,6 +220,7 @@ public class VideosFragment extends Fragment {
                                     DatabaseReference ref=database.getReference(firebaseAuth.getCurrentUser().getUid())
                                             .child("Favorites")
                                             .child(className)
+                                            .child("tests")
                                             .child("videos")
                                             .child(subjectName)
                                             .child(topicName)

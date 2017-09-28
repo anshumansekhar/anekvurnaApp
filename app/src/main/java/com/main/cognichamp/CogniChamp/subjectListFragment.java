@@ -44,7 +44,6 @@ public class subjectListFragment extends Fragment {
         View v=inflater.inflate(R.layout.subjects_list,container,false);
         className=getArguments().getString("ClassNumber");
         where=getArguments().getString("where");
-        Log.e("Cla",className);
         subjectsGrid=(RecyclerView)v.findViewById(R.id.subjectGrid);
         subjectsGrid.setLayoutManager(new GridLayoutManager(getActivity(),2));
 
@@ -53,6 +52,7 @@ public class subjectListFragment extends Fragment {
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(where)
                 .child(className)
+               .child("tests")
                 .child("subjects")
        .addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
@@ -64,6 +64,7 @@ public class subjectListFragment extends Fragment {
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(where)
                                    .child(className)
+                                   .child("tests")
                                    .child("subjects")
                                    .child("0")
                                    .setValue(new subjectItem("English"));
@@ -71,6 +72,7 @@ public class subjectListFragment extends Fragment {
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(where)
                                    .child(className)
+                                   .child("tests")
                                    .child("subjects")
                                    .child("1")
                                    .setValue(new subjectItem("Maths"));
@@ -78,7 +80,6 @@ public class subjectListFragment extends Fragment {
 
                        }
                        else{
-                           Log.e("dgn","age glsd");
                            setCommonAdapter(className);
                        }
                    }
@@ -107,7 +108,6 @@ public class subjectListFragment extends Fragment {
         return v;
     }
     public void setCommonAdapter(String name){
-        Log.e("Ad","inside common");
         DatabaseReference ref=FirebaseDatabase.getInstance()
                 .getReference("Subjects")
                 .child(name);
@@ -132,9 +132,7 @@ public class subjectListFragment extends Fragment {
                         subjectNameBundle.putString("ClassName",className);
                         subjectNameBundle.putString("where",where);
                         subjectNameBundle.putString("SubjectName",model.getSubjectName());
-                        Log.e("gd",getParentFragment().toString());
                         if(where.equals("ClassDetails")) {
-                            Log.e("gdh",""+className.contains("Age"));
                             if(className.contains("Age")){
                                 ((AnotherActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
                             }else {
@@ -158,6 +156,7 @@ public class subjectListFragment extends Fragment {
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(where)
                 .child(name)
+                .child("tests")
                 .child("subjects");
         recyclerAdapter=new FirebaseRecyclerAdapter<subjectItem , subjectTopicHolde>
                 (subjectItem.class
@@ -183,9 +182,7 @@ public class subjectListFragment extends Fragment {
                         subjectNameBundle.putString("ClassName",className);
                         subjectNameBundle.putString("where",where);
                         subjectNameBundle.putString("SubjectName",model.getSubjectName());
-                        Log.e("gd",getParentFragment().toString());
                         if(where.equals("ClassDetails")) {
-                            Log.e("gdh",""+className.contains("Age"));
                             if(className.contains("Age")){
                                 ((AnotherActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
                             }

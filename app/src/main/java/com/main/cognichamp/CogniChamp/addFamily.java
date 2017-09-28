@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -235,7 +234,6 @@ public class addFamily extends AppCompatActivity {
         catch(ActivityNotFoundException anfe){
             //display an error message
             String errorMessage = "Whoops - your device doesn't support the crop action!";
-            Log.e("sg",errorMessage);
             Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -263,8 +261,6 @@ public class addFamily extends AppCompatActivity {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        Log.e("sdg",path);
-        Log.e("GH",Uri.parse(path).toString());
         return Uri.parse(path);
     }
 

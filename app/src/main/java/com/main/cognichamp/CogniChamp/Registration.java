@@ -2,6 +2,7 @@ package com.main.cognichamp.CogniChamp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -147,8 +148,13 @@ public class Registration extends AppCompatActivity  {
                             @Override
                             public void onSuccess(AuthResult authResult) {
                                 Log.e(TAG, "User Created");
-                                firebaseAuth.getCurrentUser()
-                                        .sendEmailVerification();
+                                firebaseAuth.getCurrentUser();
+//                                sendEmailTask task=new sendEmailTask();
+//                                //TODO add message
+//                                task.execute("Welcome to CogniChamp"
+//                                        ,""
+//                                        ,email
+//                                        ,"contact@cognichamp.com,"+email,messageTypetext);
                                 pushUserProfileDetails();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -178,5 +184,32 @@ public class Registration extends AppCompatActivity  {
         }
         else
             Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT).show();
+    }
+    public class sendEmailTask extends AsyncTask<String,Void,Void> {
+        String messageType;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(Registration.this,"Sending",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //Toast.makeText(getActivity(),"Thank you.Your "+messageType+" has been submitted. Our team will reach out to you shortly.",Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+//                MailSender sender = new MailSender(username,pass);
+//                sender.sendMail(params[0],params[1],params[2],params[3]);
+//                messageType=params[4];
+            } catch (Exception e) {
+                Log.e("SendMail", e.toString());
+            }
+
+            return null;
+        }
     }
 }
