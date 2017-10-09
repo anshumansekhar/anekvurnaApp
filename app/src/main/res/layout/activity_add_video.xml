@@ -5,7 +5,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.main.cognichamp.CogniChamp.AddVideoActivity">
+    tools:context="com.cognichamp.CogniChamp.AddVideoActivity">
 
     <include
         android:id="@+id/videoItemLayout"
@@ -80,6 +80,7 @@ android:layout_width="0dp"
     <Spinner
         android:layout_weight="1"
         android:textAlignment="textEnd"
+        android:layout_gravity="end"
         android:id="@+id/subjectAddApinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -121,6 +122,7 @@ android:layout_width="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="end"
             android:textAlignment="textEnd"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
@@ -160,6 +162,7 @@ android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:textAlignment="textEnd"
+            android:layout_gravity="end"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"

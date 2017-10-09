@@ -15,6 +15,58 @@
       },
       "oauth_client": [
         {
+          "client_id": "53102712930-l246uht30lqlof3motneh6tuir1sefn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.main.cognichamp.CogniChamp",
+            "certificate_hash": "8b4aaad67eb15c8e4a35e6c38564e7e46b1d70d2"
+          }
+        },
+        {
+          "client_id": "53102712930-4fre560o6ha5u373fnincap4kbavqo9m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.main.cognichamp.CogniChamp",
+            "certificate_hash": "552ac4f667a36121869d308ca2d821ca2537f45d"
+          }
+        },
+        {
+          "client_id": "53102712930-m0l681dbrdj4h82qjtcrk2vimln45ja9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB35YqDWkFm_RpPUqkGI6YLL4K3mTbVlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53102712930-m0l681dbrdj4h82qjtcrk2vimln45ja9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53102712930:android:10615e80d1db75b8",
+        "android_client_info": {
+          "package_name": "com.cognichamp.CogniChamp"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "53102712930-m0l681dbrdj4h82qjtcrk2vimln45ja9.apps.googleusercontent.com",
           "client_type": 3
         }
