@@ -6,15 +6,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cognichamp.CogniChamp.R.id;
+import com.cognichamp.CogniChamp.R.layout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
@@ -33,17 +36,14 @@ import java.util.regex.Pattern;
 
 public class Registration extends AppCompatActivity  {
     private static final int RESULT_LOAD_IMG = 345;
+    final String TAG = "Registartion";
     EditText emailText;
     EditText passwordText;
     Button register;
     String ismale="true";
     String email,password;
     TextView terms;
-
     boolean phone;
-
-    final String TAG="Registartion";
-
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
     StorageReference ref= FirebaseStorage.getInstance().getReference();
@@ -54,21 +54,21 @@ public class Registration extends AppCompatActivity  {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        this.setContentView(layout.activity_registration);
 
-        Intent j=getIntent();
-        email=j.getStringExtra("Email");
-        password=j.getStringExtra("Password");
-        phone=j.getBooleanExtra("PhoneAuth",false);
-        terms=(TextView)findViewById(R.id.terms);
+        Intent j = this.getIntent();
+        this.email = j.getStringExtra("Email");
+        this.password = j.getStringExtra("Password");
+        this.phone = j.getBooleanExtra("PhoneAuth", false);
+        this.terms = (TextView) this.findViewById(id.terms);
 
 
-        terms.setOnClickListener(new View.OnClickListener() {
+        this.terms.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(Registration.this);
+                Builder builder = new Builder(Registration.this);
                 builder.setTitle("Privacy and Terms");
-                builder.setView(R.layout.terms);
+                builder.setView(layout.terms);
                 builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -85,24 +85,24 @@ public class Registration extends AppCompatActivity  {
         });
 
 
-        Log.e(TAG,email +""+ password);
+        Log.e(this.TAG, this.email + "" + this.password);
 
-        emailText=(EditText)findViewById(R.id.emailRegister);
-        passwordText=(EditText)findViewById(R.id.passwordRegister);
-        register=(Button)findViewById(R.id.registerButton);
-        emailText.setText(email);
-        passwordText.setText(password);
+        this.emailText = (EditText) this.findViewById(id.emailRegister);
+        this.passwordText = (EditText) this.findViewById(id.passwordRegister);
+        this.register = (Button) this.findViewById(id.registerButton);
+        this.emailText.setText(this.email);
+        this.passwordText.setText(this.password);
 
 
-        register.setOnClickListener(new View.OnClickListener() {
+        this.register.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG,"Register CLicked");
-                    if (!passwordText.getText().toString().isEmpty()) {
-                        Log.e(TAG, "Creating user");
-                        createUser();
+                Log.e(Registration.this.TAG, "Register CLicked");
+                if (!Registration.this.passwordText.getText().toString().isEmpty()) {
+                    Log.e(Registration.this.TAG, "Creating user");
+                    Registration.this.createUser();
                     } else {
-                        passwordText.setError("Enter a Minimum 8 characters Long Password");
+                    Registration.this.passwordText.setError("Enter a Minimum 8 characters Long Password");
                     }
             }
         });
@@ -116,18 +116,18 @@ public class Registration extends AppCompatActivity  {
     }
     public void pushUserProfileDetails()
     {
-        Log.e(TAG,"Pushing user Details");
+        Log.e(this.TAG, "Pushing user Details");
         user_profile profile=new user_profile(""
                 ,""
-        ,ismale
-        ,presentClass
+                , this.ismale
+                , this.presentClass
         ,"https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
         ,""
         ,""
         ,""
         ,""
         ,"1");
-        firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+        this.firebaseDatabase.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
                 .setValue(profile)
         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -135,44 +135,38 @@ public class Registration extends AppCompatActivity  {
             public void onSuccess(Void aVoid) {
                 Intent i=new Intent(Registration.this,NavigationDrawer.class);
                 i.putExtra("IsFirstTime",true);
-                startActivity(i);
+                Registration.this.startActivity(i);
             }
         });
     }
     public void createUser()
     {
-        if(checkEmailPattern(emailText.getText().toString())) {
-            if(!phone) {
-                firebaseAuth.createUserWithEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString())
+        if (this.checkEmailPattern(this.emailText.getText().toString())) {
+            if (!this.phone) {
+                this.firebaseAuth.createUserWithEmailAndPassword(this.emailText.getText().toString(), this.passwordText.getText().toString())
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                Log.e(TAG, "User Created");
-                                firebaseAuth.getCurrentUser();
-//                                sendEmailTask task=new sendEmailTask();
-//                                //TODO add message
-//                                task.execute("Welcome to CogniChamp"
-//                                        ,""
-//                                        ,email
-//                                        ,"contact@cognichamp.com,"+email,messageTypetext);
-                                pushUserProfileDetails();
+                                Log.e(Registration.this.TAG, "User Created");
+                                Registration.this.firebaseAuth.getCurrentUser();
+                                Registration.this.pushUserProfileDetails();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
+                        Log.e(Registration.this.TAG, e.toString());
                     }
                 });
             }
             else{
-                AuthCredential credential=EmailAuthProvider.getCredential(emailText.getText().toString(),passwordText.getText().toString());
-                firebaseAuth.getCurrentUser().linkWithCredential(credential)
+                AuthCredential credential = EmailAuthProvider.getCredential(this.emailText.getText().toString(), this.passwordText.getText().toString());
+                this.firebaseAuth.getCurrentUser().linkWithCredential(credential)
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                firebaseAuth.getCurrentUser()
+                                Registration.this.firebaseAuth.getCurrentUser()
                                         .sendEmailVerification();
-                                pushUserProfileDetails();
+                                Registration.this.pushUserProfileDetails();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -183,7 +177,7 @@ public class Registration extends AppCompatActivity  {
             }
         }
         else
-            Toast.makeText(getApplicationContext(),"Enter a Valid Email Address",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), "Enter a Valid Email Address", Toast.LENGTH_SHORT).show();
     }
     public class sendEmailTask extends AsyncTask<String,Void,Void> {
         String messageType;

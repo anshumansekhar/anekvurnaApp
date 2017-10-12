@@ -1,16 +1,20 @@
 package com.cognichamp.CogniChamp;
 
+import android.R.layout;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,11 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.cognichamp.CogniChamp.R.array;
+import com.cognichamp.CogniChamp.R.id;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -43,17 +50,14 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class AddVideoActivity extends AppCompatActivity {
+    private static final String youtubeAPIKey = "AIzaSyCHE0gIbODh4UZ-KmQcSS7pOD4rVdQEYtM";
     static ProgressDialog dialog;
-    Spinner subject,topic,Class;
-    CardView videoLayout;
     static ImageView videoThumbnail;
     static TextView videoCaption,videoDuration,publishedBy;
+    Spinner subject, topic, Class;
+    CardView videoLayout;
     Button addVideo;
     LinearLayout buttonsVideoItem;
-
-    private static String youtubeAPIKey="AIzaSyCHE0gIbODh4UZ-KmQcSS7pOD4rVdQEYtM";
-
-
     ArrayList subjectsList=new ArrayList();
     ArrayList topicsList=new ArrayList();
     ArrayList classList=new ArrayList();
@@ -73,58 +77,58 @@ public class AddVideoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_video);
-        ctx=AddVideoActivity.this;
-        subject=(Spinner)findViewById(R.id.subjectAddApinner);
-        topic=(Spinner)findViewById(R.id.topicAddSpinner);
-        Class=(Spinner)findViewById(R.id.classSpinner);
-        videoLayout=(CardView)findViewById(R.id.videoItemLayout);
-        videoThumbnail=(ImageView)videoLayout.findViewById(R.id.videoThumbnail);
-        videoCaption=(TextView)videoLayout.findViewById(R.id.videoCaption);
-        videoDuration=(TextView)videoLayout.findViewById(R.id.videoDuration);
-        publishedBy=(TextView)videoLayout.findViewById(R.id.videoPublishedBy);
-        addVideo=(Button)findViewById(R.id.AddVideo);
-        buttonsVideoItem=(LinearLayout)videoLayout.findViewById(R.id.buttonsVideoItem);
-        buttonsVideoItem.setVisibility(View.INVISIBLE);
-        classList=new ArrayList(Arrays.asList(getResources().getStringArray(R.array.ClassWithStream)));
-        classAdapter=new ArrayAdapter(AddVideoActivity.this,android.R.layout.simple_spinner_item,classList);
-        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Class.setAdapter(classAdapter);
-        subjectAdapter=new ArrayAdapter(AddVideoActivity.this,android.R.layout.simple_spinner_item,subjectsList);
-        subjectAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subject.setAdapter(subjectAdapter);
+        this.setContentView(R.layout.activity_add_video);
+        this.ctx = this;
+        this.subject = (Spinner) this.findViewById(id.subjectAddApinner);
+        this.topic = (Spinner) this.findViewById(id.topicAddSpinner);
+        this.Class = (Spinner) this.findViewById(id.classSpinner);
+        this.videoLayout = (CardView) this.findViewById(id.videoItemLayout);
+        AddVideoActivity.videoThumbnail = (ImageView) this.videoLayout.findViewById(id.videoThumbnail);
+        AddVideoActivity.videoCaption = (TextView) this.videoLayout.findViewById(id.videoCaption);
+        AddVideoActivity.videoDuration = (TextView) this.videoLayout.findViewById(id.videoDuration);
+        AddVideoActivity.publishedBy = (TextView) this.videoLayout.findViewById(id.videoPublishedBy);
+        this.addVideo = (Button) this.findViewById(id.AddVideo);
+        this.buttonsVideoItem = (LinearLayout) this.videoLayout.findViewById(id.buttonsVideoItem);
+        this.buttonsVideoItem.setVisibility(View.INVISIBLE);
+        this.classList = new ArrayList(Arrays.asList(this.getResources().getStringArray(array.ClassWithStream)));
+        this.classAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.classList);
+        this.classAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.Class.setAdapter(this.classAdapter);
+        this.subjectAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.subjectsList);
+        this.subjectAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.subject.setAdapter(this.subjectAdapter);
 
-        topicAdapter=new ArrayAdapter(AddVideoActivity.this,android.R.layout.simple_spinner_item,topicsList);
-        topicAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        topic.setAdapter(topicAdapter);
+        this.topicAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.topicsList);
+        this.topicAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.topic.setAdapter(this.topicAdapter);
 
-        dialog=new ProgressDialog(AddVideoActivity.this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setTitle("Alert");
-        dialog.setIndeterminate(true);
-        dialog.setMessage("Please wait while the categories are loaded");
-        dialog.show();
+        AddVideoActivity.dialog = new ProgressDialog(this);
+        AddVideoActivity.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        AddVideoActivity.dialog.setTitle("Alert");
+        AddVideoActivity.dialog.setIndeterminate(true);
+        AddVideoActivity.dialog.setMessage("Please wait while the categories are loaded");
+        AddVideoActivity.dialog.show();
 
-        j=getIntent();
-        String action=j.getAction();
+        this.j = this.getIntent();
+        String action = this.j.getAction();
 
         if (Intent.ACTION_SEND.equals(action)) {
-            final String sharedText = j.getStringExtra(Intent.EXTRA_TEXT);
+            final String sharedText = this.j.getStringExtra(Intent.EXTRA_TEXT);
             if(sharedText!=null)
             {
                 Scanner s=new Scanner(sharedText).useDelimiter("\\s*https://youtu.be/");
                 String videoID=s.next();
                 URL embededURL = null;
                 try {
-                    embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id="+videoID+"&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key="+youtubeAPIKey);
+                    embededURL = new URL("https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Csnippet&id=" + videoID + "&fields=items(contentDetails%2Fduration%2Cid%2Csnippet(channelTitle%2Cthumbnails%2Fdefault%2Ctitle))&key=" + AddVideoActivity.youtubeAPIKey);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                dialog.show();
-                RequestQueue queue = Volley.newRequestQueue(ctx);
+                AddVideoActivity.dialog.show();
+                RequestQueue queue = Volley.newRequestQueue(this.ctx);
                 try {
                     JsonObjectRequest request = new JsonObjectRequest
-                            (embededURL.toString(), null, new Response.Listener<JSONObject>() {
+                            (embededURL.toString(), null, new Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
@@ -133,11 +137,11 @@ public class AddVideoActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                     Log.e("db", response.toString());
-                                    dialog.hide();
+                                    AddVideoActivity.dialog.hide();
                                     String caption = null;
                                     try {
                                         caption = response.getJSONObject("snippet").getString("title");
-                                        videoCaption.setText(caption);
+                                        AddVideoActivity.videoCaption.setText(caption);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -149,23 +153,23 @@ public class AddVideoActivity extends AppCompatActivity {
                                         }else {
                                             duration=duration.substring(2,duration.length()-1).replaceAll("[^0-9]", ":");
                                         }
-                                        videoDuration.setText(duration);
+                                        AddVideoActivity.videoDuration.setText(duration);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     String publishedby = null;
                                     try {
                                         publishedby = response.getJSONObject("snippet").getString("channelTitle");
-                                        publishedBy.setText(publishedby);
+                                        AddVideoActivity.publishedBy.setText(publishedby);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     Scanner s = new Scanner(sharedText).useDelimiter("\\s*https://youtu.be/");
                                     String videoID = s.next();
-                                    Glide.with(ctx)
+                                    Glide.with(AddVideoActivity.this.ctx)
                                             .load("https://img.youtube.com/vi/" + videoID + "/default.jpg")
-                                            .into(videoThumbnail);
-                                    video=new video("https://img.youtube.com/vi/" + videoID + "/default.jpg"
+                                            .into(AddVideoActivity.videoThumbnail);
+                                    AddVideoActivity.this.video = new video("https://img.youtube.com/vi/" + videoID + "/default.jpg"
                                             ,caption
                                     ,duration
                                     ,sharedText
@@ -173,7 +177,7 @@ public class AddVideoActivity extends AppCompatActivity {
                                     ,""
                                     ,publishedby);
                                 }
-                            }, new Response.ErrorListener() {
+                            }, new ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     // TODO Auto-generated method stub
@@ -189,47 +193,47 @@ public class AddVideoActivity extends AppCompatActivity {
 
             }
         }
-        if(firebaseAuth.getCurrentUser()!=null) {
+        if (this.firebaseAuth.getCurrentUser() != null) {
 
-            database.getReference(firebaseAuth.getCurrentUser().getUid())
+            this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                     .child("UserProfile")
                     .child("presentClass")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                subjectsList.clear();
-                                subjectAdapter.clear();
-                                className = dataSnapshot.getValue().toString();
-                                if (className.equals("11")) {
-                                    className = "Class-" + className + "(Arts)";
-                                } else if (className.equals("0")) {
-                                    className = "Age (0-1) yrs";
-                                } else if (className.equals("1")) {
-                                    className = "Age (1-2) yrs";
-                                } else if (className.equals("2")) {
-                                    className = "Age (2-3) yrs";
-                                } else if (className.equals("3")) {
-                                    className = "Age (3-4) yrs";
-                                } else if (className.equals("4")) {
-                                    className = "Age (4-5) yrs";
-                                } else if (className.equals("5")) {
-                                    className = "Age (5-6) yrs";
-                                } else if (className.equals("12")) {
-                                    className = "Class-" + "11" + "(Commerce)";
-                                } else if (className.equals("13")) {
-                                    className = "Class-" + "11" + "(Science)";
-                                } else if (className.equals("14")) {
-                                    className = "Class-" + "12" + "(Arts)";
-                                } else if (className.equals("15")) {
-                                    className = "Class-" + "12" + "(Commerce)";
-                                } else if (className.equals("16")) {
-                                    className = "Class-" + "12" + "(Science)";
+                                AddVideoActivity.this.subjectsList.clear();
+                                AddVideoActivity.this.subjectAdapter.clear();
+                                AddVideoActivity.this.className = dataSnapshot.getValue().toString();
+                                if (AddVideoActivity.this.className.equals("11")) {
+                                    AddVideoActivity.this.className = "Class-" + AddVideoActivity.this.className + "(Arts)";
+                                } else if (AddVideoActivity.this.className.equals("0")) {
+                                    AddVideoActivity.this.className = "Age (0-1) yrs";
+                                } else if (AddVideoActivity.this.className.equals("1")) {
+                                    AddVideoActivity.this.className = "Age (1-2) yrs";
+                                } else if (AddVideoActivity.this.className.equals("2")) {
+                                    AddVideoActivity.this.className = "Age (2-3) yrs";
+                                } else if (AddVideoActivity.this.className.equals("3")) {
+                                    AddVideoActivity.this.className = "Age (3-4) yrs";
+                                } else if (AddVideoActivity.this.className.equals("4")) {
+                                    AddVideoActivity.this.className = "Age (4-5) yrs";
+                                } else if (AddVideoActivity.this.className.equals("5")) {
+                                    AddVideoActivity.this.className = "Age (5-6) yrs";
+                                } else if (AddVideoActivity.this.className.equals("12")) {
+                                    AddVideoActivity.this.className = "Class-" + "11" + "(Commerce)";
+                                } else if (AddVideoActivity.this.className.equals("13")) {
+                                    AddVideoActivity.this.className = "Class-" + "11" + "(Science)";
+                                } else if (AddVideoActivity.this.className.equals("14")) {
+                                    AddVideoActivity.this.className = "Class-" + "12" + "(Arts)";
+                                } else if (AddVideoActivity.this.className.equals("15")) {
+                                    AddVideoActivity.this.className = "Class-" + "12" + "(Commerce)";
+                                } else if (AddVideoActivity.this.className.equals("16")) {
+                                    AddVideoActivity.this.className = "Class-" + "12" + "(Science)";
                                 } else {
-                                    className = "Class-" + (Integer.valueOf(className) - 6);
+                                    AddVideoActivity.this.className = "Class-" + (Integer.valueOf(AddVideoActivity.this.className) - 6);
                                 }
-                                Class.setSelection(classList.indexOf(className));
-                                getSubjects(className);
+                                AddVideoActivity.this.Class.setSelection(AddVideoActivity.this.classList.indexOf(AddVideoActivity.this.className));
+                                AddVideoActivity.this.getSubjects(AddVideoActivity.this.className);
                             }
                         }
                         @Override
@@ -239,18 +243,18 @@ public class AddVideoActivity extends AppCompatActivity {
                     });
         }
         else{
-            Toast.makeText(AddVideoActivity.this,"Please Sign in First",Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(AddVideoActivity.this,SignUpChooseActivity.class));
+            Toast.makeText(this, "Please Sign in First", Toast.LENGTH_SHORT).show();
+            this.startActivity(new Intent(this, SignUpChooseActivity.class));
         }
-        Class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.Class.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                subjectsList.clear();
-                subjectAdapter.clear();
-                topicsList.clear();
-                topicAdapter.clear();
-                className=classList.get(position).toString();
-                getSubjects(className);
+                AddVideoActivity.this.subjectsList.clear();
+                AddVideoActivity.this.subjectAdapter.clear();
+                AddVideoActivity.this.topicsList.clear();
+                AddVideoActivity.this.topicAdapter.clear();
+                AddVideoActivity.this.className = AddVideoActivity.this.classList.get(position).toString();
+                AddVideoActivity.this.getSubjects(AddVideoActivity.this.className);
             }
 
             @Override
@@ -258,26 +262,26 @@ public class AddVideoActivity extends AppCompatActivity {
 
             }
         });
-        subject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.subject.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                topicsList.clear();
-                topicAdapter.clear();
-                subjectName=subjectsList.get(position).toString();
-                if(className.contains("Age")) {
-                    getAgeTopics();
+                AddVideoActivity.this.topicsList.clear();
+                AddVideoActivity.this.topicAdapter.clear();
+                AddVideoActivity.this.subjectName = AddVideoActivity.this.subjectsList.get(position).toString();
+                if (AddVideoActivity.this.className.contains("Age")) {
+                    AddVideoActivity.this.getAgeTopics();
                 }
-                getTopics(subjectName);
+                AddVideoActivity.this.getTopics(AddVideoActivity.this.subjectName);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-        topic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.topic.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                topicName=topicsList.get(position).toString();
+                AddVideoActivity.this.topicName = AddVideoActivity.this.topicsList.get(position).toString();
             }
 
             @Override
@@ -286,19 +290,19 @@ public class AddVideoActivity extends AppCompatActivity {
             }
         });
 
-        addVideo.setOnClickListener(new View.OnClickListener() {
+        this.addVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder=new AlertDialog.Builder(AddVideoActivity.this);
+                Builder builder = new Builder(AddVideoActivity.this);
                 builder.setMessage("Confirmation");
                 builder.setMessage("Add This video ");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AddVideoToDatabase(video);
+                        AddVideoActivity.this.AddVideoToDatabase(AddVideoActivity.this.video);
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Cancel", new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -311,62 +315,63 @@ public class AddVideoActivity extends AppCompatActivity {
 
     }
     void AddVideoToDatabase(video v){
-        if(className.equals("Age")){
-            topicName="videos";
+        if (this.className.equals("Age")) {
+            this.topicName = "videos";
         }
-        database.getReference("Videos")
-                .child(className)
-                .child(subjectName)
-                .child(topicName)
+        this.database.getReference("Videos")
+                .child(this.className)
+                .child(this.subjectName)
+                .child(this.topicName)
                 .child(v.getVideoID())
                 .setValue(v);
-        database.getReference(firebaseAuth.getCurrentUser().getUid())
+        this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
-                .child(className)
+                .child(this.className)
                 .child("tests")
                 .child("subjects")
-                .child(subjectName)
-                .setValue(new subjectItem(subjectName));
-        if(className.contains("Age")){
-            database.getReference(firebaseAuth.getCurrentUser().getUid())
+                .child(this.subjectName)
+                .setValue(new subjectItem(this.subjectName));
+        if (this.className.contains("Age")) {
+            this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
-                    .child(className)
+                    .child(this.className)
                     .child("tests")
                     .child("topics")
-                    .child(subjectName)
+                    .child(this.subjectName)
                     .child("videos")
-                    .setValue(new subjectItem(topicName));
+                    .setValue(new subjectItem(this.topicName));
 
         }else {
-            database.getReference(firebaseAuth.getCurrentUser().getUid())
+            this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
-                    .child(className)
+                    .child(this.className)
                     .child("tests")
                     .child("topics")
-                    .child(subjectName)
+                    .child(this.subjectName)
                     .push()
-                    .setValue(new subjectItem(topicName));
+                    .setValue(new subjectItem(this.topicName));
         }
-        database.getReference(firebaseAuth.getCurrentUser().getUid())
+        this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
-                .child(className)
+                .child(this.className)
                 .child("tests")
                 .child("videos")
-                .child(subjectName)
-                .child(topicName)
-                .child(video.getVideoID())
-                .setValue(video)
+                .child(this.subjectName)
+                .child(this.topicName)
+                .child(this.video.getVideoID())
+                .setValue(this.video)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startActivity(new Intent(AddVideoActivity.this,NavigationDrawer.class));
+                        AddVideoActivity.this.startActivity(new Intent(AddVideoActivity.this, NavigationDrawer.class));
                     }
                 });
 
     }
-    public void getSubjects(final String Class){
+
+    public void getSubjects(String Class) {
         if(!Class.contains("Age")) {
-            database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+            this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child("ClassDetails")
                     .child(Class)
                     .child("tests")
@@ -374,16 +379,16 @@ public class AddVideoActivity extends AppCompatActivity {
                     .addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            dialog.hide();
-                            subjectAdapter.notifyDataSetChanged();
+                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                            AddVideoActivity.dialog.hide();
+                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            dialog.hide();
-                            subjectAdapter.notifyDataSetChanged();
+                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                            AddVideoActivity.dialog.hide();
+                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -403,21 +408,21 @@ public class AddVideoActivity extends AppCompatActivity {
                     });
         }
         else{
-            database.getReference("Subjects")
+            this.database.getReference("Subjects")
                     .child(Class)
                     .addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            dialog.hide();
-                            subjectAdapter.notifyDataSetChanged();
+                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                            AddVideoActivity.dialog.hide();
+                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            dialog.hide();
-                            subjectAdapter.notifyDataSetChanged();
+                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                            AddVideoActivity.dialog.hide();
+                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -435,27 +440,24 @@ public class AddVideoActivity extends AppCompatActivity {
 
                         }
                     });
-
         }
-                            if(subjectsList.isEmpty()){
-                                Toast.makeText(AddVideoActivity.this,"No Subjects Present for the selected Class ",Toast.LENGTH_SHORT).show();
-                            }
-                        }
+
+    }
     public void getTopics(String subName){
-        database.getReference("Subjects")
-                .child(className)
+        this.database.getReference("Subjects")
+                .child(this.className)
                 .child(subName)
                 .child("topics")
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                        topicAdapter.notifyDataSetChanged();
+                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
                     }
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                        topicAdapter.notifyDataSetChanged();
+                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -476,21 +478,21 @@ public class AddVideoActivity extends AppCompatActivity {
 
     }
     public  void setUpVideoItem(video v){
-        videoCaption.setText(v.getVideoCaption());
+        AddVideoActivity.videoCaption.setText(v.getVideoCaption());
         String duration;
         if(v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":").length()<=2){
             duration="0:"+v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
         }else {
             duration=v.getVideoDuration().substring(2,v.getVideoDuration().length()-1).replaceAll("[^0-9]", ":");
         }
-        videoDuration.setText(duration);
-        publishedBy.setText("By: "+v.getPublishedBy());
-        Glide.with(ctx)
+        AddVideoActivity.videoDuration.setText(duration);
+        AddVideoActivity.publishedBy.setText("By: " + v.getPublishedBy());
+        Glide.with(this.ctx)
                 .load(v.getVideoThumbnailUrl())
-                .into(videoThumbnail);
+                .into(AddVideoActivity.videoThumbnail);
     }
     public void getAgeTopics(){
-        topicsList.add("videos");
-        topicAdapter.notifyDataSetChanged();
+        this.topicsList.add("videos");
+        this.topicAdapter.notifyDataSetChanged();
     }
 }

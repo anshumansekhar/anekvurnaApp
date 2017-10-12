@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/subjectNameEducation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="15"
+        android:text="SubjectName"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/marksSubject"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="numberDecimal"
+        android:labelFor="@+id/marksSubject"
+        android:text="20"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:text="/"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/totalMarksSubject"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="numberDecimal"
+        android:text="100"
+        android:textAlignment="center" />
+
+    <ImageButton
+        android:id="@+id/deleteSubjectItem"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color"
+        android:contentDescription="Delete"
+        app:srcCompat="@android:drawable/ic_delete" />
+</LinearLayout>
+

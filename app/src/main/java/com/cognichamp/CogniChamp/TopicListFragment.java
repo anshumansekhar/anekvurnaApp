@@ -7,10 +7,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.cognichamp.CogniChamp.R.id;
+import com.cognichamp.CogniChamp.R.layout;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -36,22 +39,22 @@ public class TopicListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.topics_list,container,false);
-        topicsGrid=(RecyclerView)v.findViewById(R.id.topicsGrid);
-        topicsGrid.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        className=getArguments().getString("ClassName");
-        subjectName=getArguments().getString("SubjectName");
-        where=getArguments().getString("where");
-        setAdapter(className,subjectName);
+        View v = inflater.inflate(layout.topics_list, container, false);
+        this.topicsGrid = (RecyclerView) v.findViewById(id.topicsGrid);
+        this.topicsGrid.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
+        this.className = this.getArguments().getString("ClassName");
+        this.subjectName = this.getArguments().getString("SubjectName");
+        this.where = this.getArguments().getString("where");
+        this.setAdapter(this.className, this.subjectName);
         return v;
     }
 
     public void setAdapter(final String className, String subName){
         DatabaseReference ref;
-        if(!where.equals("Favorites")){
-            where="Subjects";
+        if (!this.where.equals("Favorites")) {
+            this.where = "Subjects";
             ref= FirebaseDatabase.getInstance()
-                    .getReference(where)
+                    .getReference(this.where)
                     .child(className)
                     .child(subName)
                     .child("topics");
@@ -60,15 +63,15 @@ public class TopicListFragment extends Fragment {
         {
             ref= FirebaseDatabase.getInstance()
                     .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .child(where)
+                    .child(this.where)
                     .child(className)
                     .child("tests")
                     .child("topics")
                     .child(subName);
         }
-        firebaseRecyclerAdapter=new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
+        this.firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
                 (subjectItem.class
-                ,R.layout.subject_topic_card
+                        , layout.subject_topic_card
                 ,subjectTopicHolde.class
                 ,ref) {
             @Override
@@ -88,28 +91,28 @@ public class TopicListFragment extends Fragment {
 
                 viewHolder.imageView.setImageDrawable(drawable);
 
-                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                viewHolder.view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
-                        topicsBundle.putString("ClassName",className);
-                        topicsBundle.putString("SubjectName",subjectName);
-                        topicsBundle.putString("TopicName",model.getSubjectName());
-                        topicsBundle.putString("where",where);
-                        if(where.equals("Subjects")) {
-                            ((AnotherActivity)getParentFragment()).changeFragmentWithVideo(topicsBundle);
+                        TopicListFragment.this.topicsBundle.putString("ClassName", className);
+                        TopicListFragment.this.topicsBundle.putString("SubjectName", TopicListFragment.this.subjectName);
+                        TopicListFragment.this.topicsBundle.putString("TopicName", model.getSubjectName());
+                        TopicListFragment.this.topicsBundle.putString("where", TopicListFragment.this.where);
+                        if (TopicListFragment.this.where.equals("Subjects")) {
+                            ((AnotherActivity) TopicListFragment.this.getParentFragment()).changeFragmentWithVideo(TopicListFragment.this.topicsBundle);
 
                         }
                         else {
-                            ((FavoriteVideosActivity)getParentFragment()).changeFragmentWithVideo(topicsBundle);
+                            ((FavoriteVideosActivity) TopicListFragment.this.getParentFragment()).changeFragmentWithVideo(TopicListFragment.this.topicsBundle);
                         }
                     }
                 });
 
             }
         };
-        topicsGrid.setAdapter(firebaseRecyclerAdapter);
+        this.topicsGrid.setAdapter(this.firebaseRecyclerAdapter);
     }
 
 }

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.cognichamp.CogniChamp.R.id;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -15,31 +16,33 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
     Fragment currentFragment;
     marksFragments marksFragments=new marksFragments();
     schoolDetails schoolDetails=new schoolDetails();
+    ReportCardFragment reportCardFragment = new ReportCardFragment();
     public pagerAdapter(FragmentManager fm) {
         super(fm);
-        currentFragment=fm.findFragmentById(R.id.pager);
+        this.currentFragment = fm.findFragmentById(id.pager);
     }
 
     @Override
     public Fragment getItem(int position) {
         if(position==0) {
-            if(currentFragment instanceof schoolDetails) {
+            if (this.currentFragment instanceof schoolDetails) {
 
             }
-            return schoolDetails;
+            return this.schoolDetails;
         }
         else if(position==1){
-            if(currentFragment instanceof schoolDetails) {
+            if (this.currentFragment instanceof schoolDetails) {
             }
-            return marksFragments;
+            return this.marksFragments;
+        } else if (position == 2) {
+            return this.reportCardFragment;
         }
-        else
             return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -49,12 +52,16 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
         }
         else if(position==1){
             return "Marks";
+        } else if (position == 2) {
+
+            return "Report Card";
         }
         return super.getPageTitle(position);
     }
     public void update(DatabaseReference ref, Context ctx){
-        marksFragments.setUpRecyclerView(ref,ctx);
-        marksFragments.setSpinnerAdapter();
-        schoolDetails.update();
+        this.marksFragments.setUpRecyclerView(ref, ctx);
+        this.marksFragments.setSpinnerAdapter();
+        this.schoolDetails.update();
+        this.reportCardFragment.update();
     }
 }

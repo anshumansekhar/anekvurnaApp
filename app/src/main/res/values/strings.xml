@@ -195,6 +195,7 @@ We process this data for the purposes of:\n
         <item>Sanskrit</item>
     </string-array>
     <string-array name="states">
+        <item>Choose a State</item>
         <item>Andaman and Nicobar Islands</item>
         <item>Andhra Pradesh</item>
         <item>Arunachal Pradesh</item>
@@ -248,17 +249,20 @@ We process this data for the purposes of:\n
     <string name="title_activity_login">Sign in</string>
 
     <string name="login">Have an account? Log In</string>
-    <string-array name="message_type">
-        <item>Feedback</item>
-        <item>Suggestion</item>
-        <item>Query</item>
-    </string-array>
+    <!--<string-array name="message_type">-->
+    <!--<item>Choose Message Type</item>-->
+    <!--<item>Feedback</item>-->
+    <!--<item>Suggestion</item>-->
+    <!--<item>Query</item>-->
+    <!--</string-array>-->
     <string-array name="State1">
+        <item>Select District</item>
         <item>Nicobar</item>
         <item>North and Middle Andaman</item>
         <item>South Andaman</item>
     </string-array>
     <string-array name="State2">
+        <item>Select District</item>
         <item>Ananthapur</item>
         <item>Chittoor</item>
         <item>Cuddapah</item>
@@ -274,6 +278,7 @@ We process this data for the purposes of:\n
         <item>West Godavari</item>
     </string-array>
     <string-array name="State3">
+        <item>Select District</item>
         <item>Changlang</item>
         <item>Dibang Valley</item>
         <item>East Kameng</item>
@@ -291,6 +296,7 @@ We process this data for the purposes of:\n
         <item>West Siang</item>
     </string-array>
     <string-array name="State4">
+        <item>Select District</item>
         <item>BARPETA </item>
         <item>BONGAIGAON</item>
         <item>CACHAR</item>
@@ -316,13 +322,16 @@ We process this data for the purposes of:\n
         <item> TINSUKIA</item>
     </string-array>
     <string-array name="State6">
+        <item>Select District</item>
         <item>Chandigarh</item>
     </string-array>
     <string-array name="State11">
+        <item>Select District</item>
         <item>North Goa</item>
         <item>South Goa</item>
     </string-array>
     <string-array name="State10">
+        <item>Select District</item>
         <item>Cetral Delhi</item>
         <item>East Delhi</item>
         <item>New Delhi</item>
@@ -334,6 +343,7 @@ We process this data for the purposes of:\n
         <item>West Delhi</item>
     </string-array>
     <string-array name="State7">
+        <item>Select District</item>
         <item> BASTAR </item>
         <item>BIJAPURCGH</item>
         <item>BILASPURCGH</item>
@@ -356,22 +366,27 @@ We process this data for the purposes of:\n
     </string-array>
 
     <string-array name="State19">
+        <item>Select District</item>
         <item>Lakshadweep</item>
     </string-array>
     <string-array name="State33">
+        <item>Select District</item>
         <item>North Tripura</item>
         <item>South Tripura</item>
         <item>West Tripura</item>
         <item>Dhalai</item>
     </string-array>
     <string-array name="State9">
+        <item>Select District</item>
         <item>Daman</item>
         <item>Diu</item>
     </string-array>
     <string-array name="State8">
+        <item>Select District</item>
         <item>Dadra and Nagar Haveli</item>
     </string-array>
     <string-array name="State16">
+        <item>Select District</item>
         <item>Bokara</item>
         <item>Chatra</item>
         <item>Deogarh</item>
@@ -393,6 +408,7 @@ We process this data for the purposes of:\n
         <item>Ramgarh</item>
     </string-array>
     <string-array name="State5">
+        <item>Select District</item>
         <item>ARARIA</item>
         <item>ARWAL</item>
         <item> AURANGABADBH</item>
@@ -437,6 +453,7 @@ We process this data for the purposes of:\n
         <item>WEST CHAMPARAN</item>
     </string-array>
     <string-array name="State12">
+        <item>Select District</item>
         <item>AHMEDABAD</item>
         <item>AMRELI</item>
         <item> ANAND </item>
@@ -465,6 +482,7 @@ We process this data for the purposes of:\n
         <item> VALSAD  </item>
     </string-array>
     <string-array name="State13">
+        <item>Select District</item>
         <item> AMBALA </item>
         <item>BHIWANI</item>
         <item>FARIDABAD </item>
@@ -486,6 +504,7 @@ We process this data for the purposes of:\n
         <item>YAMUNA NAGAR </item>
     </string-array>
     <string-array name="State14">
+        <item>Select District</item>
         <item>BILASPUR HP</item>
         <item>CHAMBA</item>
         <item>HAMIRPURHP</item>
@@ -500,6 +519,7 @@ We process this data for the purposes of:\n
         <item>UNA</item>
     </string-array>
     <string-array name="State15">
+        <item>Select District</item>
         <item> ANANTHNAG </item>
         <item>BANDIPUR </item>
         <item>BARAMULLA</item>
@@ -520,6 +540,7 @@ We process this data for the purposes of:\n
         <item>UDHAMPUR</item>
     </string-array>
     <string-array name="State17">
+        <item>Select District</item>
         <item>BAGALKOT</item>
         <item>BANGALORE</item>
         <item>BANGALORE RURAL</item>
@@ -552,6 +573,7 @@ We process this data for the purposes of:\n
         <item>YADGIR</item>
     </string-array>
     <string-array name="State18">
+        <item>Select District</item>
         <item>ALAPPUZHA</item>
         <item>ERNAKULAM</item>
         <item>IDUKKI</item>
@@ -568,6 +590,7 @@ We process this data for the purposes of:\n
         <item>WAYANAD</item>
     </string-array>
     <string-array name="State20">
+        <item>Select District</item>
         <item>ALIRAJPUR</item>
         <item>ANUPPUR</item>
         <item>ASHOK NAGAR</item>
@@ -622,6 +645,7 @@ We process this data for the purposes of:\n
         <item>WEST NIMAR </item>
     </string-array>
     <string-array name="State21">
+        <item>Select District</item>
         <item>AHMED NAGAR</item>
         <item>AKOLA </item>
         <item>AMRAVATI</item>
@@ -657,6 +681,7 @@ We process this data for the purposes of:\n
         <item> YAVATMAL</item>
     </string-array>
     <string-array name="State22">
+        <item>Select District</item>
         <item>BISHNUPUR</item>
         <item>CHANDEL </item>
         <item>CHURACHANDPUR</item>
@@ -668,6 +693,7 @@ We process this data for the purposes of:\n
         <item>UKHRUL</item>
     </string-array>
     <string-array name="State23">
+        <item>Select District</item>
         <item>EAST GARO HILLS</item>
         <item>EAST KHASI HILLS</item>
         <item>JAINTIA HILLS </item>
@@ -677,6 +703,7 @@ We process this data for the purposes of:\n
         <item>WEST KHASI HILLS</item>
     </string-array>
     <string-array name="State24">
+        <item>Select District</item>
         <item>AIZAWL</item>
         <item>CHAMPHAI</item>
         <item>KOLASIB</item>
@@ -687,6 +714,7 @@ We process this data for the purposes of:\n
         <item>SERCHHIP </item>
     </string-array>
     <string-array name="State25">
+        <item>Select District</item>
         <item>DIMAPUR</item>
         <item>KIPHIRE</item>
         <item>KOHIMA</item>
@@ -700,6 +728,7 @@ We process this data for the purposes of:\n
         <item> ZUNHEBOTTO </item>
     </string-array>
     <string-array name="State26">
+        <item>Select District</item>
         <item>ANGUL</item>
         <item>BALANGIR</item>
         <item>BALESWAR</item>
@@ -733,11 +762,13 @@ We process this data for the purposes of:\n
     </string-array>
 
     <string-array name="State27">
+        <item>Select District</item>
         <item>KARAIKAL</item>
         <item>MAHE</item>
         <item>PONDICHERRY</item>
     </string-array>
     <string-array name="State28">
+        <item>Select District</item>
         <item>AMRITSAR L</item>
         <item>BARNALA</item>
         <item>BATHINDA</item>
@@ -761,6 +792,7 @@ We process this data for the purposes of:\n
         <item>TARN TARAN</item>
     </string-array>
     <string-array name="State29">
+        <item>Select District</item>
         <item>AJMER</item>
         <item>ALWAR</item>
         <item>BANSWARA</item>
@@ -796,12 +828,14 @@ We process this data for the purposes of:\n
         <item>UDAIPUR</item>
     </string-array>
     <string-array name="State30">
+        <item>Select District</item>
         <item>EAST SIKKIM</item>
         <item>WEST SIKKIM</item>
         <item>NORTH SIKKIM</item>
         <item>SOUTH SIKKIM</item>
     </string-array>
     <string-array name="State31">
+        <item>Select District</item>
         <item>ARIYALUR</item>
         <item>CHENNAI</item>
         <item>COIMBATORE</item>
@@ -836,6 +870,7 @@ We process this data for the purposes of:\n
         <item>VIRUDHUNAGAR </item>
     </string-array>
     <string-array name="State32">
+        <item>Select District</item>
         <item>ADILABAD </item>
         <item>HYDERABAD</item>
         <item>K.V.RANGAREDDY</item>
@@ -848,6 +883,7 @@ We process this data for the purposes of:\n
         <item>WARANGAL </item>
     </string-array>
     <string-array name="State34">
+        <item>Select District</item>
         <item>AGRA</item>
         <item>ALIGARH</item>
         <item>ALLAHABAD </item>
@@ -921,6 +957,7 @@ We process this data for the purposes of:\n
         <item>VARANASI </item>
     </string-array>
     <string-array name="State35">
+        <item>Select District</item>
         <item>ALMORA </item>
         <item>BAGESHWAR </item>
         <item>CHAMOLI </item>
@@ -935,6 +972,7 @@ We process this data for the purposes of:\n
         <item>UTTARKASHI</item>
     </string-array>
     <string-array name="State36">
+        <item>Select District</item>
         <item>BANKURA</item>
         <item>BARDHAMAN </item>
         <item>BIRBHUM </item>
@@ -956,5 +994,5 @@ We process this data for the purposes of:\n
         <item>SOUTH DINAJPUR</item>
         <item>WEST MIDNAPORE</item>
     </string-array>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
