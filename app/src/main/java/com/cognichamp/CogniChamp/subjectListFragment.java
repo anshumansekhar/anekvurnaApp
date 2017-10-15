@@ -1,5 +1,6 @@
 package com.cognichamp.CogniChamp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,10 +8,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.cognichamp.CogniChamp.R.dimen;
+import com.cognichamp.CogniChamp.R.id;
+import com.cognichamp.CogniChamp.R.layout;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +36,7 @@ public class subjectListFragment extends Fragment {
     String where="ClassDetails";
     FirebaseRecyclerAdapter<subjectItem,subjectTopicHolde> recyclerAdapter;
     Bundle subjectNameBundle=new Bundle();
+    GridLayoutManager layoutManager;
 
 
     public subjectListFragment() {
@@ -38,58 +45,60 @@ public class subjectListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.subjects_list,container,false);
-        className=getArguments().getString("ClassNumber");
-        where=getArguments().getString("where");
-        subjectsGrid=(RecyclerView)v.findViewById(R.id.subjectGrid);
-        subjectsGrid.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        View v = inflater.inflate(layout.subjects_list, container, false);
+        this.className = this.getArguments().getString("ClassNumber");
+        this.where = this.getArguments().getString("where");
+        this.subjectsGrid = (RecyclerView) v.findViewById(id.subjectGrid);
+        this.layoutManager = new GridLayoutManager(this.getActivity(), 2);
+        this.subjectsGrid.setLayoutManager(this.layoutManager);
+
 
 
        FirebaseDatabase.getInstance()
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(where)
-                .child(className)
+               .child(this.where)
+               .child(this.className)
                .child("tests")
                 .child("subjects")
        .addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
-               if(where.equals("ClassDetails") ){
+               if (subjectListFragment.this.where.equals("ClassDetails")) {
                    if(!dataSnapshot.exists()) {
-                       if(!className.contains("Age")) {
+                       if (!subjectListFragment.this.className.contains("Age")) {
                            FirebaseDatabase.getInstance()
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                   .child(where)
-                                   .child(className)
+                                   .child(subjectListFragment.this.where)
+                                   .child(subjectListFragment.this.className)
                                    .child("tests")
                                    .child("subjects")
                                    .child("0")
                                    .setValue(new subjectItem("English"));
                            FirebaseDatabase.getInstance()
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                   .child(where)
-                                   .child(className)
+                                   .child(subjectListFragment.this.where)
+                                   .child(subjectListFragment.this.className)
                                    .child("tests")
                                    .child("subjects")
                                    .child("1")
                                    .setValue(new subjectItem("Maths"));
-                           setAdapter(className);
+                           subjectListFragment.this.setAdapter(subjectListFragment.this.className);
 
                        }
                        else{
-                           setCommonAdapter(className);
+                           subjectListFragment.this.setCommonAdapter(subjectListFragment.this.className);
                        }
                    }
                }
                else{
-                   if(where.equals("Favorites")){
+                   if (subjectListFragment.this.where.equals("Favorites")) {
                        if(dataSnapshot.exists()){
-                           subjectsGrid.setVisibility(View.VISIBLE);
-                           setAdapter(className);
+                           subjectListFragment.this.subjectsGrid.setVisibility(View.VISIBLE);
+                           subjectListFragment.this.setAdapter(subjectListFragment.this.className);
                        }
                        else{
-                           subjectsGrid.setVisibility(View.GONE);
-                           ((FavoriteVideosActivity) getParentFragment()).setEmptyFragment();
+                           subjectListFragment.this.subjectsGrid.setVisibility(View.GONE);
+                           ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).setEmptyFragment();
                        }
                    }
 
@@ -101,15 +110,15 @@ public class subjectListFragment extends Fragment {
 
            }
        });
-        setAdapter(className);
+        this.setAdapter(this.className);
         return v;
     }
     public void setCommonAdapter(String name){
         DatabaseReference ref=FirebaseDatabase.getInstance()
                 .getReference("Subjects")
                 .child(name);
-        recyclerAdapter=new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>(subjectItem.class
-                ,R.layout.subject_topic_card
+        this.recyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>(subjectItem.class
+                , layout.subject_topic_card
                 ,subjectTopicHolde.class
                 ,ref) {
             @Override
@@ -123,41 +132,41 @@ public class subjectListFragment extends Fragment {
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
                 viewHolder.imageView.setImageDrawable(drawable);
 
-                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                viewHolder.view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        subjectNameBundle.putString("ClassName",className);
-                        subjectNameBundle.putString("where",where);
-                        subjectNameBundle.putString("SubjectName",model.getSubjectName());
-                        if(where.equals("ClassDetails")) {
-                            if(className.contains("Age")){
-                                ((AnotherActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
+                        subjectListFragment.this.subjectNameBundle.putString("ClassName", subjectListFragment.this.className);
+                        subjectListFragment.this.subjectNameBundle.putString("where", subjectListFragment.this.where);
+                        subjectListFragment.this.subjectNameBundle.putString("SubjectName", model.getSubjectName());
+                        if (subjectListFragment.this.where.equals("ClassDetails")) {
+                            if (subjectListFragment.this.className.contains("Age")) {
+                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
                             }else {
-                                ((AnotherActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                             }
-                        }else if(where.equals("Favorites")){
-                            if(className.contains("Age")){
-                                ((FavoriteVideosActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
+                        } else if (subjectListFragment.this.where.equals("Favorites")) {
+                            if (subjectListFragment.this.className.contains("Age")) {
+                                ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
                             }
-                            ((FavoriteVideosActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                            ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                         }
                     }
                 });
             }
         };
-        subjectsGrid.setAdapter(recyclerAdapter);
+        this.subjectsGrid.setAdapter(this.recyclerAdapter);
     }
 
     public void setAdapter(String name){
         DatabaseReference ref= FirebaseDatabase.getInstance()
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(where)
+                .child(this.where)
                 .child(name)
                 .child("tests")
                 .child("subjects");
-        recyclerAdapter=new FirebaseRecyclerAdapter<subjectItem , subjectTopicHolde>
+        this.recyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
                 (subjectItem.class
-                ,R.layout.subject_topic_card
+                        , layout.subject_topic_card
                 ,subjectTopicHolde.class
                 ,ref) {
             @Override
@@ -172,28 +181,63 @@ public class subjectListFragment extends Fragment {
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
                 viewHolder.imageView.setImageDrawable(drawable);
 
-                viewHolder.view.setOnClickListener(new View.OnClickListener() {
+                viewHolder.view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //TODO load topic list
-                        subjectNameBundle.putString("ClassName",className);
-                        subjectNameBundle.putString("where",where);
-                        subjectNameBundle.putString("SubjectName",model.getSubjectName());
-                        if(where.equals("ClassDetails")) {
-                            if(className.contains("Age")){
-                                ((AnotherActivity) getParentFragment()).changeFragmentWithVideoOnly(subjectNameBundle);
+                        subjectListFragment.this.subjectNameBundle.putString("ClassName", subjectListFragment.this.className);
+                        subjectListFragment.this.subjectNameBundle.putString("where", subjectListFragment.this.where);
+                        subjectListFragment.this.subjectNameBundle.putString("SubjectName", model.getSubjectName());
+                        if (subjectListFragment.this.where.equals("ClassDetails")) {
+                            if (subjectListFragment.this.className.contains("Age")) {
+                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
                             }
                             else {
-                                ((AnotherActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                             }
-                        }else if(where.equals("Favorites")){
-                            ((FavoriteVideosActivity) getParentFragment()).changeFragmentWithTopic(subjectNameBundle);
+                        } else if (subjectListFragment.this.where.equals("Favorites")) {
+                            ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                         }
                     }
                 });
 
             }
         };
-        subjectsGrid.setAdapter(recyclerAdapter);
+        this.subjectsGrid.setAdapter(this.recyclerAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.subjectsGrid.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                subjectListFragment.this.subjectsGrid.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int viewWidth = subjectListFragment.this.subjectsGrid.getMeasuredWidth();
+                if (!subjectListFragment.this.isRemoving()) {
+                    if (subjectListFragment.this.getActivity() != null) {
+                        float cardViewWidth = subjectListFragment.this.getActivity().getResources().getDimension(dimen.subjectCardSizeWidth);
+                        int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
+                        if (newSpanCount > 0) {
+                            subjectListFragment.this.layoutManager.setSpanCount(newSpanCount);
+                        }
+                        subjectListFragment.this.layoutManager.requestLayout();
+                    }
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //subjectsGrid.getViewTreeObserver().removeOnGlobalLayoutListener(subjectsGrid.getViewTreeObserver().g);
     }
 }

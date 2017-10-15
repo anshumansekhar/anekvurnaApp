@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="ReportCards"
+        path="Android/data/com.cognichamp.CogniChamp/files/Pictures" />
+    <files-path
+        name="images"
+        path="Android/data/com.cognichamp.CogniChamp/files/Pictures" />
+    <external-files-path
+        name="efvsf"
+        path="Android/data/com.cognichamp.CogniChamp/files/Pictures" />
+</paths>

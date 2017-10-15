@@ -995,4 +995,6 @@ We process this data for the purposes of:\n
         <item>WEST MIDNAPORE</item>
     </string-array>
 
+    <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
+
 </resources>

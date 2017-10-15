@@ -11,8 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="15"
+        android:padding="30dp"
         android:text="SubjectName"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="@dimen/largeTextSize" />
 
     <EditText
         android:id="@+id/marksSubject"
@@ -22,7 +24,8 @@
         android:inputType="numberDecimal"
         android:labelFor="@+id/marksSubject"
         android:text="20"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="@dimen/largeTextSize" />
 
     <TextView
         android:layout_width="10dp"
@@ -37,12 +40,13 @@
         android:layout_weight="1"
         android:inputType="numberDecimal"
         android:text="100"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="@dimen/largeTextSize" />
 
     <ImageButton
         android:id="@+id/deleteSubjectItem"
         android:layout_width="30dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/cardview_shadow_end_color"
         android:contentDescription="Delete"
         app:srcCompat="@android:drawable/ic_delete" />

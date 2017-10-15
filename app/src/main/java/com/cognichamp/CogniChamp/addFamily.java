@@ -1,22 +1,31 @@
 package com.cognichamp.CogniChamp;
 
+import android.Manifest.permission;
+import android.R.id;
+import android.R.layout;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
-import android.provider.MediaStore;
+import android.os.Bundle;
+import android.provider.MediaStore.Images.Media;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat.Builder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.cognichamp.CogniChamp.R.array;
+import com.cognichamp.CogniChamp.R.drawable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,17 +43,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firebase.storage.UploadTask.TaskSnapshot;
 
 import java.io.ByteArrayOutputStream;
 import java.util.regex.Pattern;
 
 public class addFamily extends AppCompatActivity {
+    public static final int MY_PERMISSIONS_REQUEST_CAMERA = 456;
+    public static final int IMAGE_REQUEST = 102;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int PIC_CROP = 189;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA =456 ;
     private static final int RESULT_LOAD_IMG = 654;
-
-
     ArrayAdapter relationsSpinnerAdapter;
     Spinner relations;
     EditText name;
@@ -56,161 +67,179 @@ public class addFamily extends AppCompatActivity {
     String relation;
     StorageReference ref;
     ActionBar actionBar;
-
     NotificationManager notificationManager;
-    NotificationCompat.Builder builder;
-
+    Builder builder;
     String imageURI;
 
-    public static final int IMAGE_REQUEST=102;
+    public static boolean checkEmailPattern(String email) {
+        String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.matches(emailRegex, email);
+
+    }
+
+    public static boolean checkPhonePattern(String Phone) {
+        String phoneRegex = "[789]{1}[1234567890]{9}";
+        return Pattern.matches(phoneRegex, Phone);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_family);
+        this.setContentView(R.layout.activity_add_family);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        name=(EditText)findViewById(R.id.familyMemberName);
-        phoneNumber=(EditText)findViewById(R.id.PhoneNumberFamily);
-        email=(EditText)findViewById(R.id.EmailIdFamily);
-        famMemImage=(ImageView)findViewById(R.id.photoFamily);
-        relations=(Spinner)findViewById(R.id.familyMemberRelation);
-        add=(Button)findViewById(R.id.addFamilyMem);
+        this.name = (EditText) this.findViewById(R.id.familyMemberName);
+        this.phoneNumber = (EditText) this.findViewById(R.id.PhoneNumberFamily);
+        this.email = (EditText) this.findViewById(R.id.EmailIdFamily);
+        this.famMemImage = (ImageView) this.findViewById(R.id.photoFamily);
+        this.relations = (Spinner) this.findViewById(R.id.familyMemberRelation);
+        this.add = (Button) this.findViewById(R.id.addFamilyMem);
 
-        actionBar=getSupportActionBar();
-        actionBar.setTitle("Add Family Member");
+        this.actionBar = this.getSupportActionBar();
+        this.actionBar.setTitle("Add Family Member");
 
-        ref=FirebaseStorage.getInstance()
+        this.ref = FirebaseStorage.getInstance()
                 .getReference()
-                .child(auth.getCurrentUser().getUid())
+                .child(this.auth.getCurrentUser().getUid())
                 .child("FamilyMemPhotos");
-        relationsSpinnerAdapter= ArrayAdapter.createFromResource(addFamily.this,R.array.Relation,android.R.layout.simple_spinner_dropdown_item);
-        relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        relations.setAdapter(relationsSpinnerAdapter);
-        relations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.relationsSpinnerAdapter = ArrayAdapter.createFromResource(this, array.Relation, layout.simple_spinner_dropdown_item);
+        this.relationsSpinnerAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.relations.setAdapter(this.relationsSpinnerAdapter);
+        this.relations.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                relation=""+position;
+                addFamily.this.relation = "" + position;
 
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        famMemImage.setOnClickListener(new View.OnClickListener() {
+
+        this.famMemImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+                int permissionCheck = ContextCompat.checkSelfPermission(addFamily.this,
+                        permission.READ_EXTERNAL_STORAGE);
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
+                    addFamily.this.startActivityForResult(galleryIntent, addFamily.RESULT_LOAD_IMG);
+                } else {
+                    ActivityCompat.requestPermissions(addFamily.this,
+                            new String[]{permission.READ_EXTERNAL_STORAGE},
+                            addFamily.MY_PERMISSIONS_REQUEST_CAMERA);
+                }
+
             }
         });
-        add.setOnClickListener(new View.OnClickListener() {
+        this.add.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkEmailPattern(email.getText().toString())) {
-                    if(checkPhonePattern(phoneNumber.getText().toString())) {
-                        uploadImage(relation);
-                        member = new FamilyMember(name.getText().toString()
+                if (addFamily.checkEmailPattern(addFamily.this.email.getText().toString())) {
+                    if (addFamily.checkPhonePattern(addFamily.this.phoneNumber.getText().toString())) {
+                        addFamily.this.uploadImage(addFamily.this.relation);
+                        addFamily.this.member = new FamilyMember(addFamily.this.name.getText().toString()
                                 , "https://firebasestorage.googleapis.com/v0/b/internship2-4d772.appspot.com/o/noimage.png?alt=media&token=9ad0aff6-93aa-4443-94b0-be7746d43c05"
-                                , relation
-                                , email.getText().toString()
-                                , phoneNumber.getText().toString());
-                        database.getReference(auth.getCurrentUser().getUid())
+                                , addFamily.this.relation
+                                , addFamily.this.email.getText().toString()
+                                , addFamily.this.phoneNumber.getText().toString());
+                        addFamily.this.database.getReference(addFamily.this.auth.getCurrentUser().getUid())
                                 .child("Family")
-                                .child(member.getMemberName())
-                                .setValue(member)
+                                .child(addFamily.this.member.getMemberName())
+                                .setValue(addFamily.this.member)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(getApplicationContext(),"Added Family Member",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(addFamily.this.getApplicationContext(), "Added Family Member", Toast.LENGTH_SHORT).show();
                                 Intent fr=new Intent(addFamily.this,NavigationDrawer.class);
                                 fr.putExtra("PreviousFrag","addFamily");
-                                startActivity(fr);
+                                addFamily.this.startActivity(fr);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(),"Failed to Add",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(addFamily.this.getApplicationContext(), "Failed to Add", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                     else
-                        phoneNumber.setError("Enter a Valid 10 digit mobile number");
+                        addFamily.this.phoneNumber.setError("Enter a Valid 10 digit mobile number");
                 }
                 else
-                    email.setError("Enter a Valid email Address");
+                    addFamily.this.email.setError("Enter a Valid email Address");
             }
         });
     }
-    public void uploadImage(final String relation)
+
+    public void uploadImage(String relation)
     {
-        if(imageURI!=null) {
-            StorageReference photoRef=ref.child(relation);
-            showProgressNotification();
-            UploadTask task = photoRef.putFile(Uri.parse(imageURI));
-            task.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+        if (this.imageURI != null) {
+            StorageReference photoRef = this.ref.child(relation);
+            this.showProgressNotification();
+            UploadTask task = photoRef.putFile(Uri.parse(this.imageURI));
+            task.addOnProgressListener(new OnProgressListener<TaskSnapshot>() {
                 @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                public void onProgress(TaskSnapshot taskSnapshot) {
                     int progress=(int)(taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount())*100;
-                    builder.setProgress(100,progress,false);
-                    notificationManager.notify(1,builder.build());
+                    addFamily.this.builder.setProgress(100, progress, false);
+                    addFamily.this.notificationManager.notify(1, addFamily.this.builder.build());
 
                 }
             });
-            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            task.addOnSuccessListener(new OnSuccessListener<TaskSnapshot>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    builder.setContentText("Upload complete")
+                public void onSuccess(TaskSnapshot taskSnapshot) {
+                    addFamily.this.builder.setContentText("Upload complete")
                             .setProgress(0,0,false);
-                    notificationManager.notify(1, builder.build());
+                    addFamily.this.notificationManager.notify(1, addFamily.this.builder.build());
                     String url=taskSnapshot.getDownloadUrl().toString();
-                    database.getReference(auth.getCurrentUser().getUid())
+                    addFamily.this.database.getReference(addFamily.this.auth.getCurrentUser().getUid())
                             .child("Family")
-                            .child(member.getMemberName())
+                            .child(addFamily.this.member.getMemberName())
                             .child("memberPhotoUrl")
                             .setValue(url);
                 }
             });
         }
         else {
-            Toast.makeText(getApplicationContext(),"No image",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), "No image", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void showProgressNotification(){
-        notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        builder=new NotificationCompat.Builder(this);
-        builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle("Picture Upload")
+        this.notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        this.builder = new Builder(this);
+        this.builder = new Builder(this);
+        this.builder.setContentTitle("Picture Upload")
                 .setContentText("Upload in progress")
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp);
+                .setSmallIcon(drawable.ic_notifications_black_24dp);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUEST_IMAGE_CAPTURE){
-            if(resultCode==RESULT_OK){
+        if (requestCode == addFamily.REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                famMemImage.setImageBitmap(imageBitmap);
+                this.famMemImage.setImageBitmap(imageBitmap);
             }
-        }
-        else if(requestCode == PIC_CROP){
+        } else if (requestCode == addFamily.PIC_CROP) {
             Bundle extras = data.getExtras();
             Bitmap thePic = extras.getParcelable("data");
-            famMemImage.setImageBitmap(thePic);
-            imageURI=getImageUri(addFamily.this,thePic).toString();
-        }
-        else if(requestCode==RESULT_LOAD_IMG){
-            if(resultCode==RESULT_OK){
+            this.famMemImage.setImageBitmap(thePic);
+            this.imageURI = this.getImageUri(this, thePic).toString();
+        } else if (requestCode == addFamily.RESULT_LOAD_IMG) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = data.getData();
-                imageURI=selectedImage.toString();
-                famMemImage.setImageURI(selectedImage);
+                this.imageURI = selectedImage.toString();
+                this.famMemImage.setImageURI(selectedImage);
             }
 
         }
     }
+
     public void performCrop(Uri uri){
         try {
             //call the standard crop action intent (the user device may not support it)
@@ -228,7 +257,7 @@ public class addFamily extends AppCompatActivity {
             //retrieve data on return
             cropIntent.putExtra("return-data", true);
             //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, PIC_CROP);
+            this.startActivityForResult(cropIntent, addFamily.PIC_CROP);
 
         }
         catch(ActivityNotFoundException anfe){
@@ -239,28 +268,29 @@ public class addFamily extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA: {
+            case addFamily.MY_PERMISSIONS_REQUEST_CAMERA:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, addFamily.RESULT_LOAD_IMG);
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-            }
         }
     }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        inImage.compress(CompressFormat.JPEG, 100, bytes);
+        String path = Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
 
@@ -273,10 +303,10 @@ public class addFamily extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent fr=new Intent(addFamily.this,NavigationDrawer.class);
+            case id.home:
+                Intent fr = new Intent(this, NavigationDrawer.class);
                 fr.putExtra("PreviousFrag","addFamily");
-                startActivity(fr);
+                this.startActivity(fr);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -285,21 +315,9 @@ public class addFamily extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent fr=new Intent(addFamily.this,NavigationDrawer.class);
+        Intent fr = new Intent(this, NavigationDrawer.class);
         fr.putExtra("PreviousFrag","addFamily");
-        startActivity(fr);
-    }
-
-    public static boolean checkEmailPattern(String email) {
-        String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        return Pattern.matches(emailRegex, email);
-
-    }
-
-    public static boolean checkPhonePattern(String Phone) {
-        String phoneRegex = "[789]{1}[1234567890]{9}";
-        return Pattern.matches(phoneRegex, Phone);
+        this.startActivity(fr);
     }
 
 }

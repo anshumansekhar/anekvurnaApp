@@ -6,4 +6,6 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spinnerHeader">20sp</dimen>
+    <dimen name="largeTextSize">40sp</dimen>
+    <dimen name="subjectCardSizeWidth">160dp</dimen>
 </resources>

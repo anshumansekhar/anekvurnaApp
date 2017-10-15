@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center_vertical">
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,8 +19,8 @@
 
             <ImageView
                 android:id="@+id/schoolLogo"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_width="350dp"
+                android:layout_height="200dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
@@ -42,7 +42,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="38dp"
                 android:text="Dalmia Vidya Mandir"
-                android:textSize="30sp"
+                android:textSize="@dimen/largeTextSize"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schoolLogo" />
@@ -55,6 +55,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="OCL Colony"
+                android:textSize="30sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schoolName" />
 
@@ -66,7 +67,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Rajgangpur"
-                android:textSize="15sp"
+                android:textSize="30sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schoolAddress" />
 
@@ -78,7 +79,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Odisha"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schoolCity" />
 
@@ -103,6 +104,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="pinCode"
+                android:textSize="30sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/schoolState" />
         </android.support.constraint.ConstraintLayout>

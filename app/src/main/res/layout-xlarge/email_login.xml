@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center_vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,7 +26,8 @@
                 android:hint="Mobile Number"
                 android:inputType="phone"
                 android:maxLength="10"
-                android:minEms="30" />
+                android:minEms="30"
+                android:textSize="@dimen/largeTextSize" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -37,7 +38,7 @@
             android:layout_margin="20dp"
             android:text="OR"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="@dimen/largeTextSize" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
@@ -50,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:minEms="30" />
+                android:minEms="30"
+                android:textSize="@dimen/largeTextSize" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -65,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:minEms="30" />
+                android:minEms="30"
+                android:textSize="@dimen/largeTextSize" />
 
             <TextView
                 android:id="@+id/ForgotPasswordLogin"
@@ -73,7 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="Forgot Password"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/largeTextSize" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -83,7 +87,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:text="Login" />
+            android:padding="20dp"
+            android:text="Login"
+            android:textSize="@dimen/largeTextSize" />
 
     </LinearLayout>
 </ScrollView>

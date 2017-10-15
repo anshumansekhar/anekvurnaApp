@@ -1,11 +1,11 @@
 package com.cognichamp.CogniChamp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,29 +19,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.cognichamp.CogniChamp.R.drawable;
-import com.cognichamp.CogniChamp.R.id;
-import com.cognichamp.CogniChamp.R.layout;
-import com.cognichamp.CogniChamp.R.string;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.Builder;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class NavigationDrawer extends AppCompatActivity
-        implements OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_INVITE =1 ;
+    static FragmentManager fm;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     FloatingActionButton floatingActionButton;
-    static FragmentManager fm;
     MenuItem itemWER;
     Intent fg;
     boolean isFirstLaunch;
@@ -52,28 +45,32 @@ public class NavigationDrawer extends AppCompatActivity
     Fragment selectedFragment = new AnotherActivity();
     GoogleApiClient mGoogleApiClient;
 
+    public static Fragment loadRateFragment() {
+        return new FeedbackFragment();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(layout.activity_navigation_drawer);
+        setContentView(R.layout.activity_navigation_drawer);
         RateUs.app_launched(this);
-        this.toolbar = (Toolbar) this.findViewById(id.toolbar);
-        this.setSupportActionBar(this.toolbar);
-        this.actionBar = this.getSupportActionBar();
-        Toolbar toolbar = (Toolbar) this.findViewById(id.toolbar);
-        this.setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) this.findViewById(id.drawer_layout);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, string.navigation_drawer_open, string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         //drawer.setDrawerListener(toggle);
         toggle.syncState();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(this.getString(string.default_web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        this.mGoogleApiClient = new Builder(this)
-                .enableAutoManage(this, new OnConnectionFailedListener() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                     }
@@ -81,39 +78,40 @@ public class NavigationDrawer extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        this.fg = this.getIntent();
-        this.isFirstLaunch = this.fg.getBooleanExtra("IsFirstTime", false);
-        if (this.isFirstLaunch) {
-            NavigationDrawer.fm = this.getSupportFragmentManager();
-            FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-            transaction.replace(id.frame_layout, new ProfileFragment());
-            this.selectedFragment = new ProfileFragment();
-            this.actionBar.setTitle("Student Profile Details");
+        fg = getIntent();
+        isFirstLaunch = fg.getBooleanExtra("IsFirstTime", false);
+        if (isFirstLaunch) {
+            fm = getSupportFragmentManager();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, new ProfileFragment());
+            selectedFragment = new ProfileFragment();
+            actionBar.setTitle("Student Profile Details");
             transaction.commit();
         }else {
-            this.previousFragment = this.fg.getStringExtra("PreviousFrag");
-            if (this.previousFragment != null) {
-                this.getPreviousFragment(this.previousFragment);
+            previousFragment = fg.getStringExtra("PreviousFrag");
+            if (previousFragment != null) {
+                getPreviousFragment(previousFragment);
             }
             else{
-                FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-                transaction.replace(id.frame_layout, new AnotherActivity());
-                this.actionBar.setTitle("Videos");
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_layout, new AnotherActivity());
+                actionBar.setTitle("Videos");
                 transaction.commit();
             }
         }
-        this.floatingActionButton = (FloatingActionButton) this.findViewById(id.FloatingActionButton);
-        this.floatingActionButton.hide();
-        NavigationView navigationView = (NavigationView) this.findViewById(id.nav_view);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
+        floatingActionButton.hide();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NavigationDrawer.REQUEST_INVITE) {
+        if (requestCode == REQUEST_INVITE) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get the invitation IDs of all sent messages
-                String[] ids = AppInviteInvitation.getInvitationIds(RESULT_OK, data);
+                String[] ids = AppInviteInvitation.getInvitationIds(Activity.RESULT_OK, data);
                 for (String id : ids) {
                 }
             } else {
@@ -126,7 +124,7 @@ public class NavigationDrawer extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) this.findViewById(id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -136,26 +134,27 @@ public class NavigationDrawer extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(menu.navigation_drawer, menu);
-        this.itemWER = menu.findItem(id.save);
-        this.itemWER.setVisible(false);
-        if (this.selectedFragment instanceof ProfileFragment) {
-            this.itemWER.setVisible(true);
+        getMenuInflater().inflate(R.menu.navigation_drawer, menu);
+        itemWER = menu.findItem(R.id.save);
+        itemWER.setVisible(false);
+        if (selectedFragment instanceof ProfileFragment) {
+            itemWER.setVisible(true);
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == id.sign_out) {
-            this.signOut();
+        if (id == R.id.sign_out) {
+            signOut();
             return true;
-        } else if (id == id.save)
+        } else if (id == R.id.save)
         {
-            Fragment f = this.getSupportFragmentManager().findFragmentById(id.frame_layout);
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
             if(f instanceof EducationFragment)
             {
             }
@@ -181,104 +180,91 @@ public class NavigationDrawer extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id){
-            case id.nav_share:
-                this.sharePlayStoreLink();
-                this.floatingActionButton.hide();
+            case R.id.nav_share:
+                sharePlayStoreLink();
+                floatingActionButton.hide();
                 break;
-            case id.nav_send:
-                this.onInviteClicked();
-                this.floatingActionButton.hide();
+            case R.id.nav_send:
+                onInviteClicked();
+                floatingActionButton.hide();
                 break;
-            case id.nav_profile:
-                this.itemWER.setVisible(true);
-                this.selectedFragment = ProfileFragment.newInstance();
-                this.floatingActionButton.hide();
-                this.actionBar.setTitle("Student Profile");
+            case R.id.nav_profile:
+                itemWER.setVisible(true);
+                selectedFragment = ProfileFragment.newInstance();
+                floatingActionButton.hide();
+                actionBar.setTitle("Student Profile");
                 break;
-            case id.nav_hobby:
-                this.itemWER.setVisible(false);
+            case R.id.nav_hobby:
+                itemWER.setVisible(false);
                 HobbiesFragment hobbiesFragment = HobbiesFragment.newInstance();
-                this.floatingActionButton.show();
-                this.floatingActionButton.setOnClickListener(hobbiesFragment.listener);
-                this.floatingActionButton.setImageResource(drawable.ic_playlist_add_black_24dp);
-                this.selectedFragment = hobbiesFragment;
-                this.actionBar.setTitle("Hobbies");
+                floatingActionButton.show();
+                floatingActionButton.setOnClickListener(hobbiesFragment.listener);
+                floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+                selectedFragment = hobbiesFragment;
+                actionBar.setTitle("Hobbies");
                 break;
-            case id.presentClassVideos:
-                this.closeOptionsMenu();
-                this.itemWER.setVisible(false);
-                this.selectedFragment = new AnotherActivity();
-                this.floatingActionButton.hide();
-                this.actionBar.setTitle("Videos");
+            case R.id.presentClassVideos:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
+                selectedFragment = new AnotherActivity();
+                floatingActionButton.hide();
+                actionBar.setTitle("Videos");
                 break;
-            case id.favoritesVideos:
-                this.closeOptionsMenu();
-                this.itemWER.setVisible(false);
-                this.selectedFragment = new FavoriteVideosActivity();
-                this.actionBar.setTitle("My Favourites");
-                this.floatingActionButton.hide();
+            case R.id.favoritesVideos:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
+                selectedFragment = new FavoriteVideosActivity();
+                actionBar.setTitle("My Favourites");
+                floatingActionButton.hide();
                 break;
-            case id.EducationDetails:
-                this.itemWER.setVisible(false);
+            case R.id.EducationDetails:
+                itemWER.setVisible(false);
                 EducationFragment educationFragment=EducationFragment.newInstance();
-                this.floatingActionButton.hide();
-                this.selectedFragment = educationFragment;
-                this.actionBar.setTitle("Education");
+                floatingActionButton.hide();
+                selectedFragment = educationFragment;
+                actionBar.setTitle("Education");
                 break;
-            case id.rateUs:
-                this.closeOptionsMenu();
-                this.itemWER.setVisible(false);
-                this.selectedFragment = NavigationDrawer.loadRateFragment();
-                this.actionBar.setTitle("Contact us");
-                this.floatingActionButton.hide();
+            case R.id.rateUs:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
+                selectedFragment = loadRateFragment();
+                actionBar.setTitle("Contact us");
+                floatingActionButton.hide();
                 break;
-            case id.nav_family:
-                this.itemWER.setVisible(false);
+            case R.id.nav_family:
+                itemWER.setVisible(false);
                 FamilyFragment fragment = FamilyFragment.newInstance();
-                this.floatingActionButton.show();
-                this.floatingActionButton.setOnClickListener(fragment.listener());
-                this.floatingActionButton.setImageResource(drawable.ic_person_add_black_24dp);
-                this.selectedFragment = fragment;
-                this.actionBar.setTitle("Family");
+                floatingActionButton.show();
+                floatingActionButton.setOnClickListener(fragment.listener());
+                floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+                selectedFragment = fragment;
+                actionBar.setTitle("Family");
                 break;
-            case id.nav_account:
-                this.closeOptionsMenu();
-                this.itemWER.setVisible(false);
-                this.selectedFragment = AccountFragment.newInstance();
-                this.floatingActionButton.hide();
-                this.actionBar.setTitle("Account");
+            case R.id.nav_account:
+                closeOptionsMenu();
+                itemWER.setVisible(false);
+                selectedFragment = AccountFragment.newInstance();
+                floatingActionButton.hide();
+                actionBar.setTitle("Account");
                 break;
 
         }
-        FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-        transaction.replace(id.frame_layout, this.selectedFragment);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, selectedFragment);
         transaction.commit();
-        DrawerLayout drawer = (DrawerLayout) this.findViewById(id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void onInviteClicked() {
-        //TODO change the link
-        Intent intent = new IntentBuilder("Invite Your Friends")
-                .setEmailSubject("Invitation to Join " + this.getResources().getString(string.app_name))
-                .setMessage("I am using this awesome App.Join this to take advantage of cognitive learning for your child.")
-                .setEmailHtmlContent("http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp")
-                .build();
-        this.startActivityForResult(intent, NavigationDrawer.REQUEST_INVITE);
-    }
 
     private void onInviteClicked() {
         //TODO change the link
-        Intent intent = new IntentBuilder("Invite Your Friends")
-                .setEmailSubject("Invitation to Join " + this.getResources().getString(string.app_name))
+        Intent intent = new AppInviteInvitation.IntentBuilder("Invite Your Friends")
+                .setEmailSubject("Invitation to Join " + getResources().getString(R.string.app_name))
                 .setMessage("I am using this awesome App.Join this to take advantage of cognitive learning for your child.")
                 .setEmailHtmlContent("http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp")
                 .build();
-        this.startActivityForResult(intent, NavigationDrawer.REQUEST_INVITE);
-    }
-
-    public static Fragment loadRateFragment() {
-        return new FeedbackFragment();
+        startActivityForResult(intent, REQUEST_INVITE);
     }
 
     public void sharePlayStoreLink(){
@@ -287,56 +273,56 @@ public class NavigationDrawer extends AppCompatActivity
         share.setType("text/plain");
         share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp");
         share.putExtra(Intent.EXTRA_SUBJECT, "I am using this awesome App. You must also join this to take advantage of cognitive learning for your child");
-        this.startActivity(Intent.createChooser(share, "Share The App Link"));
+        startActivity(Intent.createChooser(share, "Share The App Link"));
     }
     public void getPreviousFragment(String previousFrag){
-        NavigationDrawer.fm = this.getSupportFragmentManager();
-        FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+        fm = getSupportFragmentManager();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if(previousFrag.equals("Hobby")){
-            transaction.replace(id.frame_layout, new HobbiesFragment());
-            this.floatingActionButton = (FloatingActionButton) this.findViewById(id.FloatingActionButton);
-            this.floatingActionButton.setImageResource(drawable.ic_playlist_add_black_24dp);
-            this.floatingActionButton.show();
-            this.actionBar.setTitle("Hobbies");
+            transaction.replace(R.id.frame_layout, new HobbiesFragment());
+            floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
+            floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
+            floatingActionButton.show();
+            actionBar.setTitle("Hobbies");
         }
         else if(previousFrag.equals("addFamily")){
-            transaction.replace(id.frame_layout, new FamilyFragment());
-            this.floatingActionButton = (FloatingActionButton) this.findViewById(id.FloatingActionButton);
-            this.floatingActionButton.setImageResource(drawable.ic_person_add_black_24dp);
-            this.floatingActionButton.show();
-            this.actionBar.setTitle("Family");
+            transaction.replace(R.id.frame_layout, new FamilyFragment());
+            floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
+            floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+            floatingActionButton.show();
+            actionBar.setTitle("Family");
         }
         else if(previousFrag.equals("addSubject")){
-            transaction.replace(id.frame_layout, new EducationFragment());
-            this.actionBar.setTitle("Education");
+            transaction.replace(R.id.frame_layout, new EducationFragment());
+            actionBar.setTitle("Education");
         }
         else if(previousFrag.equals("addSchool")){
-            transaction.replace(id.frame_layout, new EducationFragment());
-            this.actionBar.setTitle("Education");
+            transaction.replace(R.id.frame_layout, new EducationFragment());
+            actionBar.setTitle("Education");
         }
         else if(previousFrag.equals("account")){
-            transaction.replace(id.frame_layout, new AccountFragment());
+            transaction.replace(R.id.frame_layout, new AccountFragment());
         }
         transaction.commit();
     }
     public void signOut(){
-        if (this.firebaseAuth.getCurrentUser().getProviders().get(0).contains("google")) {
-            Auth.GoogleSignInApi.signOut(this.mGoogleApiClient).setResultCallback(
+        if (firebaseAuth.getCurrentUser().getProviders().get(0).contains("google")) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                     new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status status) {
-                            NavigationDrawer.this.firebaseAuth.signOut();
-                            NavigationDrawer.this.startActivity(new Intent(NavigationDrawer.this, SignUpChooseActivity.class));
+                            firebaseAuth.signOut();
+                            startActivity(new Intent(NavigationDrawer.this, SignUpChooseActivity.class));
                         }
                     });
-        } else if (this.firebaseAuth.getCurrentUser().getProviders().get(0).contains("facebook")) {
+        } else if (firebaseAuth.getCurrentUser().getProviders().get(0).contains("facebook")) {
             LoginManager.getInstance().logOut();
-            this.firebaseAuth.signOut();
-            this.startActivity(new Intent(this, SignUpChooseActivity.class));
+            firebaseAuth.signOut();
+            startActivity(new Intent(this, SignUpChooseActivity.class));
         }
         else {
-            this.firebaseAuth.signOut();
-            this.startActivity(new Intent(this, SignUpChooseActivity.class));
+            firebaseAuth.signOut();
+            startActivity(new Intent(this, SignUpChooseActivity.class));
         }
     }
 }

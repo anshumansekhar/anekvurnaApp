@@ -5,13 +5,18 @@
     android:versionCode="2"
     android:versionName="1.0">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+
     <application
-        android:name="com.cognichamp.CogniChamp.CogniChamp"
+        android:name=".CogniChamp"
         android:allowBackup="true"
         android:icon="@mipmap/cognichamplogo"
         android:label="@string/app_name"
@@ -22,6 +27,15 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
             tools:replace="android:value" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.cognichamp.CogniChamp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.
@@ -59,59 +73,59 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.cognichamp.CogniChamp.NavigationDrawer"
+            android:name=".NavigationDrawer"
             android:label="@string/title_activity_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.cognichamp.CogniChamp.Main2Activity"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer" />
+            android:name=".Main2Activity"
+            android:parentActivityName=".NavigationDrawer" />
         <activity
-            android:name="com.cognichamp.CogniChamp.addFamily"
+            android:name=".addFamily"
             android:label="AddFamily"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer"
+            android:parentActivityName=".NavigationDrawer"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
 
-        <service android:name="com.cognichamp.CogniChamp.MyFirebaseMessagingService">
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.cognichamp.CogniChamp.MyFirebaseInstanceIDService">
+        <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name="com.cognichamp.CogniChamp.YoutubeActivity" />
-        <activity android:name="com.cognichamp.CogniChamp.Registration" />
+        <activity android:name=".YoutubeActivity" />
+        <activity android:name=".Registration" />
         <activity
-            android:name="com.cognichamp.CogniChamp.AddHobbyActivityt"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer">
+            android:name=".AddHobbyActivityt"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
         <activity
-            android:name="com.cognichamp.CogniChamp.AddNewSubject"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer">
+            android:name=".AddNewSubject"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
-        <activity android:name="com.cognichamp.CogniChamp.ForgotPassword" />
+        <activity android:name=".ForgotPassword" />
         <activity
-            android:name="com.cognichamp.CogniChamp.EditSchoolDetails"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer">
+            android:name=".EditSchoolDetails"
+            android:parentActivityName=".NavigationDrawer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
-        <activity android:name="com.cognichamp.CogniChamp.AddVideoActivity">
+        <activity android:name=".AddVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -120,16 +134,27 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cognichamp.CogniChamp.LoginEmail" />
-        <activity android:name="com.cognichamp.CogniChamp.SignUpChooseActivity">
+        <activity android:name=".LoginEmail" />
+        <activity android:name=".SignUpChooseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cognichamp.CogniChamp.changePassword"
-            android:parentActivityName="com.cognichamp.CogniChamp.NavigationDrawer"/>
+        <activity
+            android:name=".changePassword"
+            android:parentActivityName=".NavigationDrawer" />
+        <activity
+            android:name=".FullscreenImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen_image"
+            android:parentActivityName=".NavigationDrawer"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
+        </activity>
     </application>
 
 </manifest>

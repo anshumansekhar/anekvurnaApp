@@ -31,7 +31,7 @@
             <ImageView
                 android:id="@+id/notificationImage"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="700dp"
                 android:layout_weight="2"
                 android:contentDescription="Notification Image"
                 android:scaleType="centerCrop" />
@@ -71,7 +71,8 @@
                         android:id="@+id/questionPush"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Question Goes Here" />
+                        android:text="Question Goes Here"
+                        android:textSize="@dimen/largeTextSize" />
 
                     <RadioGroup
                         android:id="@+id/notificationsRadioButtonGroup"
@@ -82,7 +83,8 @@
                         android:id="@+id/submitNotificationResponse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="submit" />
+                        android:text="submit"
+                        android:textSize="@dimen/largeTextSize" />
                 </LinearLayout>
             </FrameLayout>
         </ScrollView>

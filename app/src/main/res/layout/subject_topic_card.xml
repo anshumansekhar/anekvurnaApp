@@ -13,7 +13,7 @@
 
         <ImageView
             android:id="@+id/subject_topicImage"
-            android:layout_width="160dp"
+            android:layout_width="@dimen/subjectCardSizeWidth"
             android:layout_height="100dp"
             android:contentDescription="subjectcard"
             app:srcCompat="@drawable/com_facebook_favicon_blue" />

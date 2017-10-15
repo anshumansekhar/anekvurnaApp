@@ -9,7 +9,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         tools:context="com.main.cognichamp.CogniChamp.com.cognichamp.CogniChamp.AddNewSubject">
 
         <AutoCompleteTextView
@@ -23,6 +22,7 @@
             android:layout_marginTop="8dp"
             android:labelFor="@+id/autoCompleteTextView"
             android:minEms="30"
+            android:textSize="@dimen/largeTextSize"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -37,6 +37,7 @@
             android:layout_marginTop="8dp"
             android:minEms="30"
             android:text="Enter Subject Name"
+            android:textSize="@dimen/largeTextSize"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,7 +51,9 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:padding="20dp"
             android:text="Submit"
+            android:textSize="@dimen/largeTextSize"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -78,6 +81,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="Subjects To be Added"
+            android:textSize="@dimen/largeTextSize"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView" />
     </android.support.constraint.ConstraintLayout>

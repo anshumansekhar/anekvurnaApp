@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cognichamp.CogniChamp.emptyFragment">
+    android:background="#0099cc"
+    tools:context="com.cognichamp.CogniChamp.FullscreenImageActivity">
 
-    <TextView
+    <ImageView
+        android:id="@+id/fullImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="You Have No Favourite Videos"
-        android:textSize="@dimen/largeTextSize" />
+        android:src="@color/cardview_dark_background" />
 
 </FrameLayout>

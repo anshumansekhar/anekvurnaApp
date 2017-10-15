@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/videoItemLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_gravity="center_vertical"
     android:layout_margin="3dp">
 
     <android.support.constraint.ConstraintLayout
@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/videoThumbnail"
-            android:layout_width="150dp"
-            android:layout_height="120dp"
+            android:layout_width="300dp"
+            android:layout_height="240dp"
             android:contentDescription="videoThumbnail"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,6 +32,8 @@
             android:ellipsize="end"
             android:maxEms="8"
             android:text="Video Name"
+            android:textSize="@dimen/largeTextSize"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/videoDuration"
             app:layout_constraintLeft_toRightOf="@+id/videoThumbnail"
             app:layout_constraintTop_toBottomOf="@+id/buttonsVideoItem" />
@@ -45,6 +47,7 @@
             android:background="@color/cardview_dark_background"
             android:text="Duration"
             android:textColor="@color/cardview_light_background"
+            android:textSize="@dimen/largeTextSize"
             app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
             app:layout_constraintRight_toRightOf="@+id/videoThumbnail" />
 
@@ -59,24 +62,24 @@
 
             <ImageButton
                 android:id="@+id/rate"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@color/cardview_light_background"
                 android:contentDescription="ratevideo"
                 app:srcCompat="@drawable/ic_star_black_24dp" />
 
             <ImageButton
                 android:id="@+id/favorites"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@color/cardview_light_background"
                 android:contentDescription="buttonSelector"
                 app:srcCompat="@drawable/imagebuttonselector" />
 
             <ImageButton
                 android:id="@+id/shareVideo"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:background="@color/cardview_light_background"
                 android:contentDescription="videoShare"
                 app:srcCompat="@drawable/ic_menu_share" />
@@ -93,6 +96,7 @@
             android:ellipsize="end"
             android:maxEms="8"
             android:text="Published By"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.535"
             app:layout_constraintLeft_toRightOf="@+id/videoDuration"

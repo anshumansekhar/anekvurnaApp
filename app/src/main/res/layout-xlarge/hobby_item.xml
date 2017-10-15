@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_gravity="center_vertical"
     android:orientation="vertical">
 
     <CheckBox
@@ -14,5 +14,5 @@
         android:buttonTint="@color/cardview_light_background"
         android:text="CheckBox"
         android:textColor="@color/cardview_light_background"
-        android:textSize="30sp" />
+        android:textSize="@dimen/largeTextSize" />
 </LinearLayout>

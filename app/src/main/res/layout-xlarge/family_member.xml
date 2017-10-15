@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center_vertical">
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout15"
@@ -28,6 +28,7 @@
             android:inputType="phone"
             android:maxLength="10"
             android:minEms="15"
+            android:textSize="@dimen/largeTextSize"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="27dp" />
     </android.support.design.widget.TextInputLayout>
@@ -51,7 +52,8 @@
             android:layout_height="wrap_content"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:minEms="15" />
+            android:minEms="15"
+            android:textSize="@dimen/largeTextSize" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -70,8 +72,8 @@
 
         <ImageView
             android:id="@+id/photoFamily"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
+            android:layout_width="250dp"
+            android:layout_height="120dp"
             android:layout_weight="1"
             android:contentDescription="Family Member Photo"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait" />
@@ -92,7 +94,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Name"
                     android:inputType="textPersonName"
-                    android:minEms="15" />
+                    android:minEms="15"
+                    android:textSize="@dimen/largeTextSize" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -103,7 +106,8 @@
                 android:layout_gravity="end"
                 android:layout_weight="1"
                 android:minWidth="150dp"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:textSize="@dimen/largeTextSize" />
 
         </LinearLayout>
 

@@ -7,11 +7,13 @@
 
     <ImageView
         android:id="@+id/reportCard"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_add_box_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,13 +25,21 @@
         android:id="@+id/uploadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:text="Upload"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/reportCard"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageButton
+        android:id="@+id/addImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/cardview_light_background"
+        android:src="@drawable/ic_mode_edit_black_24dp"
+        app:layout_constraintRight_toRightOf="@+id/reportCard"
+        app:layout_constraintTop_toTopOf="@+id/reportCard" />
 
 </android.support.constraint.ConstraintLayout>

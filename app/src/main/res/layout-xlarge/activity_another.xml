@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout7"
-        android:layout_width="368dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -28,7 +28,7 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Select Class"
-            android:textSize="@dimen/spinnerHeader" />
+            android:textSize="@dimen/largeTextSize" />
 
         <Spinner
             android:id="@+id/selectClassVideo"
@@ -41,7 +41,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/largeTextSize" />
     </LinearLayout>
 
     <FrameLayout

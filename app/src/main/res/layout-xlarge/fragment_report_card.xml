@@ -26,9 +26,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload"
+        android:textSize="@dimen/largeTextSize"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/reportCard"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageButton
+        android:id="@+id/addImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_mode_edit_black_24dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
