@@ -33,8 +33,8 @@ public class FavoriteVideosActivity extends Fragment {
         View v = inflater.inflate(R.layout.activity_another, container, false);
         ((NavigationDrawer)getActivity()).actionBar.setTitle("My Favourites");
         selectClassVideo = (Spinner) v.findViewById(R.id.selectClassVideo);
-        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.ClassWithStream, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.ClassWithStream, R.layout.spinner_item);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         selectClassVideo.setAdapter(arrayAdapter);
         database.getReference(firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
@@ -109,6 +109,9 @@ public class FavoriteVideosActivity extends Fragment {
         return v;
     }
     public void setEmptyFragment(){
+        Bundle b = new Bundle();
+        b.putBoolean("Video", false);
+        emptyFragment.setArguments(b);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.videoFrame, emptyFragment);
         fragmentTransaction.commit();

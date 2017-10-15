@@ -33,9 +33,9 @@ import java.util.HashMap;
  */
 
 public class VideosFragment extends Fragment {
+    public static HashMap<String, video> videos = new HashMap<String, video>();
     RecyclerView videosList;
     FirebaseRecyclerAdapter<video,videoHolder> firebaseRecyclerAdapter;
-    public static HashMap<String,video> videos=new HashMap<String, video>();
     String className,subjectName,topicName,where;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
@@ -55,6 +55,26 @@ public class VideosFragment extends Fragment {
             topicName="videos";
         }
         SetAdapter(className,subjectName,topicName);
+        FirebaseDatabase.getInstance()
+                .getReference("Videos")
+                .child(className)
+                .child(subjectName)
+                .child(topicName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            VideosFragment.this.videosList.setVisibility(View.GONE);
+                            ((AnotherActivity) VideosFragment.this.getParentFragment()).setEmptyFragment();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
         return v;
     }
     public void SetAdapter(final String className, final String subjectName, final String topicName){

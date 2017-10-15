@@ -302,6 +302,9 @@ public class NavigationDrawer extends AppCompatActivity
         }
         else if(previousFrag.equals("account")){
             transaction.replace(R.id.frame_layout, new AccountFragment());
+        } else if (previousFrag.equals("FullScreen")) {
+            transaction.replace(R.id.frame_layout, new EducationFragment());
+            actionBar.setTitle("Education");
         }
         transaction.commit();
     }

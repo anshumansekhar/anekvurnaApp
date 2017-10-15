@@ -31,6 +31,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -67,10 +68,12 @@ import static com.cognichamp.CogniChamp.addFamily.MY_PERMISSIONS_REQUEST_CAMERA;
  * A simple {@link Fragment} subclass.
  */
 public class ReportCardFragment extends Fragment {
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMG = 7878;
     private static final int MY_PERMISSIONS_REQUEST_CAMERADEVICE = 778;
     private static final int REQUEST_IMAGE_CAPTURE_CAMERA = 7458;
+    File photoFile;
     ImageView reportCard;
     ImageButton addImage;
     Button uploadButton;
@@ -174,7 +177,7 @@ public class ReportCardFragment extends Fragment {
             if (permissionCheck2) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
-                    File photoFile = null;
+                    photoFile = null;
                     try {
                         photoFile = this.createImageFile();
                     } catch (IOException ex) {
@@ -182,15 +185,15 @@ public class ReportCardFragment extends Fragment {
                     }
                     // Continue only if the File was successfully created
                     if (photoFile != null) {
-                        Log.e("dg", getActivity() + photoFile.toString());
+                        Log.e("dg", photoFile.toString());
                         FileProvider provider = new FileProvider();
                         Log.e("dad", getUriForFile(this.getActivity(),
                                 "com.cognichamp.CogniChamp.fileprovider",
                                 photoFile).toString());
-                        this.imageBeforeUri = getUriForFile(this.getActivity(),
-                                "com.cognichamp.CogniChamp.fileprovider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, this.imageUri);
+                        this.imageBeforeUri = Uri.fromFile(photoFile);
+                        //TODO imageURI or Imagebeforeuri
+
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageBeforeUri);
                         this.startActivityForResult(takePictureIntent, ReportCardFragment.REQUEST_IMAGE_CAPTURE_CAMERA);
 
                     }
@@ -225,11 +228,10 @@ public class ReportCardFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 uploadButton.setVisibility(View.VISIBLE);
                 Log.e("uri", this.imageBeforeUri.toString());
-                this.imageBeforeUri = Uri.fromFile(new File(this.compressImage(this.imageBeforeUri.toString())));
-                imageUri = this.imageBeforeUri;
-                System.out.println(this.imageUri);
+                this.imageBeforeUri = Uri.fromFile(new File(this.compressImage(imageBeforeUri.toString())));
+                imageUri = imageBeforeUri;
                 Glide.with(getActivity())
-                        .load(this.imageBeforeUri)
+                        .load(imageUri)
                         .into(reportCard);
 
             }
@@ -299,7 +301,26 @@ public class ReportCardFragment extends Fragment {
                     if (permissionCheck2) {
                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
-                            this.startActivityForResult(takePictureIntent, ReportCardFragment.REQUEST_IMAGE_CAPTURE_CAMERA);
+
+                            File photoFile = null;
+                            try {
+                                photoFile = this.createImageFile();
+                            } catch (IOException ex) {
+
+                            }
+                            // Continue only if the File was successfully created
+                            if (photoFile != null) {
+                                Log.e("dg", getActivity() + photoFile.toString());
+                                FileProvider provider = new FileProvider();
+                                Log.e("dad", getUriForFile(this.getActivity(),
+                                        "com.cognichamp.CogniChamp.fileprovider",
+                                        photoFile).toString());
+                                this.imageBeforeUri = getUriForFile(this.getActivity(),
+                                        "com.cognichamp.CogniChamp.fileprovider",
+                                        photoFile);
+                                //TODO imageURI or Imagebeforeuri
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, this.imageBeforeUri);
+                                this.startActivityForResult(takePictureIntent, ReportCardFragment.REQUEST_IMAGE_CAPTURE_CAMERA);
                         }
                     } else {
                         Toast.makeText(this.getActivity(), "No Camera Available", Toast.LENGTH_SHORT).show();
@@ -312,18 +333,17 @@ public class ReportCardFragment extends Fragment {
 
         }
     }
+    }
 
-    public String compressImage(String imageUri) {
-        String filePath = this.getRealPathFromURI(imageUri);
+    public String compressImage(String uri) {
+        String filePath = getRealPathFromURI(uri);
         Bitmap scaledBitmap = null;
         Log.e("path", filePath);
-        if (filePath.contains("ReportCards")) {
-            filePath = Environment.getExternalStorageDirectory().getPath() + "/CogniChamp/" + filePath;
-        }
         Options options = new Options();
 
         options.inJustDecodeBounds = true;
         Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+
 
         int actualHeight = options.outHeight;
         int actualWidth = options.outWidth;
@@ -530,6 +550,8 @@ public class ReportCardFragment extends Fragment {
         this.mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+
 }
 
 

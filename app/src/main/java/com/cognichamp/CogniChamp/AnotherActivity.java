@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AnotherActivity extends Fragment {
     Spinner selectClassVideo;
+    emptyFragment emptyFragment = new emptyFragment();
 
     Bundle classNameBundle = new Bundle();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -36,8 +37,8 @@ public class AnotherActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_another, container, false);
         this.selectClassVideo = (Spinner) v.findViewById(id.selectClassVideo);
-        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(this.getActivity(), array.ClassWithStream, layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(this.getActivity(), array.ClassWithStream, R.layout.spinner_item);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.selectClassVideo.setAdapter(arrayAdapter);
         this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("UserProfile")
@@ -148,5 +149,15 @@ public class AnotherActivity extends Fragment {
             fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
         }
+    }
+
+    public void setEmptyFragment() {
+        Bundle b = new Bundle();
+        b.putBoolean("Video", true);
+        emptyFragment.setArguments(b);
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.videoFrame, emptyFragment);
+        fragmentTransaction.commit();
+        fragmentTransaction.addToBackStack(null);
     }
 }

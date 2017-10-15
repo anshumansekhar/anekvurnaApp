@@ -34,12 +34,13 @@ public class FamilyFragment extends Fragment {
 
     FirebaseListAdapter<FamilyMember> listAdapter;
 
+    public FamilyFragment() {
+        super();
+    }
+
     public static FamilyFragment newInstance() {
          return new FamilyFragment();
 
-    }
-    public FamilyFragment() {
-        super();
     }
 
     @Nullable
@@ -50,8 +51,8 @@ public class FamilyFragment extends Fragment {
         emptyView=(TextView)v.findViewById(android.R.id.empty);
         familyMembers.setEmptyView(emptyView);
         relations = getResources().getStringArray(R.array.Relation);
-        relationsSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Relation, android.R.layout.simple_spinner_dropdown_item);
-        relationsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        relationsSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Relation, R.layout.spinner_dropdown_item);
+        relationsSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         DatabaseReference ref = database.getReference(auth.getCurrentUser().getUid()).child("Family");
         listAdapter=new FirebaseListAdapter<FamilyMember>(getActivity(),
                 FamilyMember.class,

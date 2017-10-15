@@ -49,6 +49,7 @@
         android:layout_height="match_parent"
         android:background="@color/cardview_shadow_end_color"
         android:contentDescription="Delete"
+        android:padding="30dp"
         app:srcCompat="@android:drawable/ic_delete" />
 </LinearLayout>
 

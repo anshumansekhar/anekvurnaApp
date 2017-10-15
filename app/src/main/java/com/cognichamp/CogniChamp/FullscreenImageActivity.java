@@ -1,6 +1,7 @@
 package com.cognichamp.CogniChamp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
@@ -58,20 +59,6 @@ public class FullscreenImageActivity extends AppCompatActivity {
             //mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final OnTouchListener mDelayHideTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (FullscreenImageActivity.AUTO_HIDE) {
-                FullscreenImageActivity.this.delayedHide(FullscreenImageActivity.AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private ImageView mContentView;
@@ -97,6 +84,20 @@ public class FullscreenImageActivity extends AppCompatActivity {
         @Override
         public void run() {
             FullscreenImageActivity.this.hide();
+        }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final OnTouchListener mDelayHideTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (FullscreenImageActivity.AUTO_HIDE) {
+                FullscreenImageActivity.this.delayedHide(FullscreenImageActivity.AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
         }
     };
     private ScaleGestureDetector scaleGestureDetector;
@@ -174,12 +175,23 @@ public class FullscreenImageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.home) {
+        if (id == android.R.id.home) {
             // This ID represents the Home or Up button.
-            NavUtils.navigateUpFromSameTask(this);
+            Intent fr = new Intent(FullscreenImageActivity.this, NavigationDrawer.class);
+            fr.putExtra("PreviousFrag", "FullScreen");
+            startActivity(fr);
             return true;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent fr = new Intent(FullscreenImageActivity.this, NavigationDrawer.class);
+        fr.putExtra("PreviousFrag", "FullScreen");
+        startActivity(fr);
     }
 
     private void toggle() {
@@ -224,6 +236,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
         this.mHideHandler.removeCallbacks(this.mHideRunnable);
         this.mHideHandler.postDelayed(this.mHideRunnable, delayMillis);
     }
+
 
     private class MySimpleOnScaleGestureListener extends SimpleOnScaleGestureListener {
 

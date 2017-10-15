@@ -126,16 +126,18 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         presentClass = (Spinner) v.findViewById(R.id.presentClassSpinnerProfile);
         stateSpinner = (Spinner) v.findViewById(R.id.stateSpinner);
         districtSpinner = (Spinner) v.findViewById(R.id.districtSpinner);
-        citiesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cities);
-        citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        citiesAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, cities);
+        citiesAdapter.setDropDownViewResource(R.layout.
+                spinner_dropdown_item);
         districtSpinner.setAdapter(citiesAdapter);
-        ArrayAdapter stateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states, android.R.layout.simple_spinner_item);
-        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter stateAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states, R.layout.spinner_item);
+        stateAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         stateSpinner.setAdapter(stateAdapter);
-        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.ClassWithStream, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.ClassWithStream, R.layout.spinner_item);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
         final String[] states = getActivity().getResources().getStringArray(R.array.states);
+
 
         datePickerDialog = new DatePickerDialog(getActivity(), this, 2000, 1, 1);
         database.getReference(firebaseAuth.getCurrentUser().getUid())

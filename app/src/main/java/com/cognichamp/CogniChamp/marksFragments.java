@@ -34,21 +34,48 @@ import java.util.HashMap;
  */
 
 public class marksFragments extends Fragment {
-    Spinner testType;
+    public static HashMap<String, subject> Subjects = new HashMap<>();
+    public static DatabaseReference testRef;
+    public static String[] tests;
     static RecyclerView subjectsList;
+    static FirebaseRecyclerAdapter<subject, subjectHolder> Adapter;
+    Spinner testType;
     Button save,addnewSubject;
     TextView percentage;
     ArrayAdapter testAdapter;
-    public static HashMap<String,subject> Subjects=new HashMap<>();
-
-    static FirebaseRecyclerAdapter<subject,subjectHolder> Adapter;
-
-    public static DatabaseReference testRef;
-
-    public static String[] tests;
-
-
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
+
+    public static void fillHashmap(DatabaseReference ref) {
+        Subjects.clear();
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Subjects.put(dataSnapshot.getKey(), dataSnapshot.getValue(subject.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Subjects.put(dataSnapshot.getKey(), dataSnapshot.getValue(subject.class));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -107,24 +134,26 @@ public class marksFragments extends Fragment {
         });
         return v;
     }
+
     public void setSpinnerAdapter(){
         if(EducationFragment.className.equals("Class-10")||EducationFragment.className.equals("Class-12")) {
-            testAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.testsBoard, android.R.layout.simple_spinner_item);
+            testAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.testsBoard, R.layout.spinner_item);
             testAdapter.notifyDataSetChanged();
             tests=getActivity().getResources().getStringArray(R.array.testsBoard);
-            testAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            testAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             testType.setAdapter(testAdapter);
         }
         else{
-            testAdapter=ArrayAdapter.createFromResource(getActivity(), R.array.testsNormal, android.R.layout.simple_spinner_item);
+            testAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.testsNormal, R.layout.spinner_item);
             testAdapter.notifyDataSetChanged();
             tests=getActivity().getResources().getStringArray(R.array.testsNormal);
-            testAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            testAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             testType.setAdapter(testAdapter);
 
         }
 
     }
+
     public  void setUpRecyclerView(final DatabaseReference ref, final Context ctx)
     {
         fillHashmap(ref);
@@ -216,42 +245,13 @@ public class marksFragments extends Fragment {
         };
         subjectsList.setAdapter(Adapter);
     }
+
     public void saveChanges(DatabaseReference testReference){
 
         testReference.child("subjects").setValue(Subjects);
         testReference.child("percentage").setValue(""+calculatePercentage());
     }
-    public static void fillHashmap(DatabaseReference ref)
-    {
-        Subjects.clear();
-        ref.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Subjects.put(dataSnapshot.getKey(),dataSnapshot.getValue(subject.class));
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Subjects.put(dataSnapshot.getKey(),dataSnapshot.getValue(subject.class));
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
     public float calculatePercentage()
     {
         float marks=Float.parseFloat("0.0");

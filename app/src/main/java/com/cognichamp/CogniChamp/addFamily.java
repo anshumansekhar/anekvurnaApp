@@ -104,8 +104,8 @@ public class addFamily extends AppCompatActivity {
                 .getReference()
                 .child(this.auth.getCurrentUser().getUid())
                 .child("FamilyMemPhotos");
-        this.relationsSpinnerAdapter = ArrayAdapter.createFromResource(this, array.Relation, layout.simple_spinner_dropdown_item);
-        this.relationsSpinnerAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.relationsSpinnerAdapter = ArrayAdapter.createFromResource(this, array.Relation, R.layout.spinner_item);
+        this.relationsSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.relations.setAdapter(this.relationsSpinnerAdapter);
         this.relations.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override

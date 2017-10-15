@@ -26,17 +26,14 @@ import java.util.HashMap;
  */
 
 public class EducationFragment extends Fragment {
+    static String className = "Class-1";
+    static DatabaseReference classRef;
     Spinner selectClass;
     ViewPager pager;
     TabLayout tabLayout;
-
     HashMap<String, subject> map = new HashMap<>();
-
-    static String className = "Class-1";
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    static DatabaseReference classRef;
     String[] classes;
 
     public static EducationFragment newInstance() {
@@ -51,8 +48,8 @@ public class EducationFragment extends Fragment {
         pager = (ViewPager) view.findViewById(R.id.pager);
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
 
-        final ArrayAdapter classAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, android.R.layout.simple_spinner_item);
-        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final ArrayAdapter classAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Class, R.layout.spinner_item);
+        classAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         selectClass.setAdapter(classAdapter);
 
         final pagerAdapter pagerAdapter = new pagerAdapter(getActivity().getSupportFragmentManager());

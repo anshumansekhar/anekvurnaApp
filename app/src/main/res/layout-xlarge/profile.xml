@@ -60,7 +60,6 @@
 
             <Spinner
                 android:id="@+id/districtSpinner"
-                style="@style/mySpinnerItemStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"

@@ -67,15 +67,17 @@ public class EditSchoolDetails extends AppCompatActivity {
         schoolNameEnter=(EditText)findViewById(R.id.schoolnamedit);
         schoolPinCodeEnter=(EditText)findViewById(R.id.schoolPinCodeEdit);
         schoolAddressEnter=(EditText)findViewById(R.id.schoolAddressEdit);
-        stateAdapter=ArrayAdapter.createFromResource(EditSchoolDetails.this,R.array.states,android.R.layout.simple_spinner_item);
-        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        stateAdapter = ArrayAdapter.createFromResource(EditSchoolDetails.this, R.array.states, R.layout.spinner_item);
+        stateAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         chooseState.setAdapter(stateAdapter);
         final String[] states=getResources().getStringArray(R.array.states);
 
         chooseState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getCities(position);
+                if (position != 0) {
+                    getCities(position - 1);
+                }
                 currentState=states[position];
             }
 
@@ -84,14 +86,16 @@ public class EditSchoolDetails extends AppCompatActivity {
                 citiesAdapter.clear();
             }
         });
-        citiesAdapter=new ArrayAdapter<String>(EditSchoolDetails.this,android.R.layout.simple_spinner_item,cities);
-        citiesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        citiesAdapter = new ArrayAdapter<String>(EditSchoolDetails.this, R.layout.spinner_item, cities);
+        citiesAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         chooseCity.setAdapter(citiesAdapter);
 
         chooseCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    getSchools(cities.get(position));
+                    if (position != 0) {
+                        getSchools(cities.get(position - 1));
+                    }
                     currentCity=cities.get(position);
                 }
                 @Override
@@ -99,8 +103,8 @@ public class EditSchoolDetails extends AppCompatActivity {
                     schoolAdapter.clear();
                 }
             });
-        schoolAdapter=new ArrayAdapter<String>(EditSchoolDetails.this,android.R.layout.simple_spinner_item,schoolNames);
-        schoolAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        schoolAdapter = new ArrayAdapter<String>(EditSchoolDetails.this, R.layout.spinner_item, schoolNames);
+        schoolAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         chooseSchool.setAdapter(schoolAdapter);
 
         chooseSchool.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

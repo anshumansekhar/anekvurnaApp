@@ -91,15 +91,15 @@ public class AddVideoActivity extends AppCompatActivity {
         this.buttonsVideoItem = (LinearLayout) this.videoLayout.findViewById(id.buttonsVideoItem);
         this.buttonsVideoItem.setVisibility(View.INVISIBLE);
         this.classList = new ArrayList(Arrays.asList(this.getResources().getStringArray(array.ClassWithStream)));
-        this.classAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.classList);
-        this.classAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.classAdapter = new ArrayAdapter(this, R.layout.spinner_item, this.classList);
+        this.classAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.Class.setAdapter(this.classAdapter);
-        this.subjectAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.subjectsList);
-        this.subjectAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.subjectAdapter = new ArrayAdapter(this, R.layout.spinner_item, this.subjectsList);
+        this.subjectAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.subject.setAdapter(this.subjectAdapter);
 
-        this.topicAdapter = new ArrayAdapter(this, layout.simple_spinner_item, this.topicsList);
-        this.topicAdapter.setDropDownViewResource(layout.simple_spinner_dropdown_item);
+        this.topicAdapter = new ArrayAdapter(this, R.layout.spinner_item, this.topicsList);
+        this.topicAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.topic.setAdapter(this.topicAdapter);
 
         AddVideoActivity.dialog = new ProgressDialog(this);

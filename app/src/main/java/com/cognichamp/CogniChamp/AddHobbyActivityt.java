@@ -183,8 +183,8 @@ public class AddHobbyActivityt extends AppCompatActivity {
         });
 
         ArrayAdapter adapter=ArrayAdapter.createFromResource(AddHobbyActivityt.this
-                ,R.array.hobbyGroup,android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                , R.array.hobbyGroup, R.layout.spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         chooseHobbyGroup=(Spinner)findViewById(R.id.chooseHobbyGroup);
         save=(Button)findViewById(R.id.saveHooby);
         chooseHobbyGroup.setAdapter(adapter);
