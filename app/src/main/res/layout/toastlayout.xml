@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toastContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#DAAA">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toastText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Toast Message"
+        android:textColor="#FFF"
+        android:textSize="@dimen/spinnerHeader" />
+</LinearLayout>

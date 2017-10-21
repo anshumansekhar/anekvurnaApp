@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="EducationTitle" formatted="true">Education</string>
+    <string name="ProfileTitle">Student Profile</string>
+    <string name="VideosTitle">Videos</string>
+    <string name="FavoritesTitle">My Favourites</string>
+    <string name="ContactUSTitle">Contact Us</string>
+    <string name="FamilyTitle">Family</string>
+    <string name="HobbiesTitle">Hobbies</string>
+    <string name="AccoutTitle">Account</string>
+</resources>

@@ -31,7 +31,6 @@
             android:ellipsize="end"
             android:maxEms="8"
             android:text="Video Name"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/videoDuration"
             app:layout_constraintLeft_toRightOf="@+id/videoThumbnail"
             app:layout_constraintTop_toBottomOf="@+id/buttonsVideoItem" />
@@ -62,7 +61,7 @@
         android:layout_height="30dp"
         android:background="@color/cardview_light_background"
         android:contentDescription="ratevideo"
-        app:srcCompat="@drawable/ic_star_black_24dp" />
+        android:src="@drawable/ic_star_black_24dp" />
 
     <ImageButton
         android:id="@+id/favorites"
@@ -77,7 +76,7 @@
         android:layout_height="30dp"
         android:background="@color/cardview_light_background"
         android:contentDescription="videoShare"
-        app:srcCompat="@drawable/ic_menu_share" />
+        android:src="@drawable/ic_menu_share" />
 </LinearLayout>
 
         <TextView

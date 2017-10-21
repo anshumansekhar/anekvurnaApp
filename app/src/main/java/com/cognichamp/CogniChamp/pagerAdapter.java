@@ -16,7 +16,7 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
     Fragment currentFragment;
     marksFragments marksFragments=new marksFragments();
     schoolDetails schoolDetails=new schoolDetails();
-    ReportCardFragment reportCardFragment = new ReportCardFragment();
+    MainReportCard reportCardFragment = new MainReportCard();
     public pagerAdapter(FragmentManager fm) {
         super(fm);
         this.currentFragment = fm.findFragmentById(id.pager);
@@ -62,6 +62,5 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
         this.marksFragments.setUpRecyclerView(ref, ctx);
         this.marksFragments.setSpinnerAdapter();
         this.schoolDetails.update();
-        this.reportCardFragment.update();
     }
 }

@@ -996,5 +996,13 @@ We process this data for the purposes of:\n
     </string-array>
 
     <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
+    <string name="EducationTitle">Education</string>
+    <string name="ProfileTitle">Student Profile</string>
+    <string name="VideosTitle">Videos</string>
+    <string name="FavoritesTitle">My Favourites</string>
+    <string name="ContactUSTitle">Contact Us</string>
+    <string name="FamilyTitle">Family</string>
+    <string name="HobbiesTitle">Hobbies</string>
+    <string name="AccoutTitle">Account</string>
 
 </resources>

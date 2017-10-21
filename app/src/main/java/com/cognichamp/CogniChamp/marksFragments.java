@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.ChildEventListener;
@@ -218,6 +219,8 @@ public class marksFragments extends Fragment {
                     public void afterTextChanged(Editable s) {
                         if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
                            Subjects.get(""+pos).setTotalMarks(Float.parseFloat(s.toString()));
+                        } else if (s.toString().isEmpty() && model.getTotalMarks() != Float.parseFloat("0.0")) {
+                            Subjects.get("" + pos).setTotalMarks(Float.parseFloat("0.0"));
                         }
 
                     }
@@ -237,6 +240,8 @@ public class marksFragments extends Fragment {
                     public void afterTextChanged(Editable s) {
                         if(!s.toString().equals("")&&model.getSubMarks()!=Float.parseFloat(s.toString())){
                             Subjects.get(""+pos).setSubMarks(Float.parseFloat(s.toString()));
+                        } else if (s.toString().isEmpty() && model.getSubMarks() != Float.parseFloat("0.0")) {
+                            Subjects.get("" + pos).setSubMarks(Float.parseFloat("0.0"));
                         }
                     }
                 });
@@ -259,7 +264,29 @@ public class marksFragments extends Fragment {
         for(subject e:Subjects.values())
         {
             marks=marks+e.getSubMarks();
-            totalMarks=totalMarks+e.getTotalMarks();
+            try {
+                if (e.getTotalMarks() == 0.0) {
+                    if (e.getSubMarks() != 0.0) {
+                        throw new Exception("Max Marks can't be Zero ");
+                    }
+                } else if (e.getSubMarks() > e.getTotalMarks()) {
+                    throw new Exception("Max Marks  less than Subject Marks");
+                }
+                totalMarks = totalMarks + e.getTotalMarks();
+            } catch (Exception we) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View layout = inflater.inflate(R.layout.toastlayout,
+                        (ViewGroup) getActivity().findViewById(R.id.toastContainer));
+
+                TextView text = (TextView) layout.findViewById(R.id.toastText);
+                text.setText(we.getMessage());
+
+                Toast toast = new Toast(getActivity());
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
+                toast.show();
+                return new Float(0.0);
+            }
         }
         return (marks/totalMarks)*100;
     }

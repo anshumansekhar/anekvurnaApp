@@ -20,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FavoriteVideosActivity extends Fragment {
     Spinner selectClassVideo;
-    emptyFragment emptyFragment=new emptyFragment();
     Bundle classNameBundle = new Bundle();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -111,6 +110,7 @@ public class FavoriteVideosActivity extends Fragment {
     public void setEmptyFragment(){
         Bundle b = new Bundle();
         b.putBoolean("Video", false);
+        emptyFragment emptyFragment = new emptyFragment();
         emptyFragment.setArguments(b);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.videoFrame, emptyFragment);

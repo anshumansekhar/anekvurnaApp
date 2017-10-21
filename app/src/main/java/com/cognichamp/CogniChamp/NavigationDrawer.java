@@ -85,7 +85,7 @@ public class NavigationDrawer extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.frame_layout, new ProfileFragment());
             selectedFragment = new ProfileFragment();
-            actionBar.setTitle("Student Profile Details");
+            actionBar.setTitle(R.string.ProfileTitle);
             transaction.commit();
         }else {
             previousFragment = fg.getStringExtra("PreviousFrag");
@@ -95,7 +95,7 @@ public class NavigationDrawer extends AppCompatActivity
             else{
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_layout, new AnotherActivity());
-                actionBar.setTitle("Videos");
+                actionBar.setTitle(R.string.VideosTitle);
                 transaction.commit();
             }
         }
@@ -192,7 +192,7 @@ public class NavigationDrawer extends AppCompatActivity
                 itemWER.setVisible(true);
                 selectedFragment = ProfileFragment.newInstance();
                 floatingActionButton.hide();
-                actionBar.setTitle("Student Profile");
+                actionBar.setTitle(R.string.ProfileTitle);
                 break;
             case R.id.nav_hobby:
                 itemWER.setVisible(false);
@@ -201,20 +201,20 @@ public class NavigationDrawer extends AppCompatActivity
                 floatingActionButton.setOnClickListener(hobbiesFragment.listener);
                 floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
                 selectedFragment = hobbiesFragment;
-                actionBar.setTitle("Hobbies");
+                actionBar.setTitle(R.string.HobbiesTitle);
                 break;
             case R.id.presentClassVideos:
                 closeOptionsMenu();
                 itemWER.setVisible(false);
                 selectedFragment = new AnotherActivity();
                 floatingActionButton.hide();
-                actionBar.setTitle("Videos");
+                actionBar.setTitle(R.string.VideosTitle);
                 break;
             case R.id.favoritesVideos:
                 closeOptionsMenu();
                 itemWER.setVisible(false);
                 selectedFragment = new FavoriteVideosActivity();
-                actionBar.setTitle("My Favourites");
+                actionBar.setTitle(R.string.FavoritesTitle);
                 floatingActionButton.hide();
                 break;
             case R.id.EducationDetails:
@@ -222,13 +222,13 @@ public class NavigationDrawer extends AppCompatActivity
                 EducationFragment educationFragment=EducationFragment.newInstance();
                 floatingActionButton.hide();
                 selectedFragment = educationFragment;
-                actionBar.setTitle("Education");
+                actionBar.setTitle(R.string.EducationTitle);
                 break;
             case R.id.rateUs:
                 closeOptionsMenu();
                 itemWER.setVisible(false);
                 selectedFragment = loadRateFragment();
-                actionBar.setTitle("Contact us");
+                actionBar.setTitle(R.string.ContactUSTitle);
                 floatingActionButton.hide();
                 break;
             case R.id.nav_family:
@@ -238,14 +238,14 @@ public class NavigationDrawer extends AppCompatActivity
                 floatingActionButton.setOnClickListener(fragment.listener());
                 floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
                 selectedFragment = fragment;
-                actionBar.setTitle("Family");
+                actionBar.setTitle(R.string.FamilyTitle);
                 break;
             case R.id.nav_account:
                 closeOptionsMenu();
                 itemWER.setVisible(false);
                 selectedFragment = AccountFragment.newInstance();
                 floatingActionButton.hide();
-                actionBar.setTitle("Account");
+                actionBar.setTitle(R.string.AccoutTitle);
                 break;
 
         }
@@ -283,28 +283,28 @@ public class NavigationDrawer extends AppCompatActivity
             floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
             floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
             floatingActionButton.show();
-            actionBar.setTitle("Hobbies");
+            actionBar.setTitle(R.string.HobbiesTitle);
         }
         else if(previousFrag.equals("addFamily")){
             transaction.replace(R.id.frame_layout, new FamilyFragment());
             floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
             floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
             floatingActionButton.show();
-            actionBar.setTitle("Family");
+            actionBar.setTitle(R.string.FamilyTitle);
         }
         else if(previousFrag.equals("addSubject")){
             transaction.replace(R.id.frame_layout, new EducationFragment());
-            actionBar.setTitle("Education");
+            actionBar.setTitle(R.string.EducationTitle);
         }
         else if(previousFrag.equals("addSchool")){
             transaction.replace(R.id.frame_layout, new EducationFragment());
-            actionBar.setTitle("Education");
-        }
-        else if(previousFrag.equals("account")){
+            actionBar.setTitle(R.string.EducationTitle);
+        } else if (previousFrag.equals(R.string.AccoutTitle)) {
             transaction.replace(R.id.frame_layout, new AccountFragment());
         } else if (previousFrag.equals("FullScreen")) {
             transaction.replace(R.id.frame_layout, new EducationFragment());
-            actionBar.setTitle("Education");
+            actionBar.setTitle(R.string.EducationTitle);
+
         }
         transaction.commit();
     }

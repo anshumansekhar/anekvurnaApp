@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="20dp">
 
     <android.support.design.widget.TextInputLayout
@@ -14,15 +14,16 @@
         android:layout_height="wrap_content"
         app:counterEnabled="true"
         app:counterMaxLength="10"
-        app:errorEnabled="true">
+        app:errorEnabled="true"
+        app:hintTextAppearance="@style/TextLabel">
 
         <EditText
             android:id="@+id/mobileLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="phone"
             android:hint="Mobile Number"
+            android:inputType="phone"
             android:maxLength="10" />
 
     </android.support.design.widget.TextInputLayout>
@@ -31,36 +32,38 @@
         android:id="@+id/textView18"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OR"
         android:layout_margin="20dp"
+        android:text="OR"
         android:textAlignment="center"
         android:textSize="20sp" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:errorEnabled="true"
-        android:layout_height="wrap_content">
+        app:hintTextAppearance="@style/TextLabel">
 
         <EditText
             android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="Email" />
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:passwordToggleEnabled="true"
-        app:errorEnabled="true">
+        app:errorEnabled="true"
+        app:hintTextAppearance="@style/TextLabel"
+        app:passwordToggleEnabled="true">
 
         <EditText
             android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="Password" />
+            android:hint="Password"
+            android:inputType="textPassword" />
 
         <TextView
             android:id="@+id/ForgotPasswordLogin"

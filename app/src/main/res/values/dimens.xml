@@ -8,4 +8,9 @@
     <dimen name="spinnerHeader">20sp</dimen>
     <dimen name="largeTextSize">40sp</dimen>
     <dimen name="subjectCardSizeWidth">160dp</dimen>
+    <dimen name="actionBarTextSize">20sp</dimen>
+
+
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
 </resources>

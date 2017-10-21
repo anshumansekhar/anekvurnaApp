@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             app:counterEnabled="true"
             app:counterMaxLength="10"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            app:hintTextAppearance="@style/TextLabel">
 
             <EditText
                 android:id="@+id/mobileLogin"
@@ -43,7 +44,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            app:hintTextAppearance="@style/TextLabel">
 
             <EditText
                 android:id="@+id/emailLogin"
@@ -59,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:errorEnabled="true"
+            app:hintTextAppearance="@style/TextLabel"
             app:passwordToggleEnabled="true">
 
             <EditText
