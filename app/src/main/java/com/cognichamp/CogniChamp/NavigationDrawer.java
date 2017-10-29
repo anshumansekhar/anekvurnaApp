@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -261,7 +262,7 @@ public class NavigationDrawer extends AppCompatActivity
         //TODO change the link
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite Your Friends")
                 .setEmailSubject("Invitation to Join " + getResources().getString(R.string.app_name))
-                .setMessage("I am using this awesome App.Join this to take advantage of cognitive learning for your child.")
+                .setMessage("I am using this awesome App. Join this to take advantage of cognitive learning for your child. ")
                 .setEmailHtmlContent("http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp")
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
@@ -271,8 +272,9 @@ public class NavigationDrawer extends AppCompatActivity
         //TODO change the link
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp");
-        share.putExtra(Intent.EXTRA_SUBJECT, "I am using this awesome App. You must also join this to take advantage of cognitive learning for your child");
+        share.putExtra(Intent.EXTRA_TEXT, "I am using this awesome App. You must also join this to take advantage of cognitive learning for your child\n"
+                + "http://play.google.com/store/apps/details?id=com.cognichamp.CogniChamp");
+        share.putExtra(Intent.EXTRA_SUBJECT, "Invitation ");
         startActivity(Intent.createChooser(share, "Share The App Link"));
     }
     public void getPreviousFragment(String previousFrag){
@@ -284,16 +286,29 @@ public class NavigationDrawer extends AppCompatActivity
             floatingActionButton.setImageResource(R.drawable.ic_playlist_add_black_24dp);
             floatingActionButton.show();
             actionBar.setTitle(R.string.HobbiesTitle);
+        } else if (previousFrag.equals("account")) {
+            transaction.replace(R.id.frame_layout, new AccountFragment());
+            floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
+            floatingActionButton.hide();
+            actionBar.setTitle(R.string.AccoutTitle);
+
         }
         else if(previousFrag.equals("addFamily")){
-            transaction.replace(R.id.frame_layout, new FamilyFragment());
+            FamilyFragment familyFragment = new FamilyFragment();
+            transaction.replace(R.id.frame_layout, familyFragment);
             floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
-            floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
             floatingActionButton.show();
+            Log.e("dgs", "" + floatingActionButton.isShown());
+            floatingActionButton.setOnClickListener(familyFragment.listener());
+            floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+
             actionBar.setTitle(R.string.FamilyTitle);
         }
         else if(previousFrag.equals("addSubject")){
             transaction.replace(R.id.frame_layout, new EducationFragment());
+            floatingActionButton = (FloatingActionButton) findViewById(R.id.FloatingActionButton);
+            floatingActionButton.setImageResource(R.drawable.ic_person_add_black_24dp);
+            floatingActionButton.hide();
             actionBar.setTitle(R.string.EducationTitle);
         }
         else if(previousFrag.equals("addSchool")){

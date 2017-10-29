@@ -22,9 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class AnotherActivity extends Fragment {
     Spinner selectClassVideo;
-    emptyFragment emptyFragment = new emptyFragment();
+
 
     Bundle classNameBundle = new Bundle();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -38,6 +41,7 @@ public class AnotherActivity extends Fragment {
         View v = inflater.inflate(R.layout.activity_another, container, false);
         this.selectClassVideo = (Spinner) v.findViewById(id.selectClassVideo);
         ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(this.getActivity(), array.ClassWithStream, R.layout.spinner_item);
+        final ArrayList classess = new ArrayList(Arrays.asList(getActivity().getResources().getStringArray(array.ClassWithStream)));
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.selectClassVideo.setAdapter(arrayAdapter);
         this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
@@ -48,35 +52,35 @@ public class AnotherActivity extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             AnotherActivity.this.className = dataSnapshot.getValue().toString();
-                            AnotherActivity.this.selectClassVideo.setSelection(Integer.valueOf(AnotherActivity.this.className));
-                            if (AnotherActivity.this.className.equals("11")) {
-                                AnotherActivity.this.className = "Class-" + AnotherActivity.this.className + "(Arts)";
-                            } else if (AnotherActivity.this.className.equals("0")) {
-                                AnotherActivity.this.className = "Age (0-1) yrs";
-                            } else if (AnotherActivity.this.className.equals("1")) {
-                                AnotherActivity.this.className = "Age (1-2) yrs";
-                            } else if (AnotherActivity.this.className.equals("2")) {
-                                AnotherActivity.this.className = "Age (2-3) yrs";
-                            } else if (AnotherActivity.this.className.equals("3")) {
-                                AnotherActivity.this.className = "Age (3-4) yrs";
-                            } else if (AnotherActivity.this.className.equals("4")) {
-                                AnotherActivity.this.className = "Age (4-5) yrs";
-                            } else if (AnotherActivity.this.className.equals("5")) {
-                                AnotherActivity.this.className = "Age (5-6) yrs";
-                            } else if (AnotherActivity.this.className.equals("12")) {
-                                AnotherActivity.this.className = "Class-" + "11" + "(Commerce)";
-                            } else if (AnotherActivity.this.className.equals("13")) {
-                                AnotherActivity.this.className = "Class-" + "11" + "(Science)";
-                            } else if (AnotherActivity.this.className.equals("14")) {
-                                AnotherActivity.this.className = "Class-" + "12" + "(Arts)";
-                            } else if (AnotherActivity.this.className.equals("15")) {
-                                AnotherActivity.this.className = "Class-" + "12" + "(Commerce)";
-                            } else if (AnotherActivity.this.className.equals("16")) {
-                                AnotherActivity.this.className = "Class-" + "12" + "(Science)";
-                            }
-                            else{
-                                AnotherActivity.this.className = "Class-" + (Integer.valueOf(AnotherActivity.this.className) - 6);
-                            }
+                            AnotherActivity.this.selectClassVideo.setSelection(classess.indexOf(className));
+//                            if (AnotherActivity.this.className.equals("11")) {
+//                                AnotherActivity.this.className = "Class-" + AnotherActivity.this.className + "(Arts)";
+//                            } else if (AnotherActivity.this.className.equals("0")) {
+//                                AnotherActivity.this.className = "Age (0-1) yrs";
+//                            } else if (AnotherActivity.this.className.equals("1")) {
+//                                AnotherActivity.this.className = "Age (1-2) yrs";
+//                            } else if (AnotherActivity.this.className.equals("2")) {
+//                                AnotherActivity.this.className = "Age (2-3) yrs";
+//                            } else if (AnotherActivity.this.className.equals("3")) {
+//                                AnotherActivity.this.className = "Age (3-4) yrs";
+//                            } else if (AnotherActivity.this.className.equals("4")) {
+//                                AnotherActivity.this.className = "Age (4-5) yrs";
+//                            } else if (AnotherActivity.this.className.equals("5")) {
+//                                AnotherActivity.this.className = "Age (5-6) yrs";
+//                            } else if (AnotherActivity.this.className.equals("12")) {
+//                                AnotherActivity.this.className = "Class-" + "11" + "(Commerce)";
+//                            } else if (AnotherActivity.this.className.equals("13")) {
+//                                AnotherActivity.this.className = "Class-" + "11" + "(Science)";
+//                            } else if (AnotherActivity.this.className.equals("14")) {
+//                                AnotherActivity.this.className = "Class-" + "12" + "(Arts)";
+//                            } else if (AnotherActivity.this.className.equals("15")) {
+//                                AnotherActivity.this.className = "Class-" + "12" + "(Commerce)";
+//                            } else if (AnotherActivity.this.className.equals("16")) {
+//                                AnotherActivity.this.className = "Class-" + "12" + "(Science)";
+//                            }
+//                            else{
+//                                AnotherActivity.this.className = "Class-" + (Integer.valueOf(AnotherActivity.this.className) - 6);
+//                            }
                             AnotherActivity.this.classNameBundle.putString("ClassNumber", AnotherActivity.this.className);
                             AnotherActivity.this.classNameBundle.putString("where", "ClassDetails");
                             subjectListFragment subjectListFragment = new subjectListFragment();
@@ -154,6 +158,7 @@ public class AnotherActivity extends Fragment {
     public void setEmptyFragment() {
         Bundle b = new Bundle();
         b.putBoolean("Video", true);
+        emptyFragment emptyFragment = new emptyFragment();
         emptyFragment.setArguments(b);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.videoFrame, emptyFragment);

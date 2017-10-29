@@ -205,33 +205,33 @@ public class AddVideoActivity extends AppCompatActivity {
                                 AddVideoActivity.this.subjectsList.clear();
                                 AddVideoActivity.this.subjectAdapter.clear();
                                 AddVideoActivity.this.className = dataSnapshot.getValue().toString();
-                                if (AddVideoActivity.this.className.equals("11")) {
-                                    AddVideoActivity.this.className = "Class-" + AddVideoActivity.this.className + "(Arts)";
-                                } else if (AddVideoActivity.this.className.equals("0")) {
-                                    AddVideoActivity.this.className = "Age (0-1) yrs";
-                                } else if (AddVideoActivity.this.className.equals("1")) {
-                                    AddVideoActivity.this.className = "Age (1-2) yrs";
-                                } else if (AddVideoActivity.this.className.equals("2")) {
-                                    AddVideoActivity.this.className = "Age (2-3) yrs";
-                                } else if (AddVideoActivity.this.className.equals("3")) {
-                                    AddVideoActivity.this.className = "Age (3-4) yrs";
-                                } else if (AddVideoActivity.this.className.equals("4")) {
-                                    AddVideoActivity.this.className = "Age (4-5) yrs";
-                                } else if (AddVideoActivity.this.className.equals("5")) {
-                                    AddVideoActivity.this.className = "Age (5-6) yrs";
-                                } else if (AddVideoActivity.this.className.equals("12")) {
-                                    AddVideoActivity.this.className = "Class-" + "11" + "(Commerce)";
-                                } else if (AddVideoActivity.this.className.equals("13")) {
-                                    AddVideoActivity.this.className = "Class-" + "11" + "(Science)";
-                                } else if (AddVideoActivity.this.className.equals("14")) {
-                                    AddVideoActivity.this.className = "Class-" + "12" + "(Arts)";
-                                } else if (AddVideoActivity.this.className.equals("15")) {
-                                    AddVideoActivity.this.className = "Class-" + "12" + "(Commerce)";
-                                } else if (AddVideoActivity.this.className.equals("16")) {
-                                    AddVideoActivity.this.className = "Class-" + "12" + "(Science)";
-                                } else {
-                                    AddVideoActivity.this.className = "Class-" + (Integer.valueOf(AddVideoActivity.this.className) - 6);
-                                }
+//                                if (AddVideoActivity.this.className.equals("11")) {
+//                                    AddVideoActivity.this.className = "Class-" + AddVideoActivity.this.className + "(Arts)";
+//                                } else if (AddVideoActivity.this.className.equals("0")) {
+//                                    AddVideoActivity.this.className = "Age (0-1) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("1")) {
+//                                    AddVideoActivity.this.className = "Age (1-2) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("2")) {
+//                                    AddVideoActivity.this.className = "Age (2-3) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("3")) {
+//                                    AddVideoActivity.this.className = "Age (3-4) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("4")) {
+//                                    AddVideoActivity.this.className = "Age (4-5) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("5")) {
+//                                    AddVideoActivity.this.className = "Age (5-6) yrs";
+//                                } else if (AddVideoActivity.this.className.equals("12")) {
+//                                    AddVideoActivity.this.className = "Class-" + "11" + "(Commerce)";
+//                                } else if (AddVideoActivity.this.className.equals("13")) {
+//                                    AddVideoActivity.this.className = "Class-" + "11" + "(Science)";
+//                                } else if (AddVideoActivity.this.className.equals("14")) {
+//                                    AddVideoActivity.this.className = "Class-" + "12" + "(Arts)";
+//                                } else if (AddVideoActivity.this.className.equals("15")) {
+//                                    AddVideoActivity.this.className = "Class-" + "12" + "(Commerce)";
+//                                } else if (AddVideoActivity.this.className.equals("16")) {
+//                                    AddVideoActivity.this.className = "Class-" + "12" + "(Science)";
+//                                } else {
+//                                    AddVideoActivity.this.className = "Class-" + (Integer.valueOf(AddVideoActivity.this.className) - 6);
+//                                }
                                 AddVideoActivity.this.Class.setSelection(AddVideoActivity.this.classList.indexOf(AddVideoActivity.this.className));
                                 AddVideoActivity.this.getSubjects(AddVideoActivity.this.className);
                             }
@@ -327,7 +327,6 @@ public class AddVideoActivity extends AppCompatActivity {
         this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
                 .child(this.className)
-                .child("tests")
                 .child("subjects")
                 .child(this.subjectName)
                 .setValue(new subjectItem(this.subjectName));
@@ -335,7 +334,6 @@ public class AddVideoActivity extends AppCompatActivity {
             this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
                     .child(this.className)
-                    .child("tests")
                     .child("topics")
                     .child(this.subjectName)
                     .child("videos")
@@ -345,7 +343,6 @@ public class AddVideoActivity extends AppCompatActivity {
             this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                     .child("Favorites")
                     .child(this.className)
-                    .child("tests")
                     .child("topics")
                     .child(this.subjectName)
                     .push()
@@ -354,7 +351,6 @@ public class AddVideoActivity extends AppCompatActivity {
         this.database.getReference(this.firebaseAuth.getCurrentUser().getUid())
                 .child("Favorites")
                 .child(this.className)
-                .child("tests")
                 .child("videos")
                 .child(this.subjectName)
                 .child(this.topicName)
@@ -369,35 +365,25 @@ public class AddVideoActivity extends AppCompatActivity {
 
     }
 
-    public void getSubjects(String Class) {
+    public void getSubjects(final String Class) {
         if(!Class.contains("Age")) {
             this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child("ClassDetails")
                     .child(Class)
-                    .child("tests")
                     .child("subjects")
-                    .addChildEventListener(new ChildEventListener() {
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            AddVideoActivity.dialog.hide();
-                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
-                        }
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                                    subjectsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                    AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+                                    AddVideoActivity.dialog.hide();
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            AddVideoActivity.dialog.hide();
-                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                }
+                            } else {
+                                addItems(Class);
+                            }
 
                         }
 
@@ -406,32 +392,51 @@ public class AddVideoActivity extends AppCompatActivity {
 
                         }
                     });
+//                    .addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.dialog.hide();
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.dialog.hide();
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
         }
         else{
             this.database.getReference("Subjects")
                     .child(Class)
-                    .addChildEventListener(new ChildEventListener() {
+                    .addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            AddVideoActivity.dialog.hide();
-                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
-                        }
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                                    subjectsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                    AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+                                    AddVideoActivity.dialog.hide();
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                            AddVideoActivity.dialog.hide();
-                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                }
+                            }
 
                         }
 
@@ -440,6 +445,36 @@ public class AddVideoActivity extends AppCompatActivity {
 
                         }
                     });
+//                    .addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.dialog.hide();
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                            AddVideoActivity.this.subjectsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.dialog.hide();
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
         }
 
     }
@@ -448,25 +483,16 @@ public class AddVideoActivity extends AppCompatActivity {
                 .child(this.className)
                 .child(subName)
                 .child("topics")
-                .addChildEventListener(new ChildEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
-                    }
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
-                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
-                    }
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+                                topicsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            }
+                        }
 
                     }
 
@@ -475,6 +501,33 @@ public class AddVideoActivity extends AppCompatActivity {
 
                     }
                 });
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
+//                    }
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                        AddVideoActivity.this.topicsList.add(dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                        AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
 
     }
     public  void setUpVideoItem(video v){
@@ -494,5 +547,20 @@ public class AddVideoActivity extends AppCompatActivity {
     public void getAgeTopics(){
         this.topicsList.add("videos");
         this.topicAdapter.notifyDataSetChanged();
+    }
+
+    public void addItems(String Class) {
+        this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("ClassDetails")
+                .child(Class)
+                .child("subjects")
+                .child("0")
+                .setValue(new subjectItem("English"));
+        this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("ClassDetails")
+                .child(Class)
+                .child("subjects")
+                .child("1")
+                .setValue(new subjectItem("Maths"));
     }
 }

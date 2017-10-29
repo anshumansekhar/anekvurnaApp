@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.profile_details,container,false);
+        View v = inflater.inflate(R.layout.profile_detailsss, container, false);
         profileImage = (ImageView) v.findViewById(R.id.profileImage);
         name = (EditText) v.findViewById(R.id.nameProfile);
         birthDate = (EditText) v.findViewById(R.id.birthdateEdit);
@@ -137,6 +138,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         presentClass.setAdapter(arrayAdapter);
         final String[] states = getActivity().getResources().getStringArray(R.array.states);
+        final ArrayList<String> classes = new ArrayList<>(Arrays.asList(getActivity().getResources().getStringArray(R.array.ClassWithStream)));
 
 
         datePickerDialog = new DatePickerDialog(getActivity(), this, 2000, 1, 1);
@@ -166,17 +168,18 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                             male.setChecked(false);
                             female.setChecked(true);
                         }
-
-                        presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
+                        //TODO get the class
+                        presentClass.setSelection(classes.indexOf(user_profile.getPresentClass()));
+                        //presentClass.setSelection(Integer.valueOf(user_profile.getPresentClass()));
                         int indexState = Arrays.asList(states).indexOf(user_profile.getState());
                         stateSpinner.setSelection(indexState);
                         presentClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 if (user_profile != null) {
-                                    if (Integer.valueOf(user_profile.getPresentClass()) != position) {
+                                    if (!user_profile.getPresentClass().equals(classes.get(position))) {
                                         isChanged = true;
-                                        user_profile.setPresentClass("" + position);
+                                        user_profile.setPresentClass(classes.get(position));
                                     }
                                 }
                             }
@@ -405,14 +408,16 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     }
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        if (year < myCalendar.get(Calendar.YEAR)) {
+        Log.e("yesr", "" + year);
+        if (year < Calendar.getInstance().get(Calendar.YEAR)) {
             birthDate.setError(null);
+            Log.e("insideyesr", "" + year);
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             birthDate.setText(sdf.format(myCalendar.getTime()));
-        }
-        else{
+        } else if (year >= Calendar.getInstance().get(Calendar.YEAR)) {
+            Log.e("nonoono", "" + Calendar.getInstance().get(Calendar.YEAR));
             birthDate.setError("Enter a Valid Date of Birth");
             datePickerDialog.show();
         }

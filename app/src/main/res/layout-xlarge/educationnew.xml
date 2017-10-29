@@ -17,14 +17,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select a Class"
+            android:text="Select Class"
             android:textSize="@dimen/largeTextSize" />
 
         <Spinner
             android:id="@+id/selectClassEducation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_weight="1"
+            android:gravity="end"
             android:textAlignment="textEnd"
             android:textSize="@dimen/largeTextSize" />
     </LinearLayout>

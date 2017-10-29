@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +63,7 @@ public class schoolDetails extends Fragment {
         return v;
     }
     public  void update(){
-        if (isAdded()) {
-            DatabaseReference schoolDetail = firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
+        final DatabaseReference schoolDetail = firebaseDatabase.getReference(firebaseAuth.getCurrentUser().getUid())
                     .child("SchoolDetails")
                     .child(EducationFragment.className);
             schoolDetail.addValueEventListener(new ValueEventListener() {
@@ -76,10 +76,12 @@ public class schoolDetails extends Fragment {
                         schoolPinCode.setText("Pin:-" + schoolObject.getSchoolPin());
                         schoolAddress.setText("At:-" + schoolObject.getSchoolAddress());
                         schoolState.setText(schoolObject.getSchoolState());
-
-                        Glide.with(getActivity())
-                                .load(schoolObject.getSchoolLogo())
-                                .into(schoolLogo);
+                        Log.e("shx", "" + isAdded());
+                        if (isAdded()) {
+                            Glide.with(schoolDetails.this)
+                                    .load(schoolObject.getSchoolLogo())
+                                    .into(schoolLogo);
+                        }
 
                     } else {
                         schoolLogo.setVisibility(View.GONE);
@@ -105,7 +107,4 @@ public class schoolDetails extends Fragment {
                 }
             });
         }
-
-
-    }
 }

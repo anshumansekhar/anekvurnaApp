@@ -79,6 +79,7 @@
         <item>Tabla</item>
         <item>Harmonium</item>
     </string-array>
+    <integer name="emsSize">10</integer>
     <string-array name="IndoorGames">
         <item>Chess</item>
         <item>Table Tennis</item>
@@ -115,7 +116,7 @@
     </string-array>
 
     <string name="feedback">Kindly mail in your queries/ feedback/ suggestions to  <u> contact@cognichamp.com </u>\nOur representative will get in touch with you within 2 working days.\n
-        \nTeam CogniChamp</string>
+        </string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -175,24 +176,97 @@ We process this data for the purposes of:\n
         <item>Commerce</item>
         <item>Science</item>
     </string-array>
+    <string name="emsSize">
+        14
+    </string>
+    <string name="website">
+Visit us at<u> www.cognichamp.com</u></string>
     <string-array name="Subjects">
-        <item>Hindi</item>
-        <item>Maths</item>
-        <item>English</item>
-        <item>Social Science</item>
-        <item>History</item>
-        <item>Political Science</item>
-        <item>Geography</item>
-        <item>Physics</item>
-        <item>Chemistry</item>
-        <item>General Science</item>
-        <item>Computer Science</item>
-        <item>Information Technology</item>
-        <item>Accountancy</item>
+        <item>Arabic</item>
+        <item>Assamese</item>
+        <item>Automobile Technology</item>
+        <item>Bahasa Melayu</item>
+        <item>Banking  Insurance</item>
+        <item>Beauty and Wellness</item>
+        <item>Bengali</item>
+        <item>Bhutia</item>
+        <item>Biology</item>
+        <item>Bodo</item>
         <item>Business Studies</item>
+        <item>Carnatic Music (Melodic Instruments)</item>
+        <item>Carnatic Music (Percussion Instruments)</item>
+        <item>Carnatic Music (Vocal)</item>
+        <item>Chemistry</item>
+        <item>Computer Science</item>
+        <item>Dynamics of Retailing</item>
         <item>Economics</item>
-        <item>Disaster Management</item>
-        <item>Sanskrit</item>
+        <item>Elements of Book Keeping and Accountancy</item>
+        <item>Elements of Business</item>
+        <item>English</item>
+        <item>English Communicative</item>
+        <item>English Language and Literatur</item>
+        <item>Environmental Studies</item>
+        <item>e-Publishing and e-Office (English)</item>
+        <item>e-Publishing and e-Office (Hindi)</item>
+        <item>Food Production</item>
+        <item>Foundation of Information Technology</item>
+        <item>French</item>
+        <item>Front Office Operations</item>
+        <item>German</item>
+        <item>Gujarati</item>
+        <item>Gurung</item>
+        <item>Healthcare (General Duty Assistant)</item>
+        <item>Hindi</item>
+        <item>Hindi Course - A</item>
+        <item>Hindi Course - B</item>
+        <item>Hindustani Music (Instruments Melodic)</item>
+        <item>Hindustani Music (Percussion Instruments)</item>
+        <item>Hindustani Music (Vocal)</item>
+        <item>Home Science</item>
+        <item>Information and Communication Technology (ICT)</item>
+        <item>Information Technology</item>
+        <item>Introduction t Tourism</item>
+        <item>Introduction to Financial Market</item>
+        <item>Introductory Agriculture</item>
+        <item>Japanese</item>
+        <item>Kannada </item>
+        <item>Kashmiri </item>
+        <item>Lepcha </item>
+        <item>Limb </item>
+        <item>Malayalam </item>
+        <item>Manipuri </item>
+        <item>Marathi </item>
+        <item>Marketing and Sales </item>
+        <item>Mathematics </item>
+        <item>Mizo </item>
+        <item>National Cadet Corps </item>
+        <item>Nepali </item>
+        <item>Odia </item>
+        <item>Painting </item>
+        <item>Persian </item>
+        <item>Physical Education </item>
+        <item>Physics </item>
+        <item>Punjabi </item>
+        <item>Rai </item>
+        <item>Retailing </item>
+        <item>Russian </item>
+        <item>Sanskrit </item>
+        <item>Science </item>
+        <item>Security </item>
+        <item>Sherpa </item>
+        <item>Sindhi </item>
+        <item>Social Science </item>
+        <item>Spanish </item>
+        <item>Tamang </item>
+        <item>Tamil </item>
+        <item>Tangkhul </item>
+        <item>Telugu </item>
+        <item>Telugu – Telangana </item>
+        <item>Thai </item>
+        <item>Tibetan </item>
+        <item>Urdu </item>
+        <item>Urdu Course – A </item>
+        <item>Urdu Course – B</item>
     </string-array>
     <string-array name="states">
         <item>Choose a State</item>
@@ -202,7 +276,7 @@ We process this data for the purposes of:\n
         <item>Assam</item>
         <item>Bihar</item>
         <item>Chandigarh</item>
-        <item>Chattishgarh</item>
+        <item>Chattisgarh</item>
         <item>Dadra and Nagar Haveli</item>
         <item>Daman and Diu</item>
         <item>Delhi</item>
@@ -213,7 +287,7 @@ We process this data for the purposes of:\n
         <item>Jammu and Kashmir</item>
         <item>Jharkhand</item>
         <item>Karnataka</item>
-        <item>Kerela</item>
+        <item>Kerala</item>
         <item>Lakshadweep</item>
         <item>Madhya Pradesh</item>
         <item>Maharastra</item>
@@ -234,15 +308,19 @@ We process this data for the purposes of:\n
         <item>West Bengal</item>
     </string-array>
     <string-array name="testsBoard">
-        <item>UnitTest</item>
-        <item>CycleTest</item>
+        <item>UnitTest-1</item>
+        <item>UnitTest-2</item>
+        <item>CycleTest-1</item>
+        <item>CycleTest-2</item>
         <item>HalfYearly</item>
-        <item>Pre-Boards</item>
-        <item>Boards</item>
+        <item>Pre-Board</item>
+        <item>Board</item>
     </string-array>
     <string-array name="testsNormal">
-        <item>UnitTest</item>
-        <item>CycleTest</item>
+        <item>UnitTest-1</item>
+        <item>UnitTest-2</item>
+        <item>CycleTest-1</item>
+        <item>CycleTest-2</item>
         <item>HalfYearly</item>
         <item>Yearly</item>
     </string-array>

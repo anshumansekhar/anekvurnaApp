@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="emsSize">8</integer>
     <string name="EducationTitle" formatted="true">Education</string>
     <string name="ProfileTitle">Student Profile</string>
     <string name="VideosTitle">Videos</string>

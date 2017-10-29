@@ -93,6 +93,19 @@ public class marksFragments extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 testRef=EducationFragment.classRef.child("tests").child(tests[position]);
+                testRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.exists()) {
+                            testRef.setValue(new subjects());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 setUpRecyclerView(EducationFragment.classRef.child("tests").child(tests[position]).child("subjects"),getActivity());
                 EducationFragment.classRef.child("tests").child(tests[position]).child("percentage")
                         .addValueEventListener(new ValueEventListener() {

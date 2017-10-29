@@ -65,7 +65,6 @@ public class TopicListFragment extends Fragment {
                     .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child(this.where)
                     .child(className)
-                    .child("tests")
                     .child("topics")
                     .child(subName);
         }

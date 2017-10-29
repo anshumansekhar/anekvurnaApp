@@ -58,7 +58,6 @@ public class subjectListFragment extends Fragment {
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                .child(this.where)
                .child(this.className)
-               .child("tests")
                 .child("subjects")
        .addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
@@ -70,7 +69,6 @@ public class subjectListFragment extends Fragment {
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(subjectListFragment.this.where)
                                    .child(subjectListFragment.this.className)
-                                   .child("tests")
                                    .child("subjects")
                                    .child("0")
                                    .setValue(new subjectItem("English"));
@@ -78,7 +76,6 @@ public class subjectListFragment extends Fragment {
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(subjectListFragment.this.where)
                                    .child(subjectListFragment.this.className)
-                                   .child("tests")
                                    .child("subjects")
                                    .child("1")
                                    .setValue(new subjectItem("Maths"));
@@ -162,7 +159,6 @@ public class subjectListFragment extends Fragment {
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child(this.where)
                 .child(name)
-                .child("tests")
                 .child("subjects");
         this.recyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
                 (subjectItem.class

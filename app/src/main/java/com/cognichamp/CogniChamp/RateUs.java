@@ -2,6 +2,7 @@ package com.cognichamp.CogniChamp;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -91,10 +92,34 @@ public class RateUs {
         b2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
+                Editor editor = prefs.edit();
+                editor.putLong("launch_count", 0);
                 dialog.dismiss();
             }
         });
         ll.addView(b2);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
+                Editor editor = prefs.edit();
+                editor.putLong("launch_count", 0);
+                dialog.dismiss();
+
+            }
+        });
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
+                Editor editor = prefs.edit();
+                editor.putLong("launch_count", 0);
+                dialog.dismiss();
+            }
+        });
 
         // Third Button
         dialog.setContentView(ll);

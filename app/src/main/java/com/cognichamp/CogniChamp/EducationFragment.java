@@ -65,8 +65,7 @@ public class EducationFragment extends Fragment {
                 if(!className.contains("Class-12") && !className.contains("Class-10")) {
                     classRef = database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
-                            .child(className)
-                    .child("tests");
+                            .child(className);
                     classRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,9 +75,10 @@ public class EducationFragment extends Fragment {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists()) {
-                                                    pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"), getActivity());
                                                 }else {
-                                                    addSubjects();
+                                                    // addSubjectswith(12);
+                                                    addItems();
                                                 }
                                             }
 
@@ -89,7 +89,8 @@ public class EducationFragment extends Fragment {
                                         });
                             }
                             else {
-                                addSubjects();
+                                //addSubjectswith(12);
+                                addItems();
                             }
                         }
                         @Override
@@ -101,8 +102,7 @@ public class EducationFragment extends Fragment {
                 else if(className.equals("Class-10") ){
                     classRef=database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
-                            .child(className)
-                    .child("tests");
+                            .child(className);
                     classRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -112,9 +112,10 @@ public class EducationFragment extends Fragment {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists()) {
-                                                    pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"), getActivity());
                                                 }else {
-                                                    addSubjectswith(10);
+                                                    addSubjectswith(12);
+                                                    addItems();
                                                 }
                                             }
                                             @Override
@@ -124,7 +125,8 @@ public class EducationFragment extends Fragment {
                                         });
                             }
                             else{
-                                addSubjectswith(10);
+                                //addSubjectswith(12);
+                                addItems();
 
                             }
                         }
@@ -138,8 +140,7 @@ public class EducationFragment extends Fragment {
                 else if(className.contains("Class-12")){
                     classRef=database.getReference(auth.getCurrentUser().getUid())
                             .child("ClassDetails")
-                            .child(className)
-                            .child("tests");
+                            .child(className);
                                 classRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,9 +150,10 @@ public class EducationFragment extends Fragment {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                                             if (dataSnapshot.exists()) {
-                                                                pagerAdapter.update(EducationFragment.classRef.child("UnitTest").child("subjects"), getActivity());
+                                                                pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest-1").child("subjects"), getActivity());
                                                             } else {
                                                                 addSubjectswith(12);
+                                                                addItems();
                                                             }
                                                         }
                                                         @Override
@@ -160,7 +162,8 @@ public class EducationFragment extends Fragment {
                                                     });
                                         }
                                         else {
-                                            addSubjectswith(12);
+                                            //addSubjectswith(12);
+                                            addItems();
                                         }
                                     }
                                     @Override
@@ -181,6 +184,9 @@ public class EducationFragment extends Fragment {
     }
     public void addSubjects(){
         classRef.setValue(new ClassDetails());
+    }
+
+    public void addItems() {
         classRef
                 .child("subjects")
                 .child("0")
@@ -189,18 +195,8 @@ public class EducationFragment extends Fragment {
                 .child("subjects")
                 .child("1")
                 .setValue(new subjectItem("Maths"));
-
     }
     public void addSubjectswith(int num){
         classRef.setValue(new ClassDetails(num));
-        classRef
-                .child("subjects")
-                .child("0")
-                .setValue(new subjectItem("English"));
-        classRef
-                .child("subjects")
-                .child("1")
-                .setValue(new subjectItem("Maths"));
-
     }
 }

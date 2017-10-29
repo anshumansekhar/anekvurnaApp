@@ -110,6 +110,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(EducationFragment.className);
         }
 
         this.scaleGestureDetector = new ScaleGestureDetector(this, new MySimpleOnScaleGestureListener(this.mContentView));
