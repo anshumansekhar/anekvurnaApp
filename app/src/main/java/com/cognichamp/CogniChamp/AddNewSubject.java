@@ -33,6 +33,8 @@ public class AddNewSubject extends AppCompatActivity {
     Intent a;
     int post;
 
+    String testTypeText;
+
     ArrayList<subject> list=new ArrayList();
 
     @Override
@@ -45,6 +47,7 @@ public class AddNewSubject extends AppCompatActivity {
         a=getIntent();
         post=a.getIntExtra("Position",0);
         reference=a.getStringExtra("Ref");
+        testTypeText = a.getStringExtra("TestType");
 
         Class=EducationFragment.classRef;
         ref= marksFragments.testRef.child("subjects");
@@ -58,7 +61,7 @@ public class AddNewSubject extends AppCompatActivity {
         subjectChoose=(AutoCompleteTextView)findViewById(R.id.autoCompleteTextView);
 
 
-        adapter=new subjectAdapter(list,post,ref,Class,AddNewSubject.this);
+        adapter = new subjectAdapter(list, post, ref, Class, AddNewSubject.this, testTypeText);
         addSubjectRecycler.setAdapter(adapter);
         arrayAdapter=ArrayAdapter.createFromResource(AddNewSubject.this,R.array.Subjects,android.R.layout.simple_dropdown_item_1line);
         subjectChoose.setAdapter(arrayAdapter);

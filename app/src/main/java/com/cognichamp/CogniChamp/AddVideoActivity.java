@@ -47,6 +47,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class AddVideoActivity extends AppCompatActivity {
@@ -58,7 +60,7 @@ public class AddVideoActivity extends AppCompatActivity {
     CardView videoLayout;
     Button addVideo;
     LinearLayout buttonsVideoItem;
-    ArrayList subjectsList=new ArrayList();
+    ArrayList<String> subjectsList = new ArrayList<>();
     ArrayList topicsList=new ArrayList();
     ArrayList classList=new ArrayList();
     ArrayAdapter subjectAdapter,topicAdapter,classAdapter;
@@ -94,7 +96,7 @@ public class AddVideoActivity extends AppCompatActivity {
         this.classAdapter = new ArrayAdapter(this, R.layout.spinner_item, this.classList);
         this.classAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.Class.setAdapter(this.classAdapter);
-        this.subjectAdapter = new ArrayAdapter(this, R.layout.spinner_item, this.subjectsList);
+        this.subjectAdapter = new ArrayAdapter(this, R.layout.spinner_item, subjectsList);
         this.subjectAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         this.subject.setAdapter(this.subjectAdapter);
 
@@ -270,8 +272,9 @@ public class AddVideoActivity extends AppCompatActivity {
                 AddVideoActivity.this.subjectName = AddVideoActivity.this.subjectsList.get(position).toString();
                 if (AddVideoActivity.this.className.contains("Age")) {
                     AddVideoActivity.this.getAgeTopics();
+                } else {
+                    AddVideoActivity.this.getTopics(AddVideoActivity.this.subjectName);
                 }
-                AddVideoActivity.this.getTopics(AddVideoActivity.this.subjectName);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -367,6 +370,45 @@ public class AddVideoActivity extends AppCompatActivity {
 
     public void getSubjects(final String Class) {
         if(!Class.contains("Age")) {
+//            this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                    .child("ClassDetails")
+//                    .child(Class)
+//                    .child("subjects")
+//                    .addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            subjectsList.put(dataSnapshot.getKey(),dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                            AddVideoActivity.dialog.hide();
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                            subjectsList.put(dataSnapshot.getKey(),dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                            AddVideoActivity.dialog.hide();
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//                            subjectsList.put(dataSnapshot.getKey(),dataSnapshot.getValue(subjectItem.class).getSubjectName());
+//                            AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                            AddVideoActivity.dialog.hide();
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//
+//                        }
+//                    });
+
             this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .child("ClassDetails")
                     .child(Class)
@@ -375,8 +417,14 @@ public class AddVideoActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                                    subjectsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                Log.e("geting", "Subjects");
+                                Iterator<DataSnapshot> itemIterator = dataSnapshot.getChildren().iterator();
+                                while (itemIterator.hasNext()) {
+                                    subjectItem item = itemIterator.next().getValue(subjectItem.class);
+                                    Log.e("subject", item.getSubjectName());
+                                    if (!subjectsList.contains(item.getSubjectName())) {
+                                        subjectsList.add(item.getSubjectName());
+                                    }
                                     AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                                     AddVideoActivity.dialog.hide();
 
@@ -430,12 +478,22 @@ public class AddVideoActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                                    subjectsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                Iterator<DataSnapshot> dataSnapshotIterator = dataSnapshot.getChildren().iterator();
+                                while (dataSnapshotIterator.hasNext()) {
+                                    subjectItem item = dataSnapshotIterator.next().getValue(subjectItem.class);
+                                    Log.e("sg", item.getSubjectName());
+                                    if (!subjectsList.contains(item.getSubjectName())) {
+                                        subjectsList.add(item.getSubjectName());
+                                    }
                                     AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
                                     AddVideoActivity.dialog.hide();
-
                                 }
+//                                for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+//                                    subjectsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+//                                    AddVideoActivity.this.subjectAdapter.notifyDataSetChanged();
+//                                    AddVideoActivity.dialog.hide();
+//
+//                                }
                             }
 
                         }
@@ -488,7 +546,9 @@ public class AddVideoActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
-                                topicsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                if (!topicsList.contains(dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName())) {
+                                    topicsList.add(i, dataSnapshot.child("" + i).getValue(subjectItem.class).getSubjectName());
+                                }
                                 AddVideoActivity.this.topicAdapter.notifyDataSetChanged();
 
                             }
@@ -554,13 +614,13 @@ public class AddVideoActivity extends AppCompatActivity {
                 .child("ClassDetails")
                 .child(Class)
                 .child("subjects")
-                .child("0")
+                .child("English")
                 .setValue(new subjectItem("English"));
         this.database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("ClassDetails")
                 .child(Class)
                 .child("subjects")
-                .child("1")
+                .child("Maths")
                 .setValue(new subjectItem("Maths"));
     }
 }

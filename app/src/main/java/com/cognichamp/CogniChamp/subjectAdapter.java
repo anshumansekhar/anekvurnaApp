@@ -29,16 +29,16 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     int post;
     FirebaseDatabase database=FirebaseDatabase.getInstance();
     FirebaseAuth auth=FirebaseAuth.getInstance();
+    String testType;
 
 
-
-
-    public subjectAdapter(ArrayList list,int position,DatabaseReference ref,DatabaseReference Class,Context context) {
+    public subjectAdapter(ArrayList list, int position, DatabaseReference ref, DatabaseReference Class, Context context, String test) {
         this.list = list;
         post=position;
         reference=ref;
         ClassName=Class;
         ctx=context;
+        testType = test;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
     @Override
     public void onBindViewHolder(SubjectNameHolder holder, int position) {
         holder.subjectName.setText(""+list.get(position).getSubjectName());
-        map.put(""+(post+position),list.get(position));
+        map.put(list.get(position).getSubjectName(), list.get(position));
     }
 
     @Override
@@ -61,25 +61,16 @@ public class subjectAdapter extends RecyclerView.Adapter<SubjectNameHolder> {
 
     public void uploadData()
     {
-        for(int i=post;i<(post+map.size());i++){
-            ClassName.child("subjects")
-                    .child(""+i)
-                    .setValue(map.get(""+i).getSubjectName());
-        }
-        for (int i=post;i<(post+map.size());i++) {
-            for(int j=0;j<marksFragments.tests.length;j++){
-                ClassName.child("tests")
-                        .child(marksFragments.tests[j])
-                        .child("subjects")
-                        .child(""+i)
-                        .setValue(map.get(""+i));
-            }
+        for (String key : map.keySet()) {
+            ClassName.child("tests")
+                    .child(testType)
+                    .child("subjects")
+                    .child(key)
+                    .setValue(map.get(key));
             Log.e("d","adding to subjects");
             ClassName.child("subjects")
-                    .child(""+i)
-                    .setValue(new subjectItem(map.get(""+i).getSubjectName()));
+                    .child(key)
+                    .setValue(new subjectItem(key));
         }
     }
-
-
 }

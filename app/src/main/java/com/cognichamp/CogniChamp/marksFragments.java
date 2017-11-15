@@ -44,7 +44,11 @@ public class marksFragments extends Fragment {
     Button save,addnewSubject;
     TextView percentage;
     ArrayAdapter testAdapter;
+    String testTypeText;
     FirebaseRecyclerAdapter<subject, subjectHolder> recyclerAdapter;
+
+
+    String subjectNameToDelete = "";
 
     public static void fillHashmap(DatabaseReference ref) {
         Subjects.clear();
@@ -93,6 +97,7 @@ public class marksFragments extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 testRef=EducationFragment.classRef.child("tests").child(tests[position]);
+                testTypeText = tests[position];
                 testRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -142,6 +147,7 @@ public class marksFragments extends Fragment {
                 Intent i=new Intent(getActivity(),AddNewSubject.class);
                 i.putExtra("Position",Subjects.size());
                 i.putExtra("Class",EducationFragment.classRef.toString());
+                i.putExtra("TestType", testTypeText);
                 i.putExtra("Ref",testRef.child("subjects").toString());
                 startActivity(i);
             }
@@ -181,7 +187,7 @@ public class marksFragments extends Fragment {
                 viewHolder.subjectMarks.setText(""+model.getSubMarks());
                 viewHolder.totalMArks.setText(""+model.getTotalMarks());
                 viewHolder.subjectName.setText(model.getSubjectName());
-
+                subjectNameToDelete = model.getSubjectName();
                 viewHolder.subjectMarks.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -204,7 +210,7 @@ public class marksFragments extends Fragment {
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ref.child(""+pos)
+                                ref.child(subjectNameToDelete)
                                         .removeValue();
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -303,4 +309,9 @@ public class marksFragments extends Fragment {
         }
         return (marks/totalMarks)*100;
     }
+
+    public void addSubjects() {
+        EducationFragment.classRef.setValue(new ClassDetails());
+    }
+
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +54,7 @@ public class subjectListFragment extends Fragment {
         this.subjectsGrid.setLayoutManager(this.layoutManager);
 
 
-
+        Log.e("subjectListFragemnt", "inside sibje");
        FirebaseDatabase.getInstance()
                 .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                .child(this.where)
@@ -62,27 +63,35 @@ public class subjectListFragment extends Fragment {
        .addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
+               Log.e("checking", "inside sibje");
+
                if (subjectListFragment.this.where.equals("ClassDetails")) {
+                   Log.e("classdetails", "true");
+
                    if(!dataSnapshot.exists()) {
+                       Log.e("subjectListFragemss", "no");
+
                        if (!subjectListFragment.this.className.contains("Age")) {
+                           Log.e("pushing", "yes");
                            FirebaseDatabase.getInstance()
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(subjectListFragment.this.where)
                                    .child(subjectListFragment.this.className)
                                    .child("subjects")
-                                   .child("0")
+                                   .child("English")
                                    .setValue(new subjectItem("English"));
                            FirebaseDatabase.getInstance()
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(subjectListFragment.this.where)
                                    .child(subjectListFragment.this.className)
                                    .child("subjects")
-                                   .child("1")
+                                   .child("Maths")
                                    .setValue(new subjectItem("Maths"));
                            subjectListFragment.this.setAdapter(subjectListFragment.this.className);
 
                        }
                        else{
+                           Log.e("classdetailsAvialable", "true");
                            subjectListFragment.this.setCommonAdapter(subjectListFragment.this.className);
                        }
                    }

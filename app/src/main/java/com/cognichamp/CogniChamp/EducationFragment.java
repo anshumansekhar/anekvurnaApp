@@ -75,7 +75,7 @@ public class EducationFragment extends Fragment {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists()) {
-                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"), getActivity());
+                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest-1").child("subjects"), getActivity());
                                                 }else {
                                                     // addSubjectswith(12);
                                                     addItems();
@@ -112,9 +112,9 @@ public class EducationFragment extends Fragment {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if(dataSnapshot.exists()) {
-                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest").child("subjects"), getActivity());
+                                                    pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest-1").child("subjects"), getActivity());
                                                 }else {
-                                                    addSubjectswith(12);
+//                                                    addSubjectswith(12);
                                                     addItems();
                                                 }
                                             }
@@ -152,7 +152,7 @@ public class EducationFragment extends Fragment {
                                                             if (dataSnapshot.exists()) {
                                                                 pagerAdapter.update(EducationFragment.classRef.child("tests").child("UnitTest-1").child("subjects"), getActivity());
                                                             } else {
-                                                                addSubjectswith(12);
+//                                                                addSubjectswith(12);
                                                                 addItems();
                                                             }
                                                         }
@@ -189,11 +189,11 @@ public class EducationFragment extends Fragment {
     public void addItems() {
         classRef
                 .child("subjects")
-                .child("0")
+                .child("English")
                 .setValue(new subjectItem("English"));
         classRef
                 .child("subjects")
-                .child("1")
+                .child("Maths")
                 .setValue(new subjectItem("Maths"));
     }
     public void addSubjectswith(int num){

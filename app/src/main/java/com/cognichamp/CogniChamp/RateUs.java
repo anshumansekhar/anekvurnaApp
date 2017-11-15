@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,29 +31,33 @@ public class RateUs {
 
     private static final int LAUNCHES_UNTIL_PROMPT = 15;
 
+    static boolean isDialogToBeShown = false;
+
     public static void app_launched(Context mContext) {
         SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
-        if (prefs.getBoolean("dontshowagain", false)) {
+        if (!prefs.getBoolean("dontshowagain", false)) {
+            isDialogToBeShown = true;
             return;
         }
 
         Editor editor = prefs.edit();
 
         long launch_count = prefs.getLong("launch_count", 0) + 1;
+        Log.e("launchCount", "" + launch_count);
         editor.putLong("launch_count", launch_count);
 
         Long date_firstLaunch = prefs.getLong("date_firstlaunch", 0);
+        Log.e("firstLaunch", "" + date_firstLaunch);
         if (date_firstLaunch == 0) {
             date_firstLaunch = System.currentTimeMillis();
             editor.putLong("date_firstlaunch", date_firstLaunch);
         }
         if (launch_count >= RateUs.LAUNCHES_UNTIL_PROMPT) {
-            if (System.currentTimeMillis() >= date_firstLaunch
-                    + RateUs.DAYS_UNTIL_PROMPT * 24 * 60 * 60 * 1000) {
+            if (System.currentTimeMillis() >= (date_firstLaunch
+                    + RateUs.DAYS_UNTIL_PROMPT * 24 * 60 * 60 * 1000)) {
                 RateUs.showRateDialog(mContext, editor);
             }
         }
-
         editor.apply();
     }
     public static void showRateDialog(final Context mContext,
@@ -95,6 +100,9 @@ public class RateUs {
                 SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
                 Editor editor = prefs.edit();
                 editor.putLong("launch_count", 0);
+                editor.commit();
+                long launch_count = prefs.getLong("launch_count", 0) + 1;
+                Log.e("launchCount", "" + launch_count);
                 dialog.dismiss();
             }
         });
@@ -106,6 +114,7 @@ public class RateUs {
                 SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
                 Editor editor = prefs.edit();
                 editor.putLong("launch_count", 0);
+                editor.commit();
                 dialog.dismiss();
 
             }
@@ -117,6 +126,7 @@ public class RateUs {
                 SharedPreferences prefs = mContext.getSharedPreferences("rateus", 0);
                 Editor editor = prefs.edit();
                 editor.putLong("launch_count", 0);
+                editor.commit();
                 dialog.dismiss();
             }
         });
