@@ -39,6 +39,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
 
                     <TextView
+                        android:id="@+id/subjectsHeading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -110,7 +111,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/testType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -127,6 +128,7 @@
                         android:id="@+id/selectTestType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="end"
                         android:layout_marginEnd="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
@@ -134,7 +136,7 @@
                         android:layout_marginTop="8dp"
                         android:textAlignment="textEnd"
                         android:textSize="@dimen/largeTextSize"
-                        app:layout_constraintLeft_toRightOf="@+id/textView6"
+                        app:layout_constraintLeft_toRightOf="@+id/testType"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

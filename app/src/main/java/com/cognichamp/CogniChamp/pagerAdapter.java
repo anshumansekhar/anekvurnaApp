@@ -17,6 +17,8 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
     marksFragments marksFragments=new marksFragments();
     schoolDetails schoolDetails=new schoolDetails();
     MainReportCard reportCardFragment = new MainReportCard();
+
+    boolean isAge = false;
     public pagerAdapter(FragmentManager fm) {
         super(fm);
         this.currentFragment = fm.findFragmentById(id.pager);
@@ -51,16 +53,33 @@ public class pagerAdapter extends FragmentStatePagerAdapter {
             return "School Details";
         }
         else if(position==1){
-            return "Marks";
+            if (isAge) {
+                return "Grades";
+            } else {
+                return "Marks";
+            }
         } else if (position == 2) {
 
             return "Report Card";
         }
         return super.getPageTitle(position);
     }
-    public void update(DatabaseReference ref, Context ctx){
-        this.marksFragments.setUpRecyclerView(ref, ctx);
+
+    public void updateAgeDetails(DatabaseReference ref, Context ctx) {
+        isAge = true;
         this.marksFragments.setSpinnerAdapter();
+        this.marksFragments.setUpLayoutForAge();
         this.schoolDetails.update();
+        this.marksFragments.setUpRecyclerViewForAge(ref, ctx);
+        this.reportCardFragment.reportCardFragment.update();
+        this.reportCardFragment.generatedReportFragment.update();
+    }
+    public void update(DatabaseReference ref, Context ctx){
+        this.marksFragments.setUpForNonAge();
+        this.marksFragments.setSpinnerAdapter();
+        this.marksFragments.setUpRecyclerView(ref, ctx);
+        this.schoolDetails.update();
+        this.reportCardFragment.reportCardFragment.update();
+        this.reportCardFragment.generatedReportFragment.update();
     }
 }

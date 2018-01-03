@@ -61,12 +61,12 @@
         android:inputType="number"
         android:textSize="@dimen/largeTextSize"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/deleteSubjectItem"
+        app:layout_constraintRight_toLeftOf="@+id/deleteGradeItem"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
-        android:id="@+id/deleteSubjectItem"
+        android:id="@+id/deleteGradeItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

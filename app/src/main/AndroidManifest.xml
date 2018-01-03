@@ -14,7 +14,6 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-
     <application
         android:name=".CogniChamp"
         android:allowBackup="true"
@@ -27,6 +26,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
             tools:replace="android:value" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.cognichamp.CogniChamp.fileprovider"
@@ -34,7 +34,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
         <!--
      Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -155,6 +155,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cognichamp.CogniChamp.NavigationDrawer" />
         </activity>
+        <activity
+            android:name=".VideoFullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_video_fullscreen"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

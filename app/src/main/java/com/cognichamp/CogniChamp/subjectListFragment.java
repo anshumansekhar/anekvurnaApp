@@ -63,16 +63,9 @@ public class subjectListFragment extends Fragment {
        .addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
-               Log.e("checking", "inside sibje");
-
                if (subjectListFragment.this.where.equals("ClassDetails")) {
-                   Log.e("classdetails", "true");
-
                    if(!dataSnapshot.exists()) {
-                       Log.e("subjectListFragemss", "no");
-
                        if (!subjectListFragment.this.className.contains("Age")) {
-                           Log.e("pushing", "yes");
                            FirebaseDatabase.getInstance()
                                    .getReference(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(subjectListFragment.this.where)
@@ -88,10 +81,8 @@ public class subjectListFragment extends Fragment {
                                    .child("Maths")
                                    .setValue(new subjectItem("Maths"));
                            subjectListFragment.this.setAdapter(subjectListFragment.this.className);
-
                        }
                        else{
-                           Log.e("classdetailsAvialable", "true");
                            subjectListFragment.this.setCommonAdapter(subjectListFragment.this.className);
                        }
                    }
@@ -122,7 +113,8 @@ public class subjectListFragment extends Fragment {
     public void setCommonAdapter(String name){
         DatabaseReference ref=FirebaseDatabase.getInstance()
                 .getReference("Subjects")
-                .child(name);
+                .child(name)
+                .child("subjects");
         this.recyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>(subjectItem.class
                 , layout.subject_topic_card
                 ,subjectTopicHolde.class
@@ -145,16 +137,19 @@ public class subjectListFragment extends Fragment {
                         subjectListFragment.this.subjectNameBundle.putString("where", subjectListFragment.this.where);
                         subjectListFragment.this.subjectNameBundle.putString("SubjectName", model.getSubjectName());
                         if (subjectListFragment.this.where.equals("ClassDetails")) {
-                            if (subjectListFragment.this.className.contains("Age")) {
-                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
-                            }else {
-                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
-                            }
+                            ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+//                            if (subjectListFragment.this.className.contains("Age")) {
+//                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
+//                            }else {
+//                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+//                            }
                         } else if (subjectListFragment.this.where.equals("Favorites")) {
-                            if (subjectListFragment.this.className.contains("Age")) {
-                                ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
-                            }
-                            ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+                            ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+
+//                            if (subjectListFragment.this.className.contains("Age")) {
+//                                ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
+//                            }
+//                            ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                         }
                     }
                 });
@@ -194,12 +189,14 @@ public class subjectListFragment extends Fragment {
                         subjectListFragment.this.subjectNameBundle.putString("where", subjectListFragment.this.where);
                         subjectListFragment.this.subjectNameBundle.putString("SubjectName", model.getSubjectName());
                         if (subjectListFragment.this.where.equals("ClassDetails")) {
-                            if (subjectListFragment.this.className.contains("Age")) {
-                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
-                            }
-                            else {
-                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
-                            }
+                            ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+
+//                            if (subjectListFragment.this.className.contains("Age")) {
+//                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithVideoOnly(subjectListFragment.this.subjectNameBundle);
+//                            }
+//                            else {
+//                                ((AnotherActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
+//                            }
                         } else if (subjectListFragment.this.where.equals("Favorites")) {
                             ((FavoriteVideosActivity) subjectListFragment.this.getParentFragment()).changeFragmentWithTopic(subjectListFragment.this.subjectNameBundle);
                         }

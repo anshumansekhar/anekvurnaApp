@@ -53,34 +53,6 @@ public class AnotherActivity extends Fragment {
                         if (dataSnapshot.exists()) {
                             AnotherActivity.this.className = dataSnapshot.getValue().toString();
                             AnotherActivity.this.selectClassVideo.setSelection(classess.indexOf(className));
-//                            if (AnotherActivity.this.className.equals("11")) {
-//                                AnotherActivity.this.className = "Class-" + AnotherActivity.this.className + "(Arts)";
-//                            } else if (AnotherActivity.this.className.equals("0")) {
-//                                AnotherActivity.this.className = "Age (0-1) yrs";
-//                            } else if (AnotherActivity.this.className.equals("1")) {
-//                                AnotherActivity.this.className = "Age (1-2) yrs";
-//                            } else if (AnotherActivity.this.className.equals("2")) {
-//                                AnotherActivity.this.className = "Age (2-3) yrs";
-//                            } else if (AnotherActivity.this.className.equals("3")) {
-//                                AnotherActivity.this.className = "Age (3-4) yrs";
-//                            } else if (AnotherActivity.this.className.equals("4")) {
-//                                AnotherActivity.this.className = "Age (4-5) yrs";
-//                            } else if (AnotherActivity.this.className.equals("5")) {
-//                                AnotherActivity.this.className = "Age (5-6) yrs";
-//                            } else if (AnotherActivity.this.className.equals("12")) {
-//                                AnotherActivity.this.className = "Class-" + "11" + "(Commerce)";
-//                            } else if (AnotherActivity.this.className.equals("13")) {
-//                                AnotherActivity.this.className = "Class-" + "11" + "(Science)";
-//                            } else if (AnotherActivity.this.className.equals("14")) {
-//                                AnotherActivity.this.className = "Class-" + "12" + "(Arts)";
-//                            } else if (AnotherActivity.this.className.equals("15")) {
-//                                AnotherActivity.this.className = "Class-" + "12" + "(Commerce)";
-//                            } else if (AnotherActivity.this.className.equals("16")) {
-//                                AnotherActivity.this.className = "Class-" + "12" + "(Science)";
-//                            }
-//                            else{
-//                                AnotherActivity.this.className = "Class-" + (Integer.valueOf(AnotherActivity.this.className) - 6);
-//                            }
                             AnotherActivity.this.classNameBundle.putString("ClassNumber", AnotherActivity.this.className);
                             AnotherActivity.this.classNameBundle.putString("where", "ClassDetails");
                             subjectListFragment subjectListFragment = new subjectListFragment();
@@ -88,8 +60,8 @@ public class AnotherActivity extends Fragment {
                             if (AnotherActivity.this.isAdded()) {
                                 FragmentTransaction fragmentTransaction = AnotherActivity.this.getChildFragmentManager().beginTransaction();
                                 fragmentTransaction.replace(id.videoFrame, subjectListFragment);
-                                fragmentTransaction.commit();
                                 fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
                             }
                         }
                     }
@@ -110,8 +82,8 @@ public class AnotherActivity extends Fragment {
                 if (AnotherActivity.this.isAdded()) {
                     FragmentTransaction fragmentTransaction = AnotherActivity.this.getChildFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.videoFrame, subjectListFragment);
-                    fragmentTransaction.commit();
                     fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
             }
             @Override
@@ -128,8 +100,8 @@ public class AnotherActivity extends Fragment {
         if (this.isAdded()) {
             FragmentTransaction fragmentTransaction = this.getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(id.videoFrame, topicListFragment);
-            fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
     }
@@ -140,8 +112,9 @@ public class AnotherActivity extends Fragment {
         if (this.isAdded()) {
             FragmentTransaction fragmentTransaction = this.getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(id.videoFrame, videosFragment);
-            fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
         }
     }
     public void changeFragmentWithVideoOnly(Bundle b){
@@ -150,8 +123,9 @@ public class AnotherActivity extends Fragment {
         if (this.isAdded()) {
             FragmentTransaction fragmentTransaction = this.getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(id.videoFrame, videosFragment);
-            fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+
         }
     }
 
@@ -162,7 +136,7 @@ public class AnotherActivity extends Fragment {
         emptyFragment.setArguments(b);
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.videoFrame, emptyFragment);
-        fragmentTransaction.commit();
         fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

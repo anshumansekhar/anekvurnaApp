@@ -10,7 +10,11 @@
 
     <string name="facebook_app_id">591280704375929</string>
     <string name="fb_login_protocol_scheme">fb591280704375929</string>
+    <string name="teachersComments"><![CDATA[ <b><font color=#2340e1>Teacher\'s Comments</b>]]> </string>
     <string-array name="Class">
+        <item>Age (2-3) yrs</item>
+        <item>Age (3-4) yrs</item>
+        <item>Age (4-5) yrs</item>
         <item>Class-1</item>
         <item>Class-2</item>
         <item>Class-3</item>
@@ -306,6 +310,11 @@ Visit us at<u> www.cognichamp.com</u></string>
         <item>Uttar Pradesh</item>
         <item>Uttrakhand</item>
         <item>West Bengal</item>
+    </string-array>
+    <string-array name="gradesTestType">
+        <item>Monthly</item>
+        <item>Quaterly</item>
+        <item>Yearly</item>
     </string-array>
     <string-array name="testsBoard">
         <item>UnitTest-1</item>
@@ -1082,5 +1091,9 @@ Visit us at<u> www.cognichamp.com</u></string>
     <string name="FamilyTitle">Family</string>
     <string name="HobbiesTitle">Hobbies</string>
     <string name="AccoutTitle">Account</string>
+
+    <string name="title_activity_youtube_embedded">YoutubeEmbeddedActivity</string>
+
+    <string name="title_activity_video_fullscreen">VideoFullscreenActivity</string>
 
 </resources>

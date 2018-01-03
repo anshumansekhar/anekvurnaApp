@@ -271,7 +271,8 @@ public class AddVideoActivity extends AppCompatActivity {
                 AddVideoActivity.this.topicAdapter.clear();
                 AddVideoActivity.this.subjectName = AddVideoActivity.this.subjectsList.get(position).toString();
                 if (AddVideoActivity.this.className.contains("Age")) {
-                    AddVideoActivity.this.getAgeTopics();
+//                    AddVideoActivity.this.getAgeTopics();
+                    AddVideoActivity.this.getTopics(AddVideoActivity.this.subjectName);
                 } else {
                     AddVideoActivity.this.getTopics(AddVideoActivity.this.subjectName);
                 }
@@ -318,9 +319,9 @@ public class AddVideoActivity extends AppCompatActivity {
 
     }
     void AddVideoToDatabase(video v){
-        if (this.className.equals("Age")) {
-            this.topicName = "videos";
-        }
+//        if (this.className.equals("Age")) {
+//            this.topicName = "videos";
+//        }
         this.database.getReference("Videos")
                 .child(this.className)
                 .child(this.subjectName)
@@ -339,7 +340,8 @@ public class AddVideoActivity extends AppCompatActivity {
                     .child(this.className)
                     .child("topics")
                     .child(this.subjectName)
-                    .child("videos")
+                    .push()
+//                    .child("videos")
                     .setValue(new subjectItem(this.topicName));
 
         }else {
@@ -474,6 +476,7 @@ public class AddVideoActivity extends AppCompatActivity {
         else{
             this.database.getReference("Subjects")
                     .child(Class)
+                    .child("subjects")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

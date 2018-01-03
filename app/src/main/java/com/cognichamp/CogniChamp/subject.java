@@ -5,14 +5,14 @@ package com.cognichamp.CogniChamp;
  */
 
 public class subject {
-    float subMarks;
-    float totalMarks;
+    int subMarks;
+    int totalMarks;
     String subjectName;
 
     public subject() {
     }
 
-    public subject(float subMarks, float totalMarks, String subjectName) {
+    public subject(int subMarks, int totalMarks, String subjectName) {
         this.subMarks = subMarks;
         this.totalMarks = totalMarks;
         this.subjectName = subjectName;
@@ -26,19 +26,19 @@ public class subject {
         this.subjectName = subjectName;
     }
 
-    public float getSubMarks() {
-        return subMarks;
+    public int getSubMarks() {
+        return this.subMarks;
     }
 
-    public void setSubMarks(float subMarks) {
+    public void setSubMarks(int subMarks) {
         this.subMarks = subMarks;
     }
 
-    public float getTotalMarks() {
-        return totalMarks;
+    public int getTotalMarks() {
+        return this.totalMarks;
     }
 
-    public void setTotalMarks(float totalMarks) {
+    public void setTotalMarks(int totalMarks) {
         this.totalMarks = totalMarks;
     }
 }

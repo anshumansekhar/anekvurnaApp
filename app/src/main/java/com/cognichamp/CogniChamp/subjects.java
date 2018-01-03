@@ -10,8 +10,8 @@ import java.util.HashMap;
 public class subjects {
     HashMap<String, subject> Subjects = new HashMap<>();
     public subjects() {
-        Subjects.put("English", new subject(Float.valueOf(0), Float.valueOf(0), "English"));
-        Subjects.put("Maths", new subject(Float.valueOf(0), Float.valueOf(0), "Maths"));
+        Subjects.put("English", new subject(0, 0, "English"));
+        Subjects.put("Maths", new subject(0, 0, "Maths"));
     }
 
     public HashMap<String, subject> getSubjects() {

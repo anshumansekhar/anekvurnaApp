@@ -17,12 +17,12 @@
         android:textSize="@dimen/largeTextSize" />
 
     <EditText
-        android:id="@+id/marksSubject"
+        android:id="@+id/marksGrade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:inputType="numberDecimal"
-        android:labelFor="@+id/marksSubject"
+        android:labelFor="@+id/marksGrade"
         android:minEms="3"
         android:text="20"
         android:textAlignment="center"
@@ -46,7 +46,7 @@
         android:textSize="@dimen/largeTextSize" />
 
     <ImageButton
-        android:id="@+id/deleteSubjectItem"
+        android:id="@+id/deleteGradeItem"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:background="@color/transparent"

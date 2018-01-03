@@ -69,15 +69,11 @@ public class TopicListFragment extends Fragment {
                     .child(subName);
         }
         this.firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<subjectItem, subjectTopicHolde>
-                (subjectItem.class
-                        , layout.subject_topic_card
+                (subjectItem.class, layout.subject_topic_card
                 ,subjectTopicHolde.class
                 ,ref) {
             @Override
             protected void populateViewHolder(subjectTopicHolde viewHolder, final subjectItem model, int position) {
-
-
-
                 TextDrawable drawable=TextDrawable.builder()
                         .beginConfig()
                         .width(160)
@@ -85,16 +81,10 @@ public class TopicListFragment extends Fragment {
                         .fontSize(25)
                         .endConfig()
                         .buildRect(model.getSubjectName(), ColorGenerator.MATERIAL.getRandomColor());
-
-
-
                 viewHolder.imageView.setImageDrawable(drawable);
-
                 viewHolder.view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-
                         TopicListFragment.this.topicsBundle.putString("ClassName", className);
                         TopicListFragment.this.topicsBundle.putString("SubjectName", TopicListFragment.this.subjectName);
                         TopicListFragment.this.topicsBundle.putString("TopicName", model.getSubjectName());

@@ -51,9 +51,9 @@ public class VideosFragment extends Fragment {
         where=getArguments().getString("where");
         videosList=(RecyclerView)v.findViewById(R.id.videosList);
         videosList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if(className.contains("Age")){
-            topicName="videos";
-        }
+//        if(className.contains("Age")){
+//            topicName="videos";
+//        }
         SetAdapter(className,subjectName,topicName);
         FirebaseDatabase.getInstance()
                 .getReference("Videos")

@@ -97,6 +97,7 @@ public class NavigationDrawer extends AppCompatActivity
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame_layout, new AnotherActivity());
                 actionBar.setTitle(R.string.VideosTitle);
+                transaction.addToBackStack(null);
                 transaction.commit();
             }
         }
@@ -129,7 +130,10 @@ public class NavigationDrawer extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish();
+            if (selectedFragment instanceof AnotherActivity)
+                //System.exit(0);
+                super.onBackPressed();
         }
     }
 
@@ -165,12 +169,8 @@ public class NavigationDrawer extends AppCompatActivity
             }
             else if(f instanceof AccountFragment)
             {
-
-
-                    ((AccountFragment) f).saveChanges();
-
+                ((AccountFragment) f).saveChanges();
             }
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -252,6 +252,7 @@ public class NavigationDrawer extends AppCompatActivity
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, selectedFragment);
+        transaction.addToBackStack(null);
         transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -321,6 +322,7 @@ public class NavigationDrawer extends AppCompatActivity
             actionBar.setTitle(R.string.EducationTitle);
 
         }
+        transaction.addToBackStack(null);
         transaction.commit();
     }
     public void signOut(){

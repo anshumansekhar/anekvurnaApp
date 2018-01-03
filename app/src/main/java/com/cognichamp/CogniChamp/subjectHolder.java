@@ -20,11 +20,11 @@ public class subjectHolder extends RecyclerView.ViewHolder {
     public subjectHolder(View itemView) {
         super(itemView);
         subjectName=(TextView) itemView.findViewById(R.id.subjectNameEducation);
-        subjectMarks=(EditText)itemView.findViewById(R.id.marksSubject);
+        subjectMarks = (EditText) itemView.findViewById(R.id.marksGrade);
         totalMArks=(EditText)itemView.findViewById(R.id.totalMarksSubject);
-        deleteSubject=(ImageButton)itemView.findViewById(R.id.deleteSubjectItem);
+        deleteSubject = (ImageButton) itemView.findViewById(R.id.deleteGradeItem);
     }
     public subject loadDataToMap() {
-        return new subject(Float.parseFloat(subjectMarks.getText().toString()),Float.parseFloat(totalMArks.getText().toString()),subjectName.getText().toString());
+        return new subject(Integer.parseInt(subjectMarks.getText().toString()), Integer.parseInt(totalMArks.getText().toString()), subjectName.getText().toString());
     }
 }
