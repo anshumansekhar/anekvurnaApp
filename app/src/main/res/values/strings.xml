@@ -184,7 +184,8 @@ We process this data for the purposes of:\n
         14
     </string>
     <string name="website">
-Visit us at<u> www.cognichamp.com</u></string>
+Visit us at\n
+        <u> www.cognichamp.com</u></string>
     <string-array name="Subjects">
         <item>Arabic</item>
         <item>Assamese</item>

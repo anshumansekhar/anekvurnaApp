@@ -363,7 +363,7 @@ public class marksFragments extends Fragment {
                     public void afterTextChanged(Editable s) {
                         if(!s.toString().equals("")&&model.getTotalMarks()!=Float.parseFloat(s.toString())){
                             Subjects.get(model.getSubjectName()).setTotalMarks(Integer.parseInt(s.toString()));
-                        } else if (s.toString().isEmpty() && model.getTotalMarks() != Integer.parseInt("0.0")) {
+                        } else if (s.toString().isEmpty() && model.getTotalMarks() != Float.parseFloat("0.0")) {
                             Subjects.get(model.getSubjectName()).setTotalMarks(Integer.parseInt("0.0"));
                         }
 

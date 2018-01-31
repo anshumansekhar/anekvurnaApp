@@ -60,8 +60,10 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            long lengthPlayed = (mPlayer.getDurationMillis() * progress) / 100;
-            mPlayer.seekToMillis((int) lengthPlayed);
+            if (mPlayer != null) {
+                long lengthPlayed = (mPlayer.getDurationMillis() * progress) / 100;
+                mPlayer.seekToMillis((int) lengthPlayed);
+            }
         }
 
         @Override

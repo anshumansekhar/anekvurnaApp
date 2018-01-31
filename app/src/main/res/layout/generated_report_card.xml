@@ -11,7 +11,6 @@
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/border"
         android:orientation="vertical">
 
 
@@ -118,8 +117,7 @@
                 android:id="@+id/schoolLogo"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_weight="1"
-                android:src="@drawable/com_facebook_close" />
+                android:layout_weight="1" />
 
             <ImageButton
                 android:id="@+id/saveReport"
@@ -181,7 +179,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/border"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

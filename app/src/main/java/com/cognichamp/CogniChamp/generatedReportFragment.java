@@ -214,9 +214,11 @@ public class generatedReportFragment extends Fragment {
                             school = dataSnapshot.getValue(School.class);
                             schoolName.setText(school.getSchoolName());
                             schoolAddress.setText(school.getSchoolAddress());
-                            Glide.with(getActivity())
-                                    .load(school.getSchoolLogo())
-                                    .into(schoolLogo);
+                            if (!school.getSchoolLogo().equals("")) {
+                                Glide.with(getActivity())
+                                        .load(school.getSchoolLogo())
+                                        .into(schoolLogo);
+                            }
                             adapter.list.clear();
                             fillTheList();
                             adapter.notifyDataSetChanged();
